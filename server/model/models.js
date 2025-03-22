@@ -1,1 +1,1 @@
-// siema kurwa
+// siema kurwa kurwa witam
