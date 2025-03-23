@@ -1,7 +1,7 @@
 // models/BlogPost.ts
 import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, AllowNull } from 'sequelize-typescript';
-import { User } from './User';
-import { Comment } from './Comment';
+import { User } from './User.ts';
+import { Comment } from './Comment.ts';
 
 @Table
 export class BlogPost extends Model {
