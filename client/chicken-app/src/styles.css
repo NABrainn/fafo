@@ -1,4 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 @import "tailwindcss";
+
+@layer base {
+    * {
+        font-family: 'Exo 2', 'sans-serif';
+    }
+}
 
 @theme {
     --color-primary: #DDEB9D;
@@ -6,3 +13,9 @@
     --color-tertiary: #143D60;
     --color-accent: #EB5B00;
 }
+
+@theme static {
+    --color-neutral-light: var(--color-neutral-100);
+    --color-neutral-dark: var(--color-neutral-900);
+}
+
