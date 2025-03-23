@@ -7,3 +7,4 @@ napisać funkcje do controller
 zaprojektować widok posta (po wywołaniu z listy)
 zaprojektować widok page not found
 dopracować widok listy postów
+przygotować serwis do łączenia z api postów po stronie klienta
