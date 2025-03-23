@@ -7,11 +7,7 @@
     <span>Zaloguj</span>
   </nav>
   <main class="bg-primary grow-1">
-    <template x-route="/hello/:name">
-      <div>Hello 
-        <span x-text="$router.params.name"></span>
-      </div>
-    </template>
+    <router-outlet></router-outlet>
   </main>
   <footer class="bg-secondary text-center">
       <span class="text-center">footer</span>
