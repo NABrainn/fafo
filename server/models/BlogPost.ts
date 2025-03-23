@@ -1,0 +1,38 @@
+// models/BlogPost.ts
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, AllowNull } from 'sequelize-typescript';
+import { User } from './User';
+import { Comment } from './Comment';
+
+@Table
+export class BlogPost extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    id!: number;
+
+    @ForeignKey(() => User)
+    @AllowNull(false)
+    @Column(DataType.INTEGER)
+    author_id!: number;
+
+    @BelongsTo(() => User)
+    author!: User;
+
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    title!: string;
+
+    @AllowNull(false)
+    @Column(DataType.STRING)
+    subtitle!: string;
+
+    @AllowNull(false)
+    @Column(DataType.DATE)
+    date!: Date;
+
+    @Column(DataType.STRING)
+    img_url!: string;
+
+    @HasMany(() => Comment)
+    comments!: Comment[];
+}
