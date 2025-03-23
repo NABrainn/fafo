@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: blog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+    - 5432:5432
+    networks:
+    - pg
+networks:
+  pg:
+    driver: bridge
+
+
+volumes:
+  postgres: {}
+
