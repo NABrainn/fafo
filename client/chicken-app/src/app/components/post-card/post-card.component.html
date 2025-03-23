@@ -1,0 +1,17 @@
+<div class="flex flex-col gap-4 overflow-y-hidden overflow-y-hidden text-ellipsis bg-secondary p-4 rounded">
+    <img src=""alt="">
+    <h3 class="text-neutral-dark text-2xl font-semibold">
+        <ng-content select="title">
+
+        </ng-content>
+    </h3>
+    <div class="flex flex-col text-neutral-light overflow-y-hidden bg-tertiary grow-1 rounded p-4">
+        <ng-content select="description">
+
+        </ng-content>
+        <span class="text-accent cursor-pointer">Czytaj więcej...</span>
+    </div>
+    <footer class="flex justify-between">
+        <span class="text-neutral-dark text-xs font-semibold">{{createdDateDMY()}}</span>
+    </footer>
+</div>
