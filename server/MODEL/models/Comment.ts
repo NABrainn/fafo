@@ -8,7 +8,7 @@ export class Comment extends Model {
     @PrimaryKey
     @AutoIncrement
     @Column(DataType.INTEGER)
-    id!: number;
+    declare id: number;
 
     @AllowNull(false)
     @Column(DataType.TEXT)

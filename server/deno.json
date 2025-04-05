@@ -6,6 +6,11 @@
     "@std/assert": "jsr:@std/assert@1",
     "express": "npm:express@4.21.2",
     "pg": "npm:pg@^8.14.1",
-    "sequelize": "npm:sequelize@^6.37.6"
+    "sequelize": "npm:sequelize@^6.37.6",
+    "sequelize-typescript": "npm:sequelize-typescript@^2.1.4"
+  },
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }
