@@ -1,16 +1,16 @@
-import { Component, computed, Signal, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal, signal } from '@angular/core';
+import { DateService } from '../../services/date.service';
 
 @Component({
   selector: 'app-post-card',
   imports: [],
   templateUrl: './post-card.component.html'
 })
-export class PostCardComponent {
-  readonly #createdDate = signal<Date>(new Date());
-  readonly createdDateDMY: Signal<string> = computed(() => {
-    const day = this.#createdDate().getDate();
-    const month = this.#createdDate().getMonth() + 1;
-    const year = this.#createdDate().getFullYear();
-    return `${day}.${month}.${year}`;
-  });
+export class PostCardComponent implements OnInit {
+  dateService = inject(DateService)
+  createdDate: string = ''
+
+  ngOnInit(): void {
+    this.createdDate = this.dateService.dateDMY()
+  }
 }
