@@ -4,7 +4,12 @@ import { API_URL } from '../../environment';
 import { catchError, of, throwError } from 'rxjs';
 
 export type Post = {
-  id: number
+  id: number,
+  image: string,
+  title: string,
+  description: string,
+  createdAt: Date,
+  createdBy: string
 }
 
 @Injectable({
@@ -29,15 +34,13 @@ export class PostService {
 
   deleteById(id: number) {
     return this.http.delete<void>(`${this.URL}/${id}`).pipe(
-      catchError(err => throwError(
-        () => err
-      ))
+      catchError(err => throwError(() => err))
     )
   }
 
   update(post: Post) {
     return this.http.put<Post>(this.URL, post).pipe(
-      catchError(err => of(undefined))
+      catchError(() => of(undefined))
     )
   }
 }
