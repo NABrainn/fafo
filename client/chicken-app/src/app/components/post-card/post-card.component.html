@@ -5,13 +5,13 @@
 
         </ng-content>
     </h3>
-    <div class="flex flex-col text-neutral-light overflow-y-hidden bg-tertiary grow-1 rounded p-4">
+    <div class="flex flex-col text-neutral-light overflow-y-hidden border text-tertiary border-tertiary border-2 grow-1 rounded p-4">
         <ng-content select="description">
 
         </ng-content>
         <span class="text-accent cursor-pointer">Czytaj więcej...</span>
     </div>
     <footer class="flex justify-between">
-        <span class="text-neutral-dark text-xs font-semibold">{{createdDateDMY()}}</span>
+        <span class="text-neutral-dark text-xs font-semibold">{{createdDate}}</span>
     </footer>
 </div>
