@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-4 overflow-y-hidden overflow-y-hidden text-ellipsis bg-secondary p-4 rounded">
-    <img src=""alt="">
+    <img [src]="imgPath()" alt="">
     <h3 class="text-neutral-dark text-2xl font-semibold">
         <ng-content select="title">
 
@@ -12,6 +12,6 @@
         <span class="text-accent cursor-pointer">Czytaj więcej...</span>
     </div>
     <footer class="flex justify-between">
-        <span class="text-neutral-dark text-xs font-semibold">{{createdDate}}</span>
+        <span class="text-neutral-dark text-xs font-semibold">{{createdBy}} | {{createdDate}}</span>
     </footer>
 </div>
