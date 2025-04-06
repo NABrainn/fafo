@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, Signal, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, Signal, signal } from '@angular/core';
 import { DateService } from '../../services/date.service';
 
 @Component({
@@ -7,10 +7,15 @@ import { DateService } from '../../services/date.service';
   templateUrl: './post-card.component.html'
 })
 export class PostCardComponent implements OnInit {
+
   dateService = inject(DateService)
+
+  imgPath = input.required<string>()
   createdDate: string = ''
+  createdBy: string = ''
 
   ngOnInit(): void {
     this.createdDate = this.dateService.dateDMY()
+    this.createdBy = 'Super User'
   }
 }
