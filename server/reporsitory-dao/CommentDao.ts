@@ -13,6 +13,38 @@ import { Comment } from "../models/Comment.ts";
 import { User } from "../models/User.ts";
 import { CrudRepository } from "./CrudRepository.ts";
 
+export const commentRepository: CrudRepository<Comment> = {
+    repository: sequelize.getRepository(Comment),
+    findById: function (id: number): Promise<Comment | null> {
+        return this.repository.findByPk(id, {
+            include: [User, BlogPost, { model: Comment, as: 'parentComment' }],
+        });  },
+    findAll: function (postId?: number): Promise<Comment[]> {
+        return this.repository.findAll({
+            where: { post_id: postId },
+            include: [User, { model: Comment, as: 'parentComment' }],
+            order: [['createdAt', 'ASC']],
+        });
+    },
+    create: function (data: Partial<Comment>): Promise<Comment> {
+        return this.repository.create(data);
+    },
+    update: function (id: number, data: Partial<Comment>): Promise<[affectedCount: number, affectedRows: Comment[]]> {
+        return this.repository.update(
+            data,
+            {
+                where: { id },
+                returning: true,
+            }
+        );
+    },
+    deleteOne: function (id: number): Promise<number> {
+        return this.repository.destroy({
+            where: { id }
+        })
+    }
+}
+
 //     async findByPostId(postId: number): Promise<Comment[]> {
 //         return Comment.findAll({
 //             where: { post_id: postId },
@@ -59,35 +91,4 @@ import { CrudRepository } from "./CrudRepository.ts";
 //     }
 // }
 
-export const commentRepository: CrudRepository<Comment> = {
-  repository: sequelize.getRepository(Comment),
-  findById: function (id: number): Promise<Comment | null> {
-    return this.repository.findByPk(id, {
-        include: [User, BlogPost, { model: Comment, as: 'parentComment' }],
-    });  },
-  findAll: function (postId?: number): Promise<Comment[]> {
-    return this.repository.findAll({
-        where: { post_id: postId },
-        include: [User, { model: Comment, as: 'parentComment' }],
-        order: [['createdAt', 'ASC']],
-    });
-  },
-  create: function (data: Partial<Comment>): Promise<Comment> {
-    return this.repository.create(data);
-  },
-  update: function (id: number, data: Partial<Comment>): Promise<[affectedCount: number, affectedRows: Comment[]]> {
-    return this.repository.update(
-        data,
-        {
-            where: { id },
-            returning: true,
-        }
-    );
-  },
-  deleteOne: function (id: number): Promise<number> {
-    return this.repository.destroy({
-        where: { id }
-    })
-  }
-}
 
