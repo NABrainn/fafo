@@ -14,7 +14,6 @@ export const sequelize = new Sequelize({
     models: [User, BlogPost, Comment],
 });
 
-
 try {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');

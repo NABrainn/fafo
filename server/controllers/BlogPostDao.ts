@@ -1,7 +1,7 @@
 import { BlogPost } from '../models/BlogPost.ts';
 import { User } from '../models/User.ts';
 import { Comment } from '../models/Comment.ts';
-import { sequelize } from "../database/initializer.ts";
+import { sequelize } from "../config/db-config.ts";
 import { CrudRepository } from "./CrudRepository.ts";
 
 // export class BlogPostRepository {
