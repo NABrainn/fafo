@@ -10,7 +10,8 @@ export const sequelize = new Sequelize({
     password: 'password',
     host: 'localhost',
     dialect: 'postgres',
-    models: [User, BlogPost, Comment], // Auto-load models
+    repositoryMode: true,
+    models: [User, BlogPost, Comment],
 });
 
 

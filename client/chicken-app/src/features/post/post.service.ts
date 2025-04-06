@@ -3,13 +3,13 @@ import { computed, inject, Injectable, WritableSignal } from '@angular/core';
 import { API_URL } from '../../environment';
 import { catchError, of, throwError } from 'rxjs';
 
-export type Post = {
+export type BlogPost = {
   id: number,
-  image: string,
+  author: string,  
   title: string,
-  description: string,
-  createdAt: Date,
-  createdBy: string
+  subtitle: string,
+  date: Date,
+  imgUrl: string,
 }
 
 @Injectable({
@@ -21,15 +21,15 @@ export class PostService {
   URL = `${API_URL}/posts`
 
   findAll() {
-    return httpResource<Post[]>(() => this.URL)
+    return httpResource<BlogPost[]>(() => this.URL)
   }
 
   findById(id: number) {
-    return httpResource<Post[]>(() => `${this.URL}/${id}`)
+    return httpResource<BlogPost[]>(() => `${this.URL}/${id}`)
   }
 
-  save(post: Post) {
-    return this.http.post<Post>(this.URL, post)
+  save(post: BlogPost) {
+    return this.http.post<BlogPost>(this.URL, post)
   }
 
   deleteById(id: number) {
@@ -38,8 +38,8 @@ export class PostService {
     )
   }
 
-  update(post: Post) {
-    return this.http.put<Post>(this.URL, post).pipe(
+  update(post: BlogPost) {
+    return this.http.put<BlogPost>(this.URL, post).pipe(
       catchError(() => of(undefined))
     )
   }
