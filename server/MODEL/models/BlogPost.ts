@@ -1,5 +1,5 @@
 // models/BlogPost.ts
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, AllowNull } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany, AllowNull, CreatedAt } from 'sequelize-typescript';
 import { User } from './User.ts';
 import { Comment } from './Comment.ts';
 
@@ -28,6 +28,7 @@ export class BlogPost extends Model {
 
     @AllowNull(false)
     @Column(DataType.DATE)
+    @CreatedAt
     date!: Date;
 
     @Column(DataType.STRING)
