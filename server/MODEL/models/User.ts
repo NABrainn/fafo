@@ -1,5 +1,5 @@
 // models/User.ts
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement, Unique, AllowNull, HasMany } from 'sequelize-typescript';
+import {Table, Column, Model, DataType, PrimaryKey, AutoIncrement, Unique, AllowNull, HasMany} from "sequelize-typescript";
 import { BlogPost } from './BlogPost.ts';
 import { Comment } from './Comment.ts';
 
@@ -8,7 +8,7 @@ export class User extends Model {
     @PrimaryKey
     @AutoIncrement
     @Column(DataType.INTEGER)
-    id!: number;
+    declare id: number;
 
     @AllowNull(false)
     @Column(DataType.STRING)

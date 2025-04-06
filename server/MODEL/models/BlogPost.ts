@@ -8,7 +8,7 @@ export class BlogPost extends Model {
     @PrimaryKey
     @AutoIncrement
     @Column(DataType.INTEGER)
-    id!: number;
+    declare id: number;
 
     @ForeignKey(() => User)
     @AllowNull(false)
