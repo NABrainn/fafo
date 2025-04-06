@@ -1,8 +1,4 @@
-import { Comment } from '../models/Comment.ts';
-import { User } from '../models/User.ts';
-import { BlogPost } from '../models/BlogPost.ts';
-import { CrudRepository } from "./CrudRepository.ts";
-import { sequelize } from "../database/initializer.ts";
+
 
 // export class CommentRepository {
 //     async findById(id: number): Promise<Comment | null> {
@@ -10,6 +6,12 @@ import { sequelize } from "../database/initializer.ts";
 //             include: [User, BlogPost, { model: Comment, as: 'parentComment' }],
 //         });
 //     }
+
+import { sequelize } from "../config/db-config.ts";
+import { BlogPost } from "../models/BlogPost.ts";
+import { Comment } from "../models/Comment.ts";
+import { User } from "../models/User.ts";
+import { CrudRepository } from "./CrudRepository.ts";
 
 //     async findByPostId(postId: number): Promise<Comment[]> {
 //         return Comment.findAll({

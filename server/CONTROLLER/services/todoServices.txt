@@ -1,3 +1,0 @@
-Contains business logic
-
-calls the dao and prepares data for controller

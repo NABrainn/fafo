@@ -1,9 +1,10 @@
 // deno-lint-ignore-file require-await
+
+import { sequelize } from "../config/db-config.ts";
+import { BlogPost } from "../models/BlogPost.ts";
+import { Comment } from "../models/Comment.ts";
 import { User } from "../models/User.ts";
-import { BlogPost } from '../models/BlogPost.ts';
-import { Comment } from '../models/Comment.ts';
 import { CrudRepository } from "./CrudRepository.ts";
-import { sequelize } from "../database/initializer.ts";
 
 // export class UserRepository {
 
