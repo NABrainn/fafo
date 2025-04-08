@@ -1,10 +1,10 @@
 {
   "tasks": {
     "dev": "deno run --allow-env --allow-net --watch src/main.ts",
-    "drizzle-generate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit generate",
-    "drizzle-push": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-sys --allow-run npm:drizzle-kit push",
-    "drizzle-pull": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit pull",
-    "drizzle-migrate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit migrate"
+    "generate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit generate",
+    "push": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-sys --allow-run npm:drizzle-kit push",
+    "pull": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit pull",
+    "migrate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit migrate"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
