@@ -1,3 +1,0 @@
-Handles HTTP requests
-
-validates inputs and wysyła dane dalej do services
