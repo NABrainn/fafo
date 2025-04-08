@@ -1,16 +1,18 @@
 {
   "tasks": {
-    "dev": "deno run --allow-net --allow-env --allow-read --watch main.ts"
+    "dev": "deno run --allow-env --allow-net --watch src/main.ts",
+    "drizzle-generate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit generate",
+    "drizzle-push": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-sys --allow-run npm:drizzle-kit push",
+    "drizzle-pull": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit pull",
+    "drizzle-migrate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit migrate"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
-    "express": "npm:express@4.21.2",
-    "pg": "npm:pg@^8.14.1",
-    "sequelize": "npm:sequelize@^6.37.6",
-    "sequelize-typescript": "npm:sequelize-typescript@^2.1.4"
-  },
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "@types/pg": "npm:@types/pg@^8.11.11",
+    "dotenv": "npm:dotenv@^16.4.7",
+    "drizzle-kit": "npm:drizzle-kit@^0.30.6",
+    "drizzle-orm": "npm:drizzle-orm@^0.41.0",
+    "hono": "npm:hono@^4.7.5",
+    "pg": "npm:pg@^8.14.1"
   }
 }
