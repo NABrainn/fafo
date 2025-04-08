@@ -7,11 +7,7 @@ const { Pool } = pg
 
 export const db = drizzle({ 
     client: new Pool({
-        host: Deno.env.get("PG_HOST") || "localhost",
-        port: parseInt(Deno.env.get("PG_PORT") || "5432"),
-        database: Deno.env.get("PG_DATABASE") || "blog",
-        user: Deno.env.get("PG_USERNAME") || "postgres",
-        password: Deno.env.get("PG_PASSWORD") || "postgres",
+        connectionString: Deno.env.get("DATABASE_URL") || "postgresql://postgres:postgres@localhost:5440/blog"
     }),
     schema: { comments, blogPosts, users } 
 })
