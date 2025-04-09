@@ -1,6 +1,5 @@
 import { db } from "../db.ts";
 import { BlogPost, blogPosts } from "../schema/blogPosts.ts";
-import { comments } from "../schema/comments.ts";
 import { eq } from "drizzle-orm/expressions";
 
 export class BlogPostRepository {
@@ -23,17 +22,18 @@ export class BlogPostRepository {
         }).returning();
         return inserted[0]
     }
-    async updateById (id: number, data: BlogPost) {
-         const updated = await this.pool.update(blogPosts).set({
-           ...blogPosts,
+    async updateById (id: number, data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {
+        const selected = await this.findById(id)
+        const updated = await this.pool.update(blogPosts).set({
+            ...selected,
            title: data.title,
            subtitle: data.subtitle,
            imgUrl: data.imgUrl
-         }).where(eq(comments.id, id)).returning();
-         return updated[0]
+        }).where(eq(blogPosts.id, id)).returning();
+        return updated[0]
     }
     async deleteById (id: number) {
-        return await this.pool.delete(blogPosts).where(eq(comments.id, id))
+        return await this.pool.delete(blogPosts).where(eq(blogPosts.id, id))
     }
 }
 
