@@ -1,9 +1,8 @@
 import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm/relations";
-import { comments } from "./comments.ts";
 import { users } from "./users.ts";
+import { relations } from "drizzle-orm/relations";
 
-export type BlogPost = typeof blogPosts.$inferSelect
+export type BlogPost = typeof blogPosts.$inferSelect | typeof blogPosts.$inferInsert
 
 export const blogPosts = pgTable('blog_posts', {
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
@@ -15,10 +14,9 @@ export const blogPosts = pgTable('blog_posts', {
     authorId: integer('author_id').references(() => users.id, {onDelete: 'cascade'}).notNull(),
 })
 
-export const blogPostRelations = relations(blogPosts, ({one, many}) => ({
-    author: one(users, {
-        fields: [blogPosts.authorId],
-        references: [users.id]
-    }),
-    comments: many(comments)
+export const blogPostsRelations = relations(blogPosts, ({ one }) => ({
+    author: one(users, { 
+        fields: [blogPosts.authorId], 
+        references: [users.id] 
+    })
 }))

@@ -5,16 +5,18 @@ import { blogPosts } from "./schema/blogPosts.ts";
 import { users } from "./schema/users.ts";
 const { Pool } = pg
 
+//DEVELOPMENT DB
 export const db = drizzle({ 
     client: new Pool({
-        connectionString: Deno.env.get("DATABASE_URL") || "postgresql://postgres:postgres@localhost:5440/blog"
+        connectionString: Deno.env.get('DATABASE_DEV_URL')
     }),
     schema: { comments, blogPosts, users } 
 })
 
-export const DB_TEST = drizzle({ 
+//TESTING DB
+export const dbTest = drizzle({
     client: new Pool({
-        connectionString: Deno.env.get("DATABASE_TEST_URL") || "postgresql://postgres:postgres@localhost:5450/blog"
+        connectionString: Deno.env.get('DATABASE_TEST_URL')
     }),
     schema: { comments, blogPosts, users } 
 })
