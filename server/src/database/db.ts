@@ -11,3 +11,10 @@ export const db = drizzle({
     }),
     schema: { comments, blogPosts, users } 
 })
+
+export const DB_TEST = drizzle({ 
+    client: new Pool({
+        connectionString: Deno.env.get("DATABASE_TEST_URL") || "postgresql://postgres:postgres@localhost:5450/blog"
+    }),
+    schema: { comments, blogPosts, users } 
+})
