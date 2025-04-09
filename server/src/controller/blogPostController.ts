@@ -1,9 +1,10 @@
 import { Hono } from "hono";
-import { blogPostRepository } from "../database/repository/blogPostRepository.ts";
-import { BlogPost } from "../database/schema/blogPosts.ts";
-
+import { BlogPost, blogPosts } from "../database/schema/blogPosts.ts";
+import { BlogPostRepository } from "../database/repository/blogPostRepository.ts";
+import { db } from "../database/db.ts";
 
 export const blogPostController = new Hono()
+const blogPostRepository = new BlogPostRepository(db)
 
 blogPostController.get('/:id', async (c) => {
     const id = c.req.param('id');
@@ -20,7 +21,7 @@ blogPostController.get('/', async (c) => {
     return c.json(blogPosts, 200);
 })
 blogPostController.post('/', async (c) => {
-    const body = await c.req.json<BlogPost>()
+    const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferInsert>>()
     const blogPost = await blogPostRepository.create(body)
     if(!blogPost)
         return c.json({error: 'Nie znaleziono posta'}, 404)
@@ -28,14 +29,14 @@ blogPostController.post('/', async (c) => {
     return c.json(blogPost, 200);
 })
 blogPostController.put('/:id', async (c) => {
-    const body = await c.req.json<BlogPost>()
+    const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferSelect>>()
     const blogPost = await blogPostRepository.updateById(body.id, body)
     if(!blogPost) 
         return c.json({error: 'Nie znaleziono posta'}, 404)
     return c.json(blogPost, 200);
 })
 blogPostController.delete('/:id', async (c) => {
-    const body = await c.req.json<BlogPost>()
+    const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferSelect>>()
     const blogPost = await blogPostRepository.deleteById(body.id)
     if(blogPost.rowCount === 0) 
         return c.json({error: 'Nie znaleziono posta'}, 404)
