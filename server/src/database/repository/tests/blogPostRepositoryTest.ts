@@ -8,21 +8,22 @@ import { blogPosts } from "../../schema/blogPosts.ts";
 import { users } from "../../schema/users.ts";
 import pg from "pg";
 import { is } from "drizzle-orm";
+import schema from "../../schema/schema.ts";
+import { CommentRepository } from "../commentRepository.ts";
 const { Pool } = pg
-
 Deno.test("should create blog post for an existing user", async (t) => {
     const dbTest = drizzle({
         client: new Pool({
             connectionString: Deno.env.get('DATABASE_TEST_URL')
         }),
-        schema: { comments, blogPosts, users } 
+        schema: schema 
     })
     
     const blogPostRepository = new BlogPostRepository(dbTest)
     const userRepository = new UserRepository(dbTest)
 
     await t.step('should setup', async () => {
-        await beforeEach(dbTest)
+        await beforeEach()
     })
     await t.step('perform database operation', async () => {
         const user = await userRepository.create({
@@ -52,14 +53,14 @@ Deno.test("should find blog post with author FK", async (t) => {
         client: new Pool({
             connectionString: Deno.env.get('DATABASE_TEST_URL')
         }),
-        schema: { comments, blogPosts, users } 
+        schema: schema 
     })
 
     const blogPostRepository = new BlogPostRepository(dbTest)
     const userRepository = new UserRepository(dbTest)
 
     await t.step('should setup', async () => {
-        await beforeEach(dbTest)
+        await beforeEach()
     })
     await t.step('should perform database operation', async () => {
         for(let i = 0; i <= 10; i++) {
@@ -76,8 +77,8 @@ Deno.test("should find blog post with author FK", async (t) => {
             authorId: 6
             });
         const blogPost = blogPostRepository.findById(1);
-        assertEquals((await blogPost).authorId, 6)
-        assertEquals((await blogPost).id, 1)
+        assertEquals((await blogPost)?.authorId, 6)
+        assertEquals((await blogPost)?.id, 1)
     })
     await t.step('should teardown', async () => {
         await afterEach(dbTest)
@@ -90,14 +91,16 @@ Deno.test('should find all blog posts belonging to a user', async (t) => {
         client: new Pool({
             connectionString: Deno.env.get('DATABASE_TEST_URL')
         }),
-        schema: { comments, blogPosts, users } 
+        schema: schema 
     })
 
     const blogPostRepository = new BlogPostRepository(dbTest)
     const userRepository = new UserRepository(dbTest)
+    const commentRepository = new CommentRepository(dbTest)
+
 
     await t.step('should setup', async () => {
-        await beforeEach(dbTest)
+        await beforeEach()
     })
     await t.step('should perform database operation', async () => {
         for(let i = 0; i <= 10; i++) {
@@ -117,8 +120,16 @@ Deno.test('should find all blog posts belonging to a user', async (t) => {
         }
 
         const blogPosts = await blogPostRepository.findAll();
+        commentRepository.create({
+            content: 'nice read :D:D',
+            authorId: 1,
+            blogPostId: 1
+        })
+        const blogPostId1 = await blogPostRepository.findById(1)
+        
         assertEquals(blogPosts.every(post => post.authorId === 6), true)
         assertEquals(blogPosts.length, 11)
+        assertEquals(blogPostId1?.comments.length, 1)
     })
 
     await t.step('should teardown', async () => {
@@ -132,14 +143,14 @@ Deno.test('should update a post', async (t) => {
         client: new Pool({
             connectionString: Deno.env.get('DATABASE_TEST_URL')
         }),
-        schema: { comments, blogPosts, users } 
+        schema: schema 
     })
 
     const blogPostRepository = new BlogPostRepository(dbTest)
     const userRepository = new UserRepository(dbTest)
 
     await t.step('should setup', async () => {
-        await beforeEach(dbTest)
+        await beforeEach()
     })
     await t.step('should perform database operation', async () => {
         for(let i = 0; i <= 10; i++) {
@@ -166,7 +177,7 @@ Deno.test('should update a post', async (t) => {
                 imgUrl: 'updated post url',
                 authorId: 8
             });
-            assertEquals(blogPost.authorId, 6)
+            assertEquals(blogPost?.authorId, 6)
             assertEquals(blogPosts.title, 'updated post title')
             assertEquals(blogPosts.subtitle, 'updated post subtitle')
             assertEquals(blogPosts.imgUrl, 'updated post url')
@@ -187,14 +198,14 @@ Deno.test('should delete a post', async (t) => {
         client: new Pool({
             connectionString: Deno.env.get('DATABASE_TEST_URL')
         }),
-        schema: { comments, blogPosts, users } 
+        schema: schema 
     })
 
     const blogPostRepository = new BlogPostRepository(dbTest)
     const userRepository = new UserRepository(dbTest)
 
     await t.step('should setup', async () => {
-        await beforeEach(dbTest)
+        await beforeEach()
     })
     await t.step('should perform database operation', async () => {
         for(let i = 0; i <= 10; i++) {
@@ -212,22 +223,12 @@ Deno.test('should delete a post', async (t) => {
                 authorId: 6
             });
         }
+        const blogPost = await blogPostRepository.findById(4);
+        assertEquals(blogPost?.id, 4);
 
-        const blogPost = await blogPostRepository.findById(4)
-        try {
-            const blogPosts = await blogPostRepository.updateById(4, {
-                title: 'updated post title',
-                subtitle: 'updated post subtitle',
-                imgUrl: 'updated post url',
-                authorId: 8
-            });
-            assertEquals(blogPost.authorId, 6)
-            assertEquals(blogPosts.title, 'updated post title')
-            assertEquals(blogPosts.subtitle, 'updated post subtitle')
-            assertEquals(blogPosts.imgUrl, 'updated post url')
-        } catch(err) {
-            console.log(`An error occurres: ${err}`);
-        }
+        await blogPostRepository.deleteById(4);
+        const deletedPost = await blogPostRepository.findById(4);
+        assertEquals(deletedPost, undefined);
 
     })
 
@@ -236,6 +237,7 @@ Deno.test('should delete a post', async (t) => {
         await dbTest.$client.end()
     })
 })
+
 
 
 
