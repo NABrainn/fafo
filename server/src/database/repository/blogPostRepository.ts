@@ -1,31 +1,38 @@
-import { db } from "../db.ts";
+import { Connection, db } from "../db.ts";
 import { BlogPost, blogPosts } from "../schema/blogPosts.ts";
 import { eq } from "drizzle-orm/expressions";
 
 export class BlogPostRepository {
 
-    private pool!: typeof db
+    private pool!: Connection
 
-    constructor(pool: typeof db) {
+    constructor(pool: Connection) {
         this.pool = pool
     }
     async findById (id: number) {
-        const selected = await this.pool.select().from(blogPosts).where(eq(blogPosts.id, id));
-        return selected[0]
+        const found = await this.pool.query.blogPosts.findFirst({
+            where: eq(blogPosts.id, id),
+            with: {
+                comments: true,
+                author: true
+            }
+        })
+        return found;
     }
     async findAll () {
-        return await this.pool.select().from(blogPosts);
+        return await this.pool.query.blogPosts.findMany({
+            with: {
+                comments: true,
+                author: true
+            }
+        })
     }
     async create (data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {
-        const inserted = await this.pool.insert(blogPosts).values({
-          ...data,
-        }).returning();
+        const inserted = await this.pool.insert(blogPosts).values(data).returning();
         return inserted[0]
     }
     async updateById (id: number, data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {
-        const selected = await this.findById(id)
         const updated = await this.pool.update(blogPosts).set({
-            ...selected,
            title: data.title,
            subtitle: data.subtitle,
            imgUrl: data.imgUrl
