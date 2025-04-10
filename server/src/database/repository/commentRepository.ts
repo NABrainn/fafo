@@ -1,32 +1,41 @@
-import { db } from "../db.ts";
+import { Connection, db } from "../db.ts";
 import { Comment, comments } from "../schema/comments.ts";
 import { eq } from "drizzle-orm/expressions";
 
 export class CommentRepository {
 
-    private pool!: typeof db
+    private pool!: Connection
 
-    constructor(pool: typeof db) {
+    constructor(pool: Connection) {
         this.pool = pool
     }
 
     async findById(id: number) {
-        const found = await this.pool.select().from(comments).where(eq(comments.id, id));
-        return found[0]
+        return await this.pool.query.comments.findFirst({
+            where: eq(comments.id, id),
+            with: {
+                parentComment: true,
+                author: true,
+                blogPost: true
+            }
+        })
     }
     async findAll() {
-        return await db.select().from(comments)
+        return await this.pool.query.comments.findMany({
+            with: {
+                parentComment: true,
+                author: true,
+                blogPost: true
+            }
+        })    
     }
-    async create(data: Comment) {
-        const created = await this.pool.insert(comments).values({
-        ...data,
-        }).returning();
+    async create(data: Extract<Comment, typeof comments.$inferInsert>) {
+        const created = await this.pool.insert(comments).values(data).returning();
         return created[0]
     }
-    async updateById (id: number, data: Comment) {
+    async updateById (id: number, data: Extract<Comment, typeof comments.$inferInsert>) {
         const updated = await this.pool.update(comments).set({
-        ...comments,
-        content: data.content
+            content: data.content
         }).where(eq(comments.id, id)).returning();
         return updated[0]
     }
