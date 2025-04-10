@@ -8,7 +8,7 @@ import { blogPosts } from "../../schema/blogPosts.ts";
 import { users } from "../../schema/users.ts";
 import pg from "pg";
 import { is } from "drizzle-orm";
-import schema from "../../schema/schema.ts";
+import schema from "../../schema/exports/schema.ts";
 import { CommentRepository } from "../commentRepository.ts";
 const { Pool } = pg
 Deno.test("should create blog post for an existing user", async (t) => {
