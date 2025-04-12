@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { Comment, comments } from "../database/schema/comments.ts";
 import { CommentRepository } from "../database/repository/commentRepository.ts";
-import { db } from "../database/db.ts";
+import { db } from "../database/database.ts";
 
 export const commentController = new Hono()
 const commentRepository = new CommentRepository(db)

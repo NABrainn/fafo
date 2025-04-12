@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { UserRepository } from "../database/repository/userRepository.ts";
 import { User, users } from "../database/schema/users.ts";
-import { db } from "../database/db.ts";
+import { db } from "../database/database.ts";
 
 export const userController = new Hono()
 const userRepository = new UserRepository(db)

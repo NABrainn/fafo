@@ -1,4 +1,4 @@
-import { Connection } from "../../db.ts";
+import { Connection } from "../../database.ts";
 
 export const beforeEach = async () => {
     const command = new Deno.Command(Deno.execPath(), {
