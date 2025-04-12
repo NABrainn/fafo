@@ -1,5 +1,5 @@
 import { User, users } from "../schema/users.ts";
-import { Connection } from "../db.ts";
+import { Connection } from "../database.ts";
 import { eq } from "drizzle-orm/expressions";
 
 export class UserRepository {

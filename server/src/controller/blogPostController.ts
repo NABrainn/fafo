@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { BlogPost, blogPosts } from "../database/schema/blogPosts.ts";
 import { BlogPostRepository } from "../database/repository/blogPostRepository.ts";
-import { db } from "../database/db.ts";
+import { db } from "../database/database.ts";
 
 export const blogPostController = new Hono()
 const blogPostRepository = new BlogPostRepository(db)

@@ -1,4 +1,4 @@
-import { Connection, db } from "../db.ts";
+import { Connection, db } from "../database.ts";
 import { Comment, comments } from "../schema/comments.ts";
 import { eq } from "drizzle-orm/expressions";
 
