@@ -5,3 +5,13 @@ przemysleć jakie funkcje do controller
 napisać funkcje do controller
 
 zaprojektować widok posta (po wywołaniu z listy)
+
+Roadmap 26.04-24.05
+
+autentykacja i autoryzacja z wykorzystaniem JWT
+integracja z zewnętrznym API
+komunikacja frontendu z API
+testy jednostkowe (do wszystkiego co zostało zaimplementowane)
+integracja SWAGGERA
+
+
