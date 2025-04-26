@@ -29,7 +29,7 @@ commentController.post('/', async (c) => {
     return c.json(comment, 200);
 })
 commentController.put('/:id', async (c) => {
-    const body = await c.req.json<Extract<Comment, typeof comments.$inferInsert>>()
+    const body = await c.req.json<Extract<Comment, typeof comments.$inferSelect>>()
     const comment = await commentRepository.updateById(body.id, body)
     if(!comment) 
         return c.json({error: 'Nie znaleziono komentarza'}, 404)
