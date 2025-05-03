@@ -20,7 +20,7 @@ export class AuthService {
   register(user: NewUser) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
       tap((res: any) => {
-        this.#router.navigate(['/login']);
+        this.#router.navigate(['/logowanie']);
       }),
       catchError((err: HttpErrorResponse) => {
         console.log(err);

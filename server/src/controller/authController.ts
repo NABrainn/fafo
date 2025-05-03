@@ -13,12 +13,12 @@ authController.post("/register", async (c) => {
   const { username, email, password } = body;
   const existingUsername = await userRepository.findByUsername(username);
   if(existingUsername) {
-    return c.json('Username taken', 409);
+    return c.json('Wprowadź inną nazwę użytkownika', 409);
   }
 
   const existingEmail = await userRepository.findByEmail(email);
   if (existingEmail) {
-    return c.json('Email taken', 409);
+    return c.json('Wprowadź inny email', 409);
   }
 
   const newUser = await userRepository.create({
@@ -37,11 +37,11 @@ authController.post("/login", async (c) => {
 
     const user = await userRepository.findByUsername(username);
     if (!user) {
-      return c.json('Invalid email or password', 401);
+      return c.json('Niepoprawny email/hasło', 401);
     }
 
     if (!await bcrypt.compare(password, user.password)) {                  
-      return c.json('Invalid email or password', 401);
+      return c.json('Niepoprawny email/hasło', 401);
     }
 
     const token = await generateJWT(user.username, user.email);
