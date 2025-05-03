@@ -6,10 +6,12 @@ napisać funkcje do controller
 
 zaprojektować widok posta (po wywołaniu z listy)
 
+
 Roadmap 26.04-24.05
 
-autentykacja i autoryzacja z wykorzystaniem JWT
+autentykacja i autoryzacja z wykorzystaniem JWT (zrobione)
 integracja z zewnętrznym API
+walidacja errorów
 komunikacja frontendu z API
 testy jednostkowe (do wszystkiego co zostało zaimplementowane)
 integracja SWAGGERA

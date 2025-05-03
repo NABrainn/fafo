@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { errorInterceptor } from './core/error-interceptors';
+import { authInterceptor } from './auth/interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,7 +11,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(
       withInterceptors([
-        errorInterceptor
+        authInterceptor
       ])
     )
   ]

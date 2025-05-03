@@ -7,10 +7,17 @@
       <img class="w-16 h-auto" src="/chick.svg" alt="obrazek pokazujący logo">
       <span class="text-accent text-2xl font-bold">Hotwings</span>
     </div>
-    <span 
-    class="text-accent text-xl underline cursor-pointer"
-    routerLink="/logowanie"
-    routerLinkActive="active">Zaloguj</span>
+    @if(!authenticated) {
+      <span 
+      class="text-accent text-xl underline cursor-pointer"
+      routerLink="/logowanie"
+      routerLinkActive="active">Zaloguj</span>
+    }
+    @else {
+      <span 
+      class="text-accent text-xl underline cursor-pointer"
+      (click)="logout()">Wyloguj</span>
+    }
   </nav>
 
   <main class="bg-primary grow-1">

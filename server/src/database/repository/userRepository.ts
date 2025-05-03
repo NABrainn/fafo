@@ -1,6 +1,7 @@
 import { User, users } from "../schema/users.ts";
 import { Connection } from "../database.ts";
 import { eq } from "drizzle-orm/expressions";
+import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
 
 export class UserRepository {
 
@@ -18,6 +19,17 @@ export class UserRepository {
             }
         })
     }
+
+    async findByUsername(username: string) {
+        return await this.pool.query.users.findFirst({
+            where: eq(users.username, username),
+            with: {
+                comments: true,
+                blogPosts: true
+            }
+        })
+    }
+
     async findAll() {
         return await this.pool.query.users.findMany({
             with: {
@@ -26,8 +38,12 @@ export class UserRepository {
             }
         })    
     }
-    async create(data: Extract<User, typeof users.$inferInsert>) {
-        const created = await this.pool.insert(users).values(data).returning();
+    async create(data: Extract<User, typeof users.$inferInsert>) {        
+        const user = {
+            ...data,
+            password: await bcrypt.hash(data.password),
+        }
+        const created = await this.pool.insert(users).values(user).returning();
         return created[0];
     }
     async updateById(id: number, data: Extract<User, typeof users.$inferInsert>) {

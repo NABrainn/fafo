@@ -19,6 +19,7 @@
     "drizzle-kit": "npm:drizzle-kit@^0.30.6",
     "drizzle-orm": "npm:drizzle-orm@^0.41.0",
     "hono": "npm:hono@^4.7.5",
+    "jose": "npm:jose@^6.0.10",
     "pg": "npm:pg@^8.14.1"
   }
 }

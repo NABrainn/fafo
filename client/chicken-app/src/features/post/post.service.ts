@@ -1,7 +1,7 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { computed, inject, Injectable, WritableSignal } from '@angular/core';
-import { API_URL } from '../../environment';
 import { catchError, of, throwError } from 'rxjs';
+import { environment } from '../../environments/environment.development';
 
 export type BlogPost = {
   id: number,
@@ -18,7 +18,7 @@ export type BlogPost = {
 export class PostService {
 
   http = inject(HttpClient)
-  URL = `${API_URL}/posts`
+  URL = `${environment.apiUrl}/posts`
 
   findAll() {
     return httpResource<BlogPost[]>(() => this.URL)
