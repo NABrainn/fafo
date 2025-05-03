@@ -3,7 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { NewUser } from './components/register-form/register-form.component';
 import { User } from './components/login-form/login-form.component';
 import { environment } from '../../environments/environment.development';
-import { catchError, tap } from 'rxjs';
+import { catchError, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -49,16 +49,16 @@ export class AuthService {
 
   verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}).pipe(
-      tap((res: any) => {
-        if (res) {
-          this.authenticated.set(true);
+      map(() => true),
+      tap((authenticated: boolean) => {
+        if (authenticated) {
+          this.authenticated.set(authenticated);
         }
       }),
       catchError((err: HttpErrorResponse) => {
         this.authenticated.set(false);
-        this.#message.set(err.error);
         this.#router.navigate(['logowanie']);
-        throw new Error(err.error);
+        return of(false);
       })
     )
   }
