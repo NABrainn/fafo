@@ -5,13 +5,9 @@ import { Component, computed, inject, input, OnInit, Signal, signal } from '@ang
   imports: [],
   templateUrl: './post-card.component.html'
 })
-export class PostCardComponent implements OnInit {
+export class PostCardComponent {
 
   imgPath = input.required<string>()
-  createdDate: string = ''
-  createdBy: string = ''
-
-  ngOnInit(): void {
-    this.createdBy = 'Super User'
-  }
+  date = signal<string>('');
+  author = input<string>('');
 }

@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { UserRepository } from "../database/repository/userRepository.ts";
 import { db } from "../database/database.ts";
-import { generateJWT } from "../util/jwtUtil.ts";
+import { generateJWT, verifyJWT } from "../util/jwtUtil.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
+import { jwtVerify } from "jose";
 
 
 export const authController = new Hono();
@@ -47,4 +48,20 @@ authController.post("/login", async (c) => {
     const token = await generateJWT(user.username, user.email);
     
     return c.json({ token }, 200);
+});
+
+authController.post('/verify', async (c) => {
+  const authHeader = c.req.header('Authorization')
+  if (!authHeader) {
+    return c.json('Brak tokenu', 401);
+  }
+  const token = authHeader.split(' ')[1]
+  if (!token) {
+    return c.json('Brak tokenu', 401);
+  }
+  const payload = await verifyJWT(token)
+  if (!payload) {
+    return c.json('Niepoprawny token', 401);
+  }
+  return c.json(200);
 });

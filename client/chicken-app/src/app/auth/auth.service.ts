@@ -3,7 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { NewUser } from './components/register-form/register-form.component';
 import { User } from './components/login-form/login-form.component';
 import { environment } from '../../environments/environment.development';
-import { catchError, tap } from 'rxjs';
+import { catchError, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class AuthService {
   #router = inject(Router);
 
   authenticated = signal<boolean>(false)
-  message = signal<string>('');
+  #message = signal<string>('');
 
   register(user: NewUser) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
@@ -23,9 +23,7 @@ export class AuthService {
         this.#router.navigate(['/logowanie']);
       }),
       catchError((err: HttpErrorResponse) => {
-        console.log(err);
-
-        this.message.set(err.error);
+        this.#message.set(err.error);
         throw new Error(err.error);
       })
     )
@@ -37,18 +35,32 @@ export class AuthService {
         if (res.token) {
           localStorage.setItem('token', res.token);
           this.authenticated.set(true);
-          this.message.set('Zalogowano pomyślnie');
+          this.#message.set('Zalogowano pomyślnie');
           this.navigateHome()
         }
       }),
       catchError((err: HttpErrorResponse) => {
-        console.log(err);
-        
         this.authenticated.set(false);
-        this.message.set(err.error);
+        this.#message.set(err.error);
         throw new Error(err.error);
       })
     );
+  }
+
+  verify() {
+    return this.#http.post(`${environment.authUrl}/verify`, {}).pipe(
+      map(() => true),
+      tap((authenticated: boolean) => {
+        if (authenticated) {
+          this.authenticated.set(authenticated);
+        }
+      }),
+      catchError((err: HttpErrorResponse) => {
+        this.authenticated.set(false);
+        this.#router.navigate(['logowanie']);
+        return of(false);
+      })
+    )
   }
 
   logout() {
@@ -59,5 +71,13 @@ export class AuthService {
 
   navigateHome() {
     this.#router.navigate(['/']);
+  }
+
+  clearMessage() {
+    this.#message.set('');
+  }
+
+  get message() {
+    return this.#message;
   }
 }

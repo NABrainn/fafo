@@ -22,7 +22,9 @@ blogPostController.get('/', async (c) => {
 })
 blogPostController.post('/', async (c) => {
     const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferInsert>>()
+
     const blogPost = await blogPostRepository.create(body)
+    
     if(!blogPost)
         return c.json({error: 'Nie udało się utworzyć posta'}, 400)
     

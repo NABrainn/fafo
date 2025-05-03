@@ -2,6 +2,7 @@ import { Component, computed, inject, linkedSignal, OnDestroy, OnInit, signal } 
 import { AuthService } from '../../auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 export type NewUser = {
   username: string;
@@ -14,9 +15,13 @@ export type NewUser = {
   imports: [
     ReactiveFormsModule,
     RouterLinkActive,
-    RouterLink
+    RouterLink,
+    NgClass
   ],
-  templateUrl: './register-form.component.html'
+  templateUrl: './register-form.component.html',
+  host: {
+    class: 'bg-primary grow-1'
+  }
 })
 export class RegisterFormComponent implements OnInit, OnDestroy {
 
@@ -51,6 +56,6 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.registerService.message.set('');
+    this.registerService.clearMessage();
   }
 }

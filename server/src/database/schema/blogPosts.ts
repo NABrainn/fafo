@@ -12,13 +12,13 @@ export const blogPosts = pgTable('blog_posts', {
     createdAt: timestamp('created_at').defaultNow().notNull(),
     imgUrl: varchar('img_url').notNull(),
 
-    authorId: integer('author_id').references(() => users.id, {onDelete: 'cascade'}).notNull(),
+    author: varchar('username').references(() => users.username, {onDelete: 'cascade'}).notNull(),
 })
 
 export const blogPostsRelations = relations(blogPosts, ({ one, many }) => ({
     author: one(users, { 
-        fields: [blogPosts.authorId], 
-        references: [users.id] 
+        fields: [blogPosts.author], 
+        references: [users.username] 
     }),
     comments: many(comments)
 }))
