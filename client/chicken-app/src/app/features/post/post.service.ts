@@ -1,13 +1,14 @@
 import { HttpClient, httpResource } from '@angular/common/http';
-import { computed, inject, Injectable, WritableSignal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, of, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 
 export type BlogPost = {
-  id: number,
+  id?: number,
   author: string,  
   title: string,
   subtitle: string,
+  content: string,
   date: Date,
   imgUrl: string,
 }
@@ -19,9 +20,10 @@ export class PostService {
 
   http = inject(HttpClient)
   URL = `${environment.apiUrl}/posts`
+  #posts = httpResource<BlogPost[]>(() => this.URL)
 
-  findAll() {
-    return httpResource<BlogPost[]>(() => this.URL)
+  loadPosts() {
+    return this.#posts
   }
 
   findById(id: number) {
@@ -42,5 +44,9 @@ export class PostService {
     return this.http.put<BlogPost>(this.URL, post).pipe(
       catchError(() => of(undefined))
     )
+  }
+
+  reload() {
+    this.#posts.reload()
   }
 }

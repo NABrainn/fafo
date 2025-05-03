@@ -1,0 +1,46 @@
+<form 
+class="min-h-4/5 w-3/5 bg-primary rounded p-16 flex flex-col gap-20" 
+(click)="$event.stopPropagation()"
+(ngSubmit)="onSubmit($event)"
+[formGroup]="form">
+
+    <h2 class="text-3xl font-semibold text-tertiary">Kreator postów</h2>
+    <div class="flex flex-col">
+        <label for="title">Tytuł</label>
+        <input 
+        type="text" 
+        id="title"
+        class="min-h-10 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary"
+        [formControl]="form.controls.title">
+        <span 
+        class="text-error"
+        [ngClass]="form.controls.title.invalid && form.controls.title.touched ? '' : 'invisible'">Pole nie może być puste</span>
+    </div>
+    <div class="flex flex-col">
+        <label for="subtitle">Podtytuł</label>
+        <textarea 
+        id="subtitle"
+        class="min-h-30 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
+        [formControl]="form.controls.subtitle"></textarea>
+        <span 
+        class="text-error"
+        [ngClass]="form.controls.subtitle.invalid && form.controls.subtitle.touched ? '' : 'invisible'">Pole nie może być puste</span>
+    </div>
+    <div class="flex flex-col">
+        <label for="content">Treść</label>
+        <textarea 
+        id="content"
+        class="min-h-75 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
+        [formControl]="form.controls.content"></textarea>
+        <span 
+        class="text-error"
+        [ngClass]="form.controls.content.invalid && form.controls.content.touched ? '' : 'invisible'">Pole nie może być puste</span>
+    </div>
+    <div class="flex justify-between">
+        <a class="cursor-pointer underline text-tertiary">Dodaj zdjęcie</a>
+        <button 
+        type="submit" 
+        class="cursor-pointer bg-accent disabled:bg-accent/50 text-neutral-light py-2 px-8 rounded"
+        [disabled]="form.invalid">Zatwierdź</button>
+    </div>
+</form>

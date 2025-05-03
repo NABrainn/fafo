@@ -1,30 +1,44 @@
-@if(posts.error()) {
-    <div class="flex flex-col justify-center items-center bg-secondary m-20 min-h-40 w-2/5 mx-auto rounded">
-        <p class="text-lg">Wystąpił błąd podczas pobierania danych</p>
-        <span>Kliknij 
-            <a 
-            class="text-accent cursor-pointer select-none"
-            (click)="posts.reload()">tutaj</a> aby spróbować jeszcze raz
-        </span>
-    </div>
-}
-@if(!posts.value() && !posts.error()) {
-    <p class="text-lg pt-20 text-center">Lista postów jest obecnie pusta</p>
-}
-<div 
-class="
-grid-cols-1
-md:grid-cols-2
-grid 2xl:grid-cols-3 gap-8 mx-auto 2xl:w-3/5 p-6">
-    @for(post of posts.value(); track $index) {
-        <app-post-card
-        [imgPath]="post.imgUrl">
-            <h2 ngProjectAs="title">
-                {{post.title}}
-            </h2>
-            <span ngProjectAs="description">
-                {{post.subtitle}}
+<div class="bg-primary grow-1 flex flex flex-col justify-between">
+    @if(posts.error()) {
+        <div class="flex flex-col justify-center items-center bg-secondary m-20 min-h-40 w-2/5 mx-auto rounded">
+            <p class="text-lg">Wystąpił błąd podczas pobierania danych</p>
+            <span>Kliknij 
+                <a 
+                class="text-accent cursor-pointer select-none"
+                (click)="posts.reload()">tutaj</a> aby spróbować jeszcze raz
             </span>
-        </app-post-card>
+        </div>
     }
+    @if(posts.value()?.length === 0) {
+        <div class="flex flex-col items-center">
+            <p class="text-xl pt-20 text-center">Lista postów jest obecnie pusta</p>
+            <p>[...]</p>
+        </div>
+    }
+    @else {
+        <div 
+        class="
+        grid grid-cols-1
+        md:grid-cols-2
+        2xl:grid-cols-3 gap-8 mx-auto 2xl:w-3/5 p-6">
+            @for(post of posts.value(); track $index) {
+                <app-post-card
+                [imgPath]="post.imgUrl">
+                    <h2 ngProjectAs="title">
+                        {{post.title}}
+                    </h2>
+                    <span ngProjectAs="description">
+                        {{post.subtitle}}
+                    </span>
+                </app-post-card>
+            }
+        </div>
+    }
+    <router-outlet></router-outlet>
+    <button 
+    class="self-end py-4 px-12 m-16 rounded cursor-pointer bg-accent text-neutral-light"
+    routerLink="/posty/nowy"
+    routerLinkActive="active">
+        Wstaw nowy post
+    </button>
 </div>

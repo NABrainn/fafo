@@ -2,7 +2,7 @@
   <nav class="flex justify-between items-center bg-secondary px-6 py-2">
     <div 
     class="flex items-center gap-2 cursor-pointer select-none"
-    routerLink="/posty"
+    routerLink="/"
     routerLinkActive="active">
       <img class="w-16 h-auto" src="/chick.svg" alt="obrazek pokazujący logo">
       <span class="text-accent text-2xl font-bold">Hotwings</span>
@@ -19,10 +19,7 @@
       (click)="logout()">Wyloguj</span>
     }
   </nav>
-
-  <main class="bg-primary grow-1">
     <router-outlet></router-outlet>
-  </main>
 
   <footer class="bg-secondary text-center">
       <span class="text-center">footer</span>
