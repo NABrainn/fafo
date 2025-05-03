@@ -24,7 +24,7 @@ userController.post('/', async (c) => {
     const body = await c.req.json<Extract<User, typeof users.$inferInsert>>()
     const user = await userRepository.create(body)
     if(!user) 
-        return c.json({error: 'Nie znaleziono użytkownika'}, 404)
+        return c.json({error: 'Nie udało się utworzyć użytkownika'}, 404)
     
     return c.json(user, 200);
 })

@@ -24,7 +24,7 @@ commentController.post('/', async (c) => {
     const body = await c.req.json<Extract<Comment, typeof comments.$inferInsert>>()
     const comment = await commentRepository.create(body)
     if(!comment) 
-        return c.json({error: 'Nie znaleziono komentarza'}, 404)
+        return c.json({error: 'Nie udało się utworzyć komentarza'}, 404)
     
     return c.json(comment, 200);
 })
