@@ -18,7 +18,10 @@ export type NewUser = {
     RouterLink,
     NgClass
   ],
-  templateUrl: './register-form.component.html'
+  templateUrl: './register-form.component.html',
+  host: {
+    class: 'bg-primary grow-1'
+  }
 })
 export class RegisterFormComponent implements OnInit, OnDestroy {
 

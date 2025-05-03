@@ -17,7 +17,10 @@ export type User = {
     RouterLink,
     NgClass
   ],
-  templateUrl: './login-form.component.html'
+  templateUrl: './login-form.component.html',
+  host: {
+    class: 'bg-primary grow-1'
+  }
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
   
