@@ -15,7 +15,7 @@ export class AuthService {
   #router = inject(Router);
 
   authenticated = signal<boolean>(false)
-  message = signal<string>('');
+  #message = signal<string>('');
 
   register(user: NewUser) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
@@ -25,7 +25,7 @@ export class AuthService {
       catchError((err: HttpErrorResponse) => {
         console.log(err);
 
-        this.message.set(err.error);
+        this.#message.set(err.error);
         throw new Error(err.error);
       })
     )
@@ -37,7 +37,7 @@ export class AuthService {
         if (res.token) {
           localStorage.setItem('token', res.token);
           this.authenticated.set(true);
-          this.message.set('Zalogowano pomyślnie');
+          this.#message.set('Zalogowano pomyślnie');
           this.navigateHome()
         }
       }),
@@ -45,7 +45,7 @@ export class AuthService {
         console.log(err);
         
         this.authenticated.set(false);
-        this.message.set(err.error);
+        this.#message.set(err.error);
         throw new Error(err.error);
       })
     );
@@ -59,5 +59,13 @@ export class AuthService {
 
   navigateHome() {
     this.#router.navigate(['/']);
+  }
+
+  clearMessage() {
+    this.#message.set('');
+  }
+
+  get message() {
+    return this.#message;
   }
 }

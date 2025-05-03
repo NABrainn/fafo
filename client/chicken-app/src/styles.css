@@ -12,10 +12,12 @@
     --color-secondary: #A0C878;
     --color-tertiary: #143D60;
     --color-accent: #EB5B00;
+    
 }
 
 @theme static {
     --color-neutral-light: var(--color-neutral-100);
     --color-neutral-dark: var(--color-neutral-900);
+    --color-error: var(--color-red-600)
 }
 

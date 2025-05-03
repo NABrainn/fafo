@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { PostService } from '../../post.service';
-import { PostCardComponent } from '../../post-card/post-card.component';
+import { PostCardComponent } from '../post-card/post-card.component';
 
 @Component({
   selector: 'app-post-list',
