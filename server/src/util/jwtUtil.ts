@@ -1,4 +1,4 @@
-import { SignJWT } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 
 const secret = new TextEncoder().encode(
     Deno.env.get("JWT_SECRET")
@@ -16,3 +16,12 @@ export const generateJWT = async (username: string, email: string) => {
     .setExpirationTime('24h')
     .sign(secret)
 }
+
+export const verifyJWT = async (jwt: string) => {
+  try {
+    const { payload } = await jwtVerify(jwt, secret);
+    return payload;
+  } catch (_error) {
+    return null;
+  }
+};

@@ -23,8 +23,6 @@ export class AuthService {
         this.#router.navigate(['/logowanie']);
       }),
       catchError((err: HttpErrorResponse) => {
-        console.log(err);
-
         this.#message.set(err.error);
         throw new Error(err.error);
       })
@@ -42,13 +40,27 @@ export class AuthService {
         }
       }),
       catchError((err: HttpErrorResponse) => {
-        console.log(err);
-        
         this.authenticated.set(false);
         this.#message.set(err.error);
         throw new Error(err.error);
       })
     );
+  }
+
+  verify() {
+    return this.#http.post(`${environment.authUrl}/verify`, {}).pipe(
+      tap((res: any) => {
+        if (res) {
+          this.authenticated.set(true);
+        }
+      }),
+      catchError((err: HttpErrorResponse) => {
+        this.authenticated.set(false);
+        this.#message.set(err.error);
+        this.#router.navigate(['logowanie']);
+        throw new Error(err.error);
+      })
+    )
   }
 
   logout() {
