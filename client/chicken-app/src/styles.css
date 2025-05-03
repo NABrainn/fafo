@@ -21,3 +21,7 @@
     --color-error: var(--color-red-600)
 }
 
+[contenteditable] {
+    outline: 0px solid transparent;
+}
+
