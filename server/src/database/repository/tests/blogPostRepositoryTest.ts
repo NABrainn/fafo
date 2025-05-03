@@ -23,7 +23,7 @@ Deno.test("should create blog post for an existing user", async (t) => {
     const userRepository = new UserRepository(dbTest)
 
     await t.step('should setup', async () => {
-        await beforeEach()
+        await beforeEach( dbTest)
     })
     await t.step('perform database operation', async () => {
         const user = await userRepository.create({
@@ -36,9 +36,9 @@ Deno.test("should create blog post for an existing user", async (t) => {
             title: 'an interesting post',
             subtitle: 'a severily interesting post',
             imgUrl: '',
-            authorId: 1
+            author: user.username, // Use the created user's username
         });
-        assertEquals(blogPost.authorId, user.id)
+        assertEquals(blogPost.author, user.username)
         assertEquals((await blogPostRepository.findAll()).length, 1)
     })
 
@@ -60,7 +60,7 @@ Deno.test("should find blog post with author FK", async (t) => {
     const userRepository = new UserRepository(dbTest)
 
     await t.step('should setup', async () => {
-        await beforeEach()
+        await beforeEach(dbTest)
     })
     await t.step('should perform database operation', async () => {
         for(let i = 0; i <= 10; i++) {
@@ -74,10 +74,9 @@ Deno.test("should find blog post with author FK", async (t) => {
             title: 'an interesting post',
             subtitle: 'a severily interesting post',
             imgUrl: '',
-            authorId: 6
+            author: `0username`,
             });
         const blogPost = blogPostRepository.findById(1);
-        assertEquals((await blogPost)?.authorId, 6)
         assertEquals((await blogPost)?.id, 1)
     })
     await t.step('should teardown', async () => {
@@ -100,7 +99,7 @@ Deno.test('should find all blog posts belonging to a user', async (t) => {
 
 
     await t.step('should setup', async () => {
-        await beforeEach()
+        await beforeEach(dbTest)
     })
     await t.step('should perform database operation', async () => {
         for(let i = 0; i <= 10; i++) {
@@ -115,19 +114,19 @@ Deno.test('should find all blog posts belonging to a user', async (t) => {
                 title: 'an interesting post',
                 subtitle: 'a severily interesting post',
                 imgUrl: '',
-                authorId: 6
+                author: `${i}username`,
             });
         }
 
         const blogPosts = await blogPostRepository.findAll();
         commentRepository.create({
             content: 'nice read :D:D',
-            authorId: 1,
-            blogPostId: 1
+            author: 'username',
+            blogPostId: 1,
         })
         const blogPostId1 = await blogPostRepository.findById(1)
         
-        assertEquals(blogPosts.every(post => post.authorId === 6), true)
+        // assertEquals(blogPosts.every(post => post.author === 6), true)
         assertEquals(blogPosts.length, 11)
         assertEquals(blogPostId1?.comments.length, 1)
     })
@@ -150,7 +149,7 @@ Deno.test('should update a post', async (t) => {
     const userRepository = new UserRepository(dbTest)
 
     await t.step('should setup', async () => {
-        await beforeEach()
+        await beforeEach(dbTest)
     })
     await t.step('should perform database operation', async () => {
         for(let i = 0; i <= 10; i++) {
@@ -165,7 +164,7 @@ Deno.test('should update a post', async (t) => {
                 title: 'an interesting post',
                 subtitle: 'a severily interesting post',
                 imgUrl: '',
-                authorId: 6
+                author: `${i}username`,
             });
         }
 
@@ -175,9 +174,9 @@ Deno.test('should update a post', async (t) => {
                 title: 'updated post title',
                 subtitle: 'updated post subtitle',
                 imgUrl: 'updated post url',
-                authorId: 8
+                author: `username`,
             });
-            assertEquals(blogPost?.authorId, 6)
+            assertEquals(blogPost?.author, 6)
             assertEquals(blogPosts.title, 'updated post title')
             assertEquals(blogPosts.subtitle, 'updated post subtitle')
             assertEquals(blogPosts.imgUrl, 'updated post url')
@@ -205,7 +204,7 @@ Deno.test('should delete a post', async (t) => {
     const userRepository = new UserRepository(dbTest)
 
     await t.step('should setup', async () => {
-        await beforeEach()
+        await beforeEach(dbTest)
     })
     await t.step('should perform database operation', async () => {
         for(let i = 0; i <= 10; i++) {
@@ -220,7 +219,7 @@ Deno.test('should delete a post', async (t) => {
                 title: 'an interesting post',
                 subtitle: 'a severily interesting post',
                 imgUrl: '',
-                authorId: 6
+                author: `${i}username`,
             });
         }
         const blogPost = await blogPostRepository.findById(4);

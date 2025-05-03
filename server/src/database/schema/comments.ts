@@ -9,14 +9,14 @@ export const comments = pgTable('comments', {
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
     content: varchar('content', {length: 50}).notNull(),
 
-    authorUsername: varchar('username').references(() => users.username, {onDelete: 'cascade'}).notNull(),
+    author: varchar('username').references(() => users.username, {onDelete: 'cascade'}).notNull(),
     blogPostId: integer('blog_post_id').references(() => blogPosts.id).notNull(),
     parentCommentId: integer('parent_comment_id')
 })
 
 export const commentsRelations = relations(comments, ({one}) => ({
     author: one(users, { 
-        fields: [comments.authorUsername], 
+        fields: [comments.author], 
         references: [users.username] 
     }),
     blogPost: one(blogPosts, { 
