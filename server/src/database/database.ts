@@ -1,8 +1,5 @@
 import { drizzle } from "drizzle-orm/node-postgres/driver";
-import { comments } from "./schema/comments.ts";
 import pg from "pg";
-import { blogPosts } from "./schema/blogPosts.ts";
-import { users } from "./schema/users.ts";
 import schema from "./schema/exports/schema.ts";
 const { Pool } = pg
 
