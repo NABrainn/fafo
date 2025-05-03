@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +13,13 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  title = 'chicken-app';
+  authService = inject(AuthService);
+
+  get authenticated() {
+    return this.authService.authenticated();
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 }
