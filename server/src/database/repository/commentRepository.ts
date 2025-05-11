@@ -1,6 +1,7 @@
 import { Connection, db } from "../database.ts";
+import { blogPosts } from "../schema/blogPosts.ts";
 import { Comment, comments } from "../schema/comments.ts";
-import { eq } from "drizzle-orm/expressions";
+import { desc, eq } from "drizzle-orm/expressions";
 
 export class CommentRepository {
 
@@ -15,7 +16,12 @@ export class CommentRepository {
             where: eq(comments.id, id),
             with: {
                 parentComment: true,
-                author: true,
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
                 blogPost: true
             }
         })
@@ -24,7 +30,12 @@ export class CommentRepository {
         return await this.pool.query.comments.findMany({
             with: {
                 parentComment: true,
-                author: true,
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
                 blogPost: true
             }
         })    
@@ -43,6 +54,22 @@ export class CommentRepository {
                 blogPost: true
             }
         })    
+    }
+    async findAllCommentsByBlogId(id: number) {
+        return await this.pool.query.comments.findMany({
+            where: eq(comments.blogPostId, id),
+            with: {
+                parentComment: true,
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
+                blogPost: true
+            },
+            orderBy: desc(comments.createdAt)
+        })
     }
     async create(data: Extract<Comment, typeof comments.$inferInsert>) {
         console.log(data);
