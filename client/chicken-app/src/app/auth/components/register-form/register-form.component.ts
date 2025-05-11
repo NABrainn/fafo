@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
 
-export type NewUser = {
+export type RegisterData = {
   username: string;
   email: string;
   password: string;
@@ -46,7 +46,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       username: this.form.value.username,
       email: this.form.value.email,
       password: this.form.value.password
-    } as NewUser).subscribe()
+    } as RegisterData).subscribe()
   }
 
   ngOnInit(): void {
