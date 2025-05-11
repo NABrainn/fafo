@@ -29,7 +29,24 @@ export class CommentRepository {
             }
         })    
     }
+    async findAllByAuthor(author: string) {
+        return await this.pool.query.comments.findMany({
+            where: eq(comments.author, author),
+            with: {
+                parentComment: true,
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
+                blogPost: true
+            }
+        })    
+    }
     async create(data: Extract<Comment, typeof comments.$inferInsert>) {
+        console.log(data);
+        
         const created = await this.pool.insert(comments).values(data).returning();
         return created[0]
     }

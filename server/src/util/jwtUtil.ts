@@ -5,14 +5,13 @@ const secret = new TextEncoder().encode(
 )
 const alg = 'HS256'
 
-export const generateJWT = async (username: string, email: string) => {
+export const generateJWT = async (username: string) => {
   return await new SignJWT()
     .setProtectedHeader({ alg })
     .setIssuedAt()
     .setIssuer('blog-post-api-iss')
     .setAudience('blog-post-api-aud')
     .setSubject(username)
-    .setSubject(email)
     .setExpirationTime('24h')
     .sign(secret)
 }
@@ -23,5 +22,5 @@ export const verifyJWT = async (jwt: string) => {
     return payload;
   } catch (_error) {
     return null;
-  }
+}
 };

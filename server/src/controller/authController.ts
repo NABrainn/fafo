@@ -45,7 +45,7 @@ authController.post("/login", async (c) => {
       return c.json('Niepoprawny email/hasło', 401);
     }
 
-    const token = await generateJWT(user.username, user.email);
+    const token = await generateJWT(user.username);
     
     return c.json({ token }, 200);
 });
@@ -63,5 +63,6 @@ authController.post('/verify', async (c) => {
   if (!payload) {
     return c.json('Niepoprawny token', 401);
   }
-  return c.json(200);
+
+  return c.json(payload.sub, 200);
 });
