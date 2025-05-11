@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
 
-export type User = {
+export type LoginData = {
   username: string;
   password: string;
 }
@@ -43,7 +43,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.loginService.login({
       username: this.form.value.username,
       password: this.form.value.password
-    } as User).subscribe()
+    } as LoginData).subscribe()
   }
 
   ngOnInit(): void {

@@ -6,6 +6,7 @@ import { userController } from "./controller/userController.ts";
 import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
 import { authController } from "./controller/authController.ts";
+import { except } from 'hono/combine';
 
 type Variables = JwtVariables
 
@@ -27,10 +28,15 @@ app.use('/auth/*', cors({
     credentials: true,
 }))
 
-app.use('/api/*', jwt({
-    secret: Deno.env.get('JWT_SECRET') || '',
-    alg: 'HS256',
-}))
+app.use('/api/*', 
+    except(
+        ['/api/posts', '/api/posts/:id'],
+        jwt({
+            secret: Deno.env.get('JWT_SECRET') || '',
+            alg: 'HS256',
+        })
+    )
+)
 
 app.route('/api/posts', blogPostController);
 app.route('/api/comments', commentController);

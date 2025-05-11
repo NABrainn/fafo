@@ -1,1 +1,31 @@
-<p>post-page works!</p>
+<div class="flex flex-col mx-auto w-4/5 gap-12">
+    <div class="flex flex-col">
+        <span class="text-8xl">{{post()?.title}}</span>
+        <span class="text-2xl">Autor: {{post()?.author?.username}}</span>
+    </div>
+    <img alt="blog post hero image">
+    <hr>
+    <span class="text-4xl">{{post()?.subtitle}}</span>
+    <hr>
+    <span class="text-2xl">{{post()?.content}}</span>
+    <hr>
+    <span class="text-2xl">Komentarze</span>
+    <div class="flex flex-col gap-6">
+        <app-post-comment
+        [blogPostId]="post()?.id"
+        (commentSaved)="onCommentSaved($event)"
+        >
+
+        </app-post-comment> 
+        @for(comment of comments(); track $index) {
+            <div>
+                <span>Autor: {{comment.author.username}}</span>
+                <app-post-comment
+                [readonly]="true"
+                [content]="comment.content">
+    
+                </app-post-comment>
+            </div>
+        }  
+    </div>
+</div>

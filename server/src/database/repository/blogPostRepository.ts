@@ -1,10 +1,10 @@
 import { Connection, db } from "../database.ts";
 import { BlogPost, blogPosts } from "../schema/blogPosts.ts";
-import { eq } from "drizzle-orm/expressions";
-import { users } from "../schema/users.ts";
+import { asc, desc, eq } from "drizzle-orm/expressions";
 import { comments } from "../schema/comments.ts";
 
 export class BlogPostRepository {
+
 
     private pool!: Connection
 
@@ -15,10 +15,26 @@ export class BlogPostRepository {
         const found = await this.pool.query.blogPosts.findFirst({
             where: eq(blogPosts.id, id),
             with: {
-                comments: true,
-                author: true
-            }
-        })
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
+                comments: {
+                    with: {
+                        author: {
+                            columns: {
+                                username: true,
+                                verified: true
+                            }
+                        },
+                        parentComment: true
+                    }
+                },
+            },
+            orderBy: desc(comments.createdAt)
+        });
         return found;
     }
     async findAll () {
