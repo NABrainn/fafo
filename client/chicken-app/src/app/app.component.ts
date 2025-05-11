@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 
@@ -12,7 +12,7 @@ import { AuthService } from './auth/auth.service';
   ],
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   authService = inject(AuthService);
 
   get authenticated() {
@@ -21,5 +21,9 @@ export class AppComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  ngOnInit(): void {
+    this.authService.isAuthenticated().subscribe()
   }
 }
