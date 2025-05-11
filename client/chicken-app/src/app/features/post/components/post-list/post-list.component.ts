@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { PostService } from '../../post.service';
+import { PostService } from '../../service/post.service';
 import { PostCardComponent } from '../post-card/post-card.component';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
