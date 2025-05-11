@@ -1,6 +1,8 @@
 import { Connection, db } from "../database.ts";
 import { BlogPost, blogPosts } from "../schema/blogPosts.ts";
 import { eq } from "drizzle-orm/expressions";
+import { users } from "../schema/users.ts";
+import { comments } from "../schema/comments.ts";
 
 export class BlogPostRepository {
 
@@ -23,11 +25,16 @@ export class BlogPostRepository {
         return await this.pool.query.blogPosts.findMany({
             with: {
                 comments: true,
-                author: true
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                }
             }
-        })
+        })        
     }
-    async create (data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {
+    async create (data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {                
         const inserted = await this.pool.insert(blogPosts).values(data).returning();
         return inserted[0]
     }

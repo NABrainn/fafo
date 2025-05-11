@@ -15,23 +15,28 @@ blogPostController.get('/:id', async (c) => {
     return c.json(blogPost);
 })
 blogPostController.get('/', async (c) => {
-    const blogPosts = await blogPostRepository.findAll()
+    const blogPosts = await blogPostRepository.findAll()  
     if(!blogPosts) 
         return c.json({error: 'Nie znaleziono postów'}, 404)
     return c.json(blogPosts, 200);
 })
 blogPostController.post('/', async (c) => {
-    const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferInsert>>()
-
+    const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferInsert>>()    
+    const payload = c.get('jwtPayload')
+    if(payload)
+        body.author = payload.sub
     const blogPost = await blogPostRepository.create(body)
     
     if(!blogPost)
         return c.json({error: 'Nie udało się utworzyć posta'}, 400)
-    
+
     return c.json(blogPost, 200);
 })
 blogPostController.put('/:id', async (c) => {
     const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferSelect>>()
+    const payload = c.get('jwtPayload')
+    if(payload)
+        body.author = payload.sub
     const blogPost = await blogPostRepository.updateById(body.id, body)
     if(!blogPost) 
         return c.json({error: 'Nie znaleziono posta'}, 404)

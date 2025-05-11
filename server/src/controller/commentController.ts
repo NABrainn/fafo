@@ -20,8 +20,20 @@ commentController.get('/', async (c) => {
         return c.json({error: 'Nie znaleziono komentarzy'}, 404)
     return c.json(comments, 200);
 })
+commentController.get('/:author', async (c) => {
+    const author = c.req.param('author')
+    const comments = await commentRepository.findAllByAuthor(author)
+    if(!comments) 
+        return c.json({error: 'Nie znaleziono komentarzy'}, 404)
+    return c.json(comments, 200);
+})
 commentController.post('/', async (c) => {
     const body = await c.req.json<Extract<Comment, typeof comments.$inferInsert>>()
+    const payload = c.get('jwtPayload')
+    if(payload)
+        body.author = payload.sub
+    console.log(body);
+    
     const comment = await commentRepository.create(body)
     if(!comment) 
         return c.json({error: 'Nie udało się utworzyć komentarza'}, 404)
