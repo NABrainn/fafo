@@ -12,20 +12,25 @@
     <span class="text-2xl">Komentarze</span>
     <div class="flex flex-col gap-6">
         <app-post-comment
+        [createMode]="true"
         [blogPostId]="post()?.id"
-        (commentSaved)="onCommentSaved($event)"
+        (commentStateChange)="onCommentStateChange($event)"
         >
-
-        </app-post-comment> 
+        </app-post-comment>
         @for(comment of comments(); track $index) {
             <div>
                 <span>Autor: {{comment.author.username}}</span>
                 <app-post-comment
-                [readonly]="true"
-                [content]="comment.content">
-    
+                  (commentStateChange)="onCommentStateChange($event)"
+                  [blogPostId]="post()?.id"
+                  [commentId]="comment.id"
+                  [createMode]="false"
+                  [readonly]="true"
+                  [content]="comment.content"
+                  [author]="comment.author.username">
+
                 </app-post-comment>
             </div>
-        }  
+        }
     </div>
 </div>

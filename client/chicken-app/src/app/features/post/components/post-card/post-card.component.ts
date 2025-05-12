@@ -1,13 +1,23 @@
-import { Component, computed, inject, input, OnInit, Signal, signal } from '@angular/core';
+import { AfterContentInit, Component, computed, contentChild, ContentChild, effect, inject, input, OnInit, Signal, signal, TemplateRef } from '@angular/core';
+import { PostService } from '../../service/post.service';
+import {RouterLink} from '@angular/router';
+
+export type Author = {
+  username: string,
+  verified: boolean
+}
 
 @Component({
   selector: 'app-post-card',
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './post-card.component.html'
 })
 export class PostCardComponent {
 
-  imgPath = input.required<string>()
-  date = signal<string>('');
-  author = input<string>('');
+  service = inject(PostService)
+
+  imgPath = input.required<string>();
+  id = input.required<number>();
 }

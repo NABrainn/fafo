@@ -2,8 +2,8 @@
     @if(posts.error()) {
         <div class="flex flex-col justify-center items-center bg-secondary m-20 min-h-40 w-2/5 mx-auto rounded">
             <p class="text-lg">Wystąpił błąd podczas pobierania danych</p>
-            <span>Kliknij 
-                <a 
+            <span>Kliknij
+                <a
                 class="text-accent cursor-pointer select-none"
                 (click)="posts.reload()">tutaj</a> aby spróbować jeszcze raz
             </span>
@@ -16,26 +16,30 @@
         </div>
     }
     @else {
-        <div 
+        <div
         class="
         grid grid-cols-1
         md:grid-cols-2
         2xl:grid-cols-3 gap-8 mx-auto 2xl:w-3/5 p-6">
             @for(post of posts.value(); track $index) {
                 <app-post-card
-                [imgPath]="post.imgUrl">
+                [imgPath]="post.imgUrl"
+                [id]="post.id">
                     <h2 ngProjectAs="title">
                         {{post.title}}
                     </h2>
                     <span ngProjectAs="description">
                         {{post.subtitle}}
                     </span>
+                    <div ngProjectAs="footer">
+                        <span>{{post.author.username}} | {{post.createdAt}}</span>
+                    </div>
                 </app-post-card>
             }
         </div>
     }
     <router-outlet></router-outlet>
-    <button 
+    <button
     class="self-end py-4 px-12 m-16 rounded cursor-pointer bg-accent text-neutral-light"
     routerLink="/posty/nowy"
     routerLinkActive="active">
