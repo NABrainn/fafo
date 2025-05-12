@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../../environments/environment.development';
 import { catchError, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginData } from './components/login-form/login-form.component';
@@ -18,9 +18,9 @@ export class AuthService {
   #http = inject(HttpClient);
   #router = inject(Router);
 
-  authenticated = signal<boolean>(false)
+  #authenticated = signal<boolean>(false)
   #message = signal<string>('');
-  user = signal<AuthUser | undefined>(undefined);
+  #user = signal<AuthUser | undefined>(undefined);
 
   register(user: RegisterData) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
@@ -52,7 +52,7 @@ export class AuthService {
     );
   }
 
-  verify() {
+  #verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}).pipe(
       tap((data: any) => {
         this.user.set({username: data})
@@ -61,23 +61,23 @@ export class AuthService {
       map(() => true),
       catchError((err: HttpErrorResponse) => {
         this.authenticated.set(false);
-        this.#router.navigate(['logowanie']);
         return of(false);
       })
     )
   }
 
-  isAuthenticated() {
-    return this.#http.post(`${environment.authUrl}/verify`, {}).pipe(
-      tap((data: any) => {
-        this.authenticated.set(true);
-      }),
-      map(() => true),
-      catchError((err: HttpErrorResponse) => {
-        this.authenticated.set(false);
-        return of(false);
+  verifyAuthenticated() {
+    return this.#verify();
+  }
+
+  verifyToken() {
+    return this.#verify().pipe(
+      tap((verified: boolean) => {
+        if(!verified) {
+          this.logout();
+        }
       })
-    )
+    );
   }
 
   logout() {
@@ -94,7 +94,15 @@ export class AuthService {
     this.#message.set('');
   }
 
+  get authenticated() {
+    return this.#authenticated;
+  }
+
   get message() {
     return this.#message;
+  }
+
+  get user() {
+    return this.#user;
   }
 }
