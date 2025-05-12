@@ -1,4 +1,18 @@
-import { AfterContentInit, Component, computed, contentChild, ContentChild, effect, inject, input, OnInit, Signal, signal, TemplateRef } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  computed,
+  contentChild,
+  ContentChild,
+  effect,
+  inject,
+  input,
+  OnInit,
+  output,
+  Signal,
+  signal,
+  TemplateRef
+} from '@angular/core';
 import { PostService } from '../../service/post.service';
 import {RouterLink} from '@angular/router';
 
@@ -20,4 +34,8 @@ export class PostCardComponent {
 
   imgPath = input.required<string>();
   id = input.required<number>();
+
+  onDelete(id: number | undefined) {
+    if(id) this.service.deleteById(id!).subscribe(() => this.service.loadPosts().reload());
+  }
 }

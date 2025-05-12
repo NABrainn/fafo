@@ -11,7 +11,7 @@ export const comments = pgTable('comments', {
     createdAt: timestamp('created_at').defaultNow().notNull(),
     
     author: varchar('username').references(() => users.username, {onDelete: 'cascade'}).notNull(),
-    blogPostId: integer('blog_post_id').references(() => blogPosts.id).notNull(),
+    blogPostId: integer('blog_post_id').references(() => blogPosts.id, {onDelete: 'cascade'}).notNull(),
     parentCommentId: integer('parent_comment_id')
 })
 

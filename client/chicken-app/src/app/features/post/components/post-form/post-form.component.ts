@@ -26,7 +26,7 @@ export class PostFormComponent {
   form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(50)]],
     subtitle: ['', Validators.maxLength(100)],
-    content: ['', [Validators.required, Validators.maxLength(250)]]
+    content: ['', [Validators.required, Validators.maxLength(500)]]
   });
 
   closeModal(event: Event) {

@@ -13,11 +13,22 @@
           routerLink="/posty/{{id()}}"
         class="text-accent cursor-pointer">Czytaj więcej...</span>
     </div>
-    <footer class="flex justify-between">
+    <footer class="flex items-center justify-between">
         <div class="text-neutral-dark text-xs font-semibold">
             <ng-content select="footer">
 
             </ng-content>
         </div>
+      <div class="flex gap-2">
+<!--        <button-->
+<!--          class="bg-accent px-2 py-1 rounded">-->
+<!--          Aktualizuj-->
+<!--        </button>-->
+        <button
+          (click)="onDelete(id())"
+          class="bg-error/80 px-2 py-1 rounded">
+          Usuń
+        </button>
+      </div>
     </footer>
 </div>

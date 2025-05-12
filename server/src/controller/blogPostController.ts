@@ -43,8 +43,8 @@ blogPostController.put('/:id', async (c) => {
     return c.json(blogPost, 200);
 })
 blogPostController.delete('/:id', async (c) => {
-    const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferSelect>>()
-    const blogPost = await blogPostRepository.deleteById(body.id)
+    const id = c.req.param('id');
+    const blogPost = await blogPostRepository.deleteById(Number(id))
     if(blogPost.rowCount === 0) 
         return c.json({error: 'Nie znaleziono posta'}, 404)
     
