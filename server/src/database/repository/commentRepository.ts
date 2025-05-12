@@ -1,7 +1,7 @@
 import { Connection, db } from "../database.ts";
 import { blogPosts } from "../schema/blogPosts.ts";
 import { Comment, comments } from "../schema/comments.ts";
-import { desc, eq } from "drizzle-orm/expressions";
+import { desc, asc, eq } from "drizzle-orm/expressions";
 
 export class CommentRepository {
 
@@ -12,6 +12,7 @@ export class CommentRepository {
     }
 
     async findById(id: number) {
+        console.log(id)
         return await this.pool.query.comments.findFirst({
             where: eq(comments.id, id),
             with: {
@@ -68,7 +69,7 @@ export class CommentRepository {
                 },
                 blogPost: true
             },
-            orderBy: desc(comments.createdAt)
+            orderBy: asc(comments.id)
         })
     }
     async create(data: Extract<Comment, typeof comments.$inferInsert>) {

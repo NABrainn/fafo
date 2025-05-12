@@ -8,7 +8,7 @@ import { SelectComment } from './comment.service';
 export type BlogPost = InsertBlogPost | SelectBlogPost
 export type SelectBlogPost = {
   id: number,
-  author: {username: string, verified: boolean},  
+  author: {username: string, verified: boolean},
   comments: SelectComment[]
   title: string,
   subtitle: string,
@@ -33,19 +33,18 @@ export class PostService {
   router = inject(Router)
   http = inject(HttpClient)
   URL = `${environment.apiUrl}/posts`
-  #posts = httpResource<Extract<BlogPost, SelectBlogPost>[]>(() => this.URL)
+  PUBLIC_URL = `${environment.apiUrl}/posts/public`
+  #posts = httpResource<Extract<BlogPost, SelectBlogPost>[]>(() => `${this.PUBLIC_URL}`)
 
   loadPosts() {
     return this.#posts
   }
 
   findById(id: number) {
-    return this.http.get<Extract<BlogPost, SelectBlogPost>>(`${this.URL}/${id}`)
+    return this.http.get<Extract<BlogPost, SelectBlogPost>>(`${this.PUBLIC_URL}/${id}`)
   }
 
   save(post: Extract<BlogPost, InsertBlogPost>) {
-    console.log(post);
-    
     return this.http.post<BlogPost>(this.URL, post)
   }
 

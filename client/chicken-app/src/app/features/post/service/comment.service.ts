@@ -11,6 +11,7 @@ export type SelectComment = {
 }
 
 export type InsertComment = {
+  id: number,
   content: string,
   blogPostId: number,
   createdAt?: string,
@@ -23,14 +24,25 @@ export class CommentService {
 
   http = inject(HttpClient)
   URL = `${environment.apiUrl}/comments`
+  PUBLIC_URL = `${environment.apiUrl}/comments/public`
 
-  save(comment: InsertComment) {
+  addComment(comment: InsertComment) {
     return this.http.post<InsertComment>(`${this.URL}`, comment).pipe(
       map((data) => ({...data, blogPostId: comment.blogPostId}))
     )
   }
-  findAllCommentsByBlogId(id: number) {
-    return this.http.get<SelectComment[]>(`${this.URL}/blogposts/${id}`)
+
+  updateComment(comment: InsertComment) {
+    return this.http.put<InsertComment>(`${this.URL}/${comment.id}`, comment).pipe()
   }
-  
+
+  findAllCommentsByBlogId(id: number | undefined) {
+    if(id)
+      return this.http.get<SelectComment[]>(`${this.PUBLIC_URL}/blogposts/${id}`)
+    return
+  }
+
+  delete(id: number | undefined) {
+    return this.http.delete<void>(`${this.URL}/${id}`)
+  }
 }

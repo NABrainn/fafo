@@ -1,4 +1,4 @@
-import { date, integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import { date, integer, pgTable, varchar } from "drizzle-orm/pg-core";
 import { users } from "./users.ts";
 import { relations } from "drizzle-orm/relations";
 import { comments } from "./comments.ts";

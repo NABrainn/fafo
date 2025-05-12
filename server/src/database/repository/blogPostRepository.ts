@@ -30,10 +30,10 @@ export class BlogPostRepository {
                             }
                         },
                         parentComment: true
-                    }
+                    },
+                    orderBy: asc(comments.id)
                 },
             },
-            orderBy: desc(comments.createdAt)
         });
         return found;
     }
