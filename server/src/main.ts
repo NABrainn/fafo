@@ -12,25 +12,20 @@ type Variables = JwtVariables
 
 const app = new Hono<{ Variables: Variables }>()
 
-app.use('/api/*', cors({
+app.use('/*', cors({
     origin: 'http://localhost:4200',
     allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
-    allowMethods: ['POST', 'GET', 'OPTIONS'],
-    maxAge: 6000,
-    credentials: true,
-}))
-
-app.use('/auth/*', cors({
-    origin: 'http://localhost:4200',
-    allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
-    allowMethods: ['POST', 'GET', 'OPTIONS'],
+    allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
     maxAge: 6000,
     credentials: true,
 }))
 
 app.use('/api/*', 
     except(
-        ['/api/posts', '/api/posts/:id'],
+        [
+            '/api/posts/public/*',
+            '/api/comments/public'
+        ],
         jwt({
             secret: Deno.env.get('JWT_SECRET') || '',
             alg: 'HS256',

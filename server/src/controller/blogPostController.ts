@@ -6,7 +6,7 @@ import { db } from "../database/database.ts";
 export const blogPostController = new Hono()
 const blogPostRepository = new BlogPostRepository(db)
 
-blogPostController.get('/:id', async (c) => {
+blogPostController.get('/public/:id', async (c) => {
     const id = c.req.param('id');
     const blogPost = await blogPostRepository.findById(parseFloat(id))
     if(!blogPost) {
@@ -14,7 +14,7 @@ blogPostController.get('/:id', async (c) => {
     } 
     return c.json(blogPost);
 })
-blogPostController.get('/', async (c) => {
+blogPostController.get('/public', async (c) => {
     const blogPosts = await blogPostRepository.findAll()  
     if(!blogPosts) 
         return c.json({error: 'Nie znaleziono postów'}, 404)
