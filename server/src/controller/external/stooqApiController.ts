@@ -10,6 +10,8 @@ export interface StockQuote {
     low: number;
     close: number;
     volume: number;
+    change: number;
+    changePositive: boolean;
 }
 
 export const stooqApiController = new Hono();
@@ -41,6 +43,8 @@ export async function getStockQuotes(): Promise<StockQuote[]> {
             console.warn(`⚠️ Brak danych giełdowych dla: ${company.ticker}`);
             continue;
         }
+        const change = evalChange(symbolData.close, symbolData.open, 4);
+        const close = Number(parseFloat(symbolData.close).toFixed(2));
 
         results.push({
             name: company.name,
@@ -50,14 +54,19 @@ export async function getStockQuotes(): Promise<StockQuote[]> {
             open: symbolData.open,
             high: symbolData.high,
             low: symbolData.low,
-            close: symbolData.close,
+            close: close,
             volume: symbolData.volume,
+            change: change,
+            changePositive: change > 0
         });
     }
 
     return results;
 }
 
+function evalChange(close: number, open: number, precision: number): number {
+    return parseFloat((((close - open) / open) * 2).toFixed(precision))
+}
 
 stooqApiController.get("/public/quotes", async (c) => {
     try {

@@ -1,11 +1,13 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {Component, computed, effect, inject, signal} from '@angular/core';
 import {StooqService} from '../../stooq.service';
 import {NgClass} from '@angular/common';
+import {ToFixedPipe} from '../../pipes/to-fixed.pipe';
 
 @Component({
   selector: 'app-stooq-display',
   imports: [
-    NgClass
+    NgClass,
+    ToFixedPipe
   ],
   templateUrl: './stooq-display.component.html',
   // host: {
@@ -14,23 +16,15 @@ import {NgClass} from '@angular/common';
 })
 export class StooqDisplayComponent {
   stooqService = inject(StooqService)
-  quotes = this.stooqService.loadQuotes()
-  quotesWithDiff = computed(() => {
-    return this.quotes.value()?.map((quote) => ({
-      ticker: quote.ticker,
-      open: quote.open,
-      close: quote.close,
-      differential: this.stooqService.differential(quote.open, quote.close, 3),
-      symbol: (this.stooqService.differential(quote.open, quote.close, 2) ?? 0) > 0
+  #quotes = this.stooqService.loadQuotes()
+  quotes = computed(() => {
+    return this.#quotes.value()?.map((quote) => ({
+      ...quote,
+      symbol: quote.changePositive
         ? '↗️'
-        : (this.stooqService.differential(quote.open, quote.close, 2) ?? 0) < 0 ? '↘️'
-        : (this.stooqService.differential(quote.open, quote.close, 2) ?? 0) === 0 ? ''
+        : !quote.changePositive ? '↘️'
         : '',
-      positive: (this.stooqService.differential(quote.open, quote.close, 2) ?? 0) > 0
     }));
   });
 
-  toFixed(value: number | undefined, toFixed: number) {
-    return this.stooqService.toFixed(value, toFixed)
-  }
 }
