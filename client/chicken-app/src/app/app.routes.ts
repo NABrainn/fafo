@@ -7,7 +7,6 @@ export const routes: Routes = [
         {path: 'nowy', loadComponent: () => import('./features/post/components/post-form/post-form.component').then(c => c.PostFormComponent), canActivate: [authGuard]},
     ]},
     {path: 'posty/:id', loadComponent: () => import('./features/post/components/post-page/post-page.component').then(c => c.PostPageComponent), canActivate: [numericIdGuard]},
-    {path: 'giełda', loadComponent: () => import('./features/stooq/components/stooq-display/stooq-display.component').then(c => c.StooqDisplayComponent)},
     {path: 'rejestracja', loadComponent: () => import('./core/auth/components/register-form/register-form.component').then(c => c.RegisterFormComponent)},
     {path: 'logowanie', loadComponent: () => import('./core/auth/components/login-form/login-form.component').then(c => c.LoginFormComponent)},
     {path: '', redirectTo: '/posty', pathMatch: 'full'},

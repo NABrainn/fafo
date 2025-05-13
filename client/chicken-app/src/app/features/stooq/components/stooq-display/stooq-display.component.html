@@ -1,27 +1,17 @@
 <div class="grow-1">
-  <div class="flex flex-row mt-20 border-1">
-    <div class="flex flex-col divide-y-1 bg-secondary">
-      <span class="p-2 cursor-default">Nazwa</span>
-      <span class="p-2 cursor-default">Symbol</span>
-      <span class="p-2 cursor-default">Data</span>
-      <span class="p-2 cursor-default">Czas</span>
-      <span class="p-2 cursor-default">Otwarcie</span>
-      <span class="p-2 cursor-default">Max</span>
-      <span class="p-2 cursor-default">Min</span>
-      <span class="p-2 cursor-default">Zamknięcie</span>
-      <span class="p-2 cursor-default">Wolumin</span>
+  <div class="border-x-1 border-t-1 bg-tertiary/50">
+    <div class="flex gap-2 bg-secondary divide-x-1 border-b-1">
+      <span class="min-w-24 p-2 cursor-default">Symbol</span>
+      <span class=" p-2 cursor-default">Cena💸</span>
     </div>
-    @for (quote of quotes.value(); track $index) {
-      <div class="flex flex-col divide-y-1">
-        <span class="p-2">{{quote.name || "N/A"}}</span>
-        <span class="p-2">{{quote.ticker || "N/A"}}</span>
-        <span class="p-2">{{quote.date || "N/A"}}</span>
-        <span class="p-2">{{quote.time || "N/A"}}</span>
-        <span class="p-2">{{quote.open || "N/A"}}</span>
-        <span class="p-2">{{quote.high || "N/A"}}</span>
-        <span class="p-2">{{quote.low || "N/A"}}</span>
-        <span class="p-2">{{quote.close || "N/A"}}</span>
-        <span class="p-2">{{quote.volume || "N/A"}}</span>
+    @for (quote of quotesWithDiff(); track $index) {
+      <div class="flex gap-2 divide-x-1 border-b-1">
+        <span class="min-w-24 p-2">{{quote.ticker || "N/A"}}</span>
+        <span class="p-2 gap-4 flex">
+          <span>{{ toFixed(quote.close, 2) || 'N/A' }}</span>
+          <span
+          [ngClass]="quote.positive ? 'text-green-400' : 'text-red-600'">{{ quote.symbol }} {{ toFixed(quote.differential, 3) || '' }}</span>
+        </span>
       </div>
     }
   </div>

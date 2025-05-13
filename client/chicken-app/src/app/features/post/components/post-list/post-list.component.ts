@@ -3,6 +3,7 @@ import { PostService } from '../../service/post.service';
 import { PostCardComponent } from '../post-card/post-card.component';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {AuthService} from '../../../../core/auth/auth.service';
+import {StooqDisplayComponent} from '../../../stooq/components/stooq-display/stooq-display.component';
 
 @Component({
   selector: 'app-post-list',
@@ -10,7 +11,8 @@ import {AuthService} from '../../../../core/auth/auth.service';
     PostCardComponent,
     RouterLink,
     RouterLinkActive,
-    RouterOutlet
+    RouterOutlet,
+    StooqDisplayComponent
   ],
   templateUrl: './post-list.component.html',
   host: {
