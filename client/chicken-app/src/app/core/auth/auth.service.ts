@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { catchError, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
@@ -40,7 +40,7 @@ export class AuthService {
         if (res.token) {
           localStorage.setItem('token', res.token);
           this.authenticated.set(true);
-          this.user.set({username: user.username})
+          this.#user.set({username: user.username})
           this.navigateHome()
         }
       }),
@@ -55,7 +55,7 @@ export class AuthService {
   #verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}).pipe(
       tap((data: any) => {
-        this.user.set({username: data})
+        this.#user.set({username: data})
         this.authenticated.set(true);
       }),
       map(() => true),
@@ -103,6 +103,6 @@ export class AuthService {
   }
 
   get user() {
-    return this.#user;
+    return computed(() => this.#user());
   }
 }

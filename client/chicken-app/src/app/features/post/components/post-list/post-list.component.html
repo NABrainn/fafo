@@ -24,7 +24,8 @@
             @for(post of posts.value(); track $index) {
                 <app-post-card
                 [imgPath]="post.imgUrl"
-                [id]="post.id">
+                [id]="post.id"
+                [author]="post.author.username">
                     <h2 ngProjectAs="title">
                         {{post.title}}
                     </h2>

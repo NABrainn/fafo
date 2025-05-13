@@ -69,14 +69,13 @@ export class PostCommentComponent {
     this.readonly.update((prev) => !prev)
   }
 
-  ngOnInit() {
-    this.form.controls.content.setValue(this.content()!)
-    this.#authService.verifyAuthenticated().subscribe()
-  }
-
   onDelete() {
     this.#commentService.delete(this.commentId()).subscribe(() => {
       this.commentStateChange.emit(this.commentId()!)
     })
+  }
+
+  ngOnInit() {
+    this.form.controls.content.setValue(this.content()!)
   }
 }

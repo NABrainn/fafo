@@ -24,11 +24,13 @@
 <!--          class="bg-accent px-2 py-1 rounded">-->
 <!--          Aktualizuj-->
 <!--        </button>-->
-        <button
-          (click)="onDelete(id())"
-          class="bg-error/80 px-2 py-1 rounded">
-          Usuń
-        </button>
+        @if (authenticated() && author() === loggedUser()?.username) {
+          <button
+            (click)="onDelete(id())"
+            class="bg-error/80 px-2 py-1 rounded">
+            Usuń
+          </button>
+        }
       </div>
     </footer>
 </div>
