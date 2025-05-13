@@ -1,4 +1,4 @@
-<div class="bg-primary grow-1 flex flex flex-col justify-between">
+<div class="bg-primary grow-1 flex flex flex-col gap-4 p-8 justify-between">
     @if(posts.error()) {
         <div class="flex flex-col justify-center items-center bg-secondary m-20 min-h-40 w-2/5 mx-auto rounded">
             <p class="text-lg">Wystąpił błąd podczas pobierania danych</p>
@@ -17,12 +17,12 @@
     }
     @else {
       <div
-      class="flex sm:flex-row flex-col-reverse gap-4 px-12 pt-12">
+      class="flex sm:flex-row flex-col-reverse gap-4">
         <div
         class="
         grid grid-cols-1
         md:grid-cols-2
-        2xl:grid-cols-3 gap-8 2xl:w-3/5 mx-auto">
+        2xl:grid-cols-3 gap-8 sm:w-3/5 w-full mx-auto">
           @for(post of posts.value(); track $index) {
             <app-post-card
               [id]="post.id"
@@ -43,13 +43,13 @@
             <app-stooq-display></app-stooq-display>
           </div>
       </div>
-
     }
-    <router-outlet></router-outlet>
     <button
-    class="self-end py-4 px-12 m-16 rounded cursor-pointer bg-accent text-neutral-light"
-    routerLink="/posty/nowy"
-    routerLinkActive="active">
-        Wstaw nowy post
+      class="fixed bottom-5 right-5 sm:block self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
+      routerLink="/posty/nowy"
+      routerLinkActive="active">
+      Wstaw nowy post
     </button>
+    <router-outlet></router-outlet>
+
 </div>

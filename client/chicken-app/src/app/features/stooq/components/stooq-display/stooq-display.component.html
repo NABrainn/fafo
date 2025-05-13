@@ -1,15 +1,16 @@
-<div class="grow-1">
+<div class="grow-1 sm:text-[1.1rem] text-sm">
   <div class="border-x-1 border-t-1 bg-tertiary/50">
     <div class="flex gap-2 bg-secondary divide-x-1 border-b-1">
-      <span class="min-w-24 p-2 cursor-default">Symbol</span>
-      <span class=" p-2 cursor-default">Cena💸</span>
+      <span class="min-w-20 p-2 cursor-default">Symbol</span>
+      <span class="min-w-42 p-2 cursor-default">Cena💸</span>
     </div>
     @for (quote of quotes(); track $index) {
       <div class="flex gap-2 divide-x-1 border-b-1">
-        <span class="min-w-24 p-2">{{quote.ticker || "N/A"}}</span>
-        <span class="p-2 gap-4 flex">
-          <span>{{ (quote.close | toFixed:2) || 'N/A' }}</span>
+        <span class="min-w-20 p-1">{{quote.ticker || "N/A"}}</span>
+        <span class="sm:gap-4 sm:p-2 flex grow-1 p-1 gap-0">
+          <span class="basis-1/4">{{ (quote.close | toFixed:2) || 'N/A' }}</span>
           <span
+            class="basis-3/4 grow"
           [ngClass]="quote.changePositive ? 'text-green-400' : 'text-red-600'">{{ quote.symbol }} {{ quote.change || '' }}</span>
         </span>
       </div>
