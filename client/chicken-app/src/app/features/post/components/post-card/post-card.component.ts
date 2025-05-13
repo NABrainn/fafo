@@ -1,11 +1,23 @@
-import { AfterContentInit, Component, computed, contentChild, ContentChild, effect, inject, input, OnInit, Signal, signal, TemplateRef } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  computed,
+  contentChild,
+  ContentChild,
+  effect,
+  inject, Input,
+  input,
+  OnInit,
+  output,
+  Signal,
+  signal,
+  TemplateRef
+} from '@angular/core';
 import { PostService } from '../../service/post.service';
 import {RouterLink} from '@angular/router';
+import {AuthService} from '../../../../core/auth/auth.service';
 
-export type Author = {
-  username: string,
-  verified: boolean
-}
+
 
 @Component({
   selector: 'app-post-card',
@@ -17,7 +29,14 @@ export type Author = {
 export class PostCardComponent {
 
   service = inject(PostService)
+  #authService = inject(AuthService)
 
-  imgPath = input.required<string>();
+  authenticated = computed(() => this.#authService.authenticated());
+  loggedUser = this.#authService.user
   id = input.required<number>();
+  author = input<string>()
+
+  onDelete(id: number | undefined) {
+    if(id) this.service.deleteById(id!).subscribe(() => this.service.loadPosts().reload());
+  }
 }

@@ -2,17 +2,19 @@ import { Hono } from 'hono';
 import { getFactById, getFactCount } from './chickenApiModel.ts';
 import type { Fact } from './chickenApiModel.ts';
 
+export type Result = {
+    fact?: Fact;
+    count?: number;
+    last_counted?: string;
+}
+
 export const chickenApiController = new Hono();
 
-chickenApiController.get('/facts', async (c) => {
-    const factId = 31;
+chickenApiController.get('/public/facts', async (c) => {
+    const factId = Math.floor(Math.random() * 31);
 
     try {
-        const results: {
-            fact?: Fact;
-            count?: number;
-            last_counted?: string;
-        } = {};
+        const results: Result = {};
 
         const [countData, factData] = await Promise.all([
             getFactCount().catch((err) => {
@@ -41,4 +43,3 @@ chickenApiController.get('/facts', async (c) => {
     }
 });
 
-// app.route('/chicken', chickenApiController);

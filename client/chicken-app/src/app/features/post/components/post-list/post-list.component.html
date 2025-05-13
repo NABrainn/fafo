@@ -23,8 +23,8 @@
         2xl:grid-cols-3 gap-8 mx-auto 2xl:w-3/5 p-6">
             @for(post of posts.value(); track $index) {
                 <app-post-card
-                [imgPath]="post.imgUrl"
-                [id]="post.id">
+                [id]="post.id"
+                [author]="post.author.username">
                     <h2 ngProjectAs="title">
                         {{post.title}}
                     </h2>

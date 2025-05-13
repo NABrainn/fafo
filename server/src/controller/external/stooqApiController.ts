@@ -1,19 +1,31 @@
-import { StockQuote } from "./StooqApiModel.ts";
 import { Hono } from "hono";
 
-const companyList = [
-    { name: "Grupa Azoty", ticker: "ATT" },
-    { name: "Ciech", ticker: "CIE" },
-    { name: "Kernel", ticker: "KER" },
-    { name: "Agroliga", ticker: "AGR" },
-    { name: "Wielton", ticker: "WLT" },
-    { name: "Gobarto", ticker: "GOB" },
-];
+export interface StockQuote {
+    name: string;
+    ticker: string;
+    date: string;
+    time: string;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+}
+
+export const stooqApiController = new Hono();
 
 export async function getStockQuotes(): Promise<StockQuote[]> {
+    const companies = [
+        { name: "Grupa Azoty", ticker: "ATT" },
+        { name: "Ciech", ticker: "CIE" },
+        { name: "Kernel", ticker: "KER" },
+        { name: "Agroliga", ticker: "AGR" },
+        { name: "Wielton", ticker: "WLT" },
+        { name: "Gobarto", ticker: "GOB" },
+    ];
     const results: StockQuote[] = [];
 
-    for (const company of companyList) {
+    for (const company of companies) {
         const url = `https://stooq.pl/q/l/?s=${company.ticker}&f=sd2t2ohlcv&h&e=json`;
         const response = await fetch(url);
 
@@ -46,21 +58,13 @@ export async function getStockQuotes(): Promise<StockQuote[]> {
     return results;
 }
 
-export const stooqApiController = new Hono();
 
-stooqApiController.get("/quotes", async (c) => {
+stooqApiController.get("/public/quotes", async (c) => {
     try {
         const quotes = await getStockQuotes();
-        return c.json(quotes);
+        return c.json(quotes, 200);
     } catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
         return c.json({ error: "Wystąpił błąd serwera" }, 500);
     }
 });
-
-// app.route('/stooqapi', stooqApiController);
-
-// zfeczuj se tym
-//const res = await fetch("http://localhost:8000/stooqapi/quotes");
-// const data = await res.json();
-// oby to działał

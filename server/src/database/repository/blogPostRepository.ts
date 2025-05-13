@@ -5,7 +5,6 @@ import { comments } from "../schema/comments.ts";
 
 export class BlogPostRepository {
 
-
     private pool!: Connection
 
     constructor(pool: Connection) {
