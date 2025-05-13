@@ -12,6 +12,8 @@ export type Quote  = {
   low: number,
   close: number,
   volume: number,
+  change: number,
+  changePositive: boolean
 }
 
 @Injectable({
@@ -24,15 +26,5 @@ export class StooqService {
 
   loadQuotes() {
     return this.#quotes
-  }
-
-  toFixed(value: number | undefined, toFixed: number) {
-    if(value) return value.toFixed(toFixed)
-    return undefined
-  }
-
-  differential(open: number | undefined, close: number | undefined, fixed: number) {
-    if(!open || !close) return undefined
-    return parseFloat((((close - open) / open) * 2).toFixed(fixed))
   }
 }
