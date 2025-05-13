@@ -7,7 +7,8 @@ import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
 import { authController } from "./controller/authController.ts";
 import { except } from 'hono/combine';
-import {stooqApiController} from "./NBPApiRepo/StooqApiController.ts";
+import {stooqApiController} from "./controller/external/stooqApiController.ts";
+import {chickenApiController} from "./controller/external/chickenFacts/chickenApiController.ts";
 
 type Variables = JwtVariables
 
@@ -25,7 +26,9 @@ app.use('/api/*',
     except(
         [
             '/api/posts/public/*',
-            '/api/comments/public'
+            '/api/comments/public/*',
+            '/api/stooqapi/public/*',
+            '/api/chicken/public/*'
         ],
         jwt({
             secret: Deno.env.get('JWT_SECRET') || '',
@@ -40,4 +43,5 @@ app.route('/api/users', userController);
 app.route('/auth', authController);
 
 app.route('/api/stooqapi', stooqApiController);
+app.route('/api/chicken', chickenApiController);
 Deno.serve(app.fetch)
