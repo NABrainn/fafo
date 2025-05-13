@@ -28,5 +28,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.verifyAuthenticated().subscribe()
+    setInterval(() => this.facts.reload(), 10000)
   }
 }
