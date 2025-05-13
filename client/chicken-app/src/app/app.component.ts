@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import {ChickenFactService} from './features/chicken-facts/chicken-fact.service';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,7 @@ import {ChickenFactService} from './features/chicken-facts/chicken-fact.service'
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
+    NgOptimizedImage,
   ],
   templateUrl: './app.component.html',
 })

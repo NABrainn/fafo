@@ -4,10 +4,10 @@
     class="flex items-center gap-2 cursor-pointer select-none"
     routerLink="/"
     routerLinkActive="active">
-      <img class="w-16 h-auto" src="/chick.svg" alt="obrazek pokazujący logo">
+      <img class="w-16 h-auto" src="/chick.svg" alt="obrazek pokazujący logo" height="16" width="16">
       <span class="text-accent text-2xl font-bold md:block hidden">Hotwings</span>
     </div>
-    <span class="max-w-120 md:block hidden">{{facts.value()?.fact?.fact}}</span>
+    <span class="max-w-140 md:block hidden">{{facts.value()?.fact?.fact}}</span>
     @if(!authenticated) {
       <span
       class="text-accent text-xl underline cursor-pointer"

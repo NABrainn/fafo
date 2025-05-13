@@ -1,20 +1,17 @@
-<div class="bg-primary grow-1 flex flex flex-col gap-4 p-8 justify-between">
-    @if(posts.error()) {
-        <div class="flex flex-col justify-center items-center bg-secondary m-20 min-h-40 w-2/5 mx-auto rounded">
-            <p class="text-lg">Wystąpił błąd podczas pobierania danych</p>
-            <span>Kliknij
-                <a
-                class="text-accent cursor-pointer select-none"
-                (click)="posts.reload()">tutaj</a> aby spróbować jeszcze raz
-            </span>
+<div class="bg-primary grow-1 flex flex-col gap-4 p-8 justify-between">
+  @if(posts.isLoading()) {
+    Loading...
+  }
+  @if(posts.error()) {
+    <div class="text-error bg-secondary p-8">Błąd przy wczytywaniu postów</div>
+    <app-stooq-display></app-stooq-display>
+  }
+  @if(!posts.value()?.length) {
+        <div class="flex flex-col gap-8 items-center">
+          <p class="text-xl pt-20 text-center">Lista postów jest obecnie pusta</p>
+          <app-stooq-display></app-stooq-display>
         </div>
-    }
-    @if(posts.value()?.length === 0) {
-        <div class="flex flex-col items-center">
-            <p class="text-xl pt-20 text-center">Lista postów jest obecnie pusta</p>
-            <p>[...]</p>
-        </div>
-    }
+  }
     @else {
       <div
       class="flex sm:flex-row flex-col-reverse gap-4">
@@ -39,9 +36,7 @@
             </app-post-card>
           }
           </div>
-          <div class="">
-            <app-stooq-display></app-stooq-display>
-          </div>
+          <app-stooq-display></app-stooq-display>
       </div>
     }
     <button
@@ -51,5 +46,4 @@
       Wstaw nowy post
     </button>
     <router-outlet></router-outlet>
-
 </div>

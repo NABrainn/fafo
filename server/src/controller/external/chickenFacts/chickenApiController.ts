@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+// @ts-ignore
 import { getFactById, getFactCount } from './chickenApiModel.ts';
 import type { Fact } from './chickenApiModel.ts';
 
@@ -11,7 +12,7 @@ export type Result = {
 export const chickenApiController = new Hono();
 
 chickenApiController.get('/public/facts', async (c) => {
-    const factId = Math.floor(Math.random() * 31);
+    const factId = Math.floor(Math.random() * 31) + 1;
 
     try {
         const results: Result = {};
