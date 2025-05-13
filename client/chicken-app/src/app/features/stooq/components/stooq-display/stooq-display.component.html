@@ -1,11 +1,11 @@
 <div class="grow-1">
-  <div class="border bg-tertiary/50">
-    <div class="flex gap-2 bg-secondary">
+  <div class="border-x-1 border-t-1 bg-tertiary/50">
+    <div class="flex gap-2 bg-secondary divide-x-1 border-b-1">
       <span class="min-w-24 p-2 cursor-default">Symbol</span>
       <span class=" p-2 cursor-default">Cena💸</span>
     </div>
     @for (quote of quotesWithDiff(); track $index) {
-      <div class="flex gap-2">
+      <div class="flex gap-2 divide-x-1 border-b-1">
         <span class="min-w-24 p-2">{{quote.ticker || "N/A"}}</span>
         <span class="p-2 gap-4 flex">
           <span>{{ toFixed(quote.close, 2) || 'N/A' }}</span>
