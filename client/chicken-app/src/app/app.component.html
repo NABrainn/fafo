@@ -7,11 +7,7 @@
       <img class="w-16 h-auto" src="/chick.svg" alt="obrazek pokazujący logo">
       <span class="text-accent text-2xl font-bold">Hotwings</span>
     </div>
-    <a
-      class="text-xl text-accent underline cursor-pointer"
-    routerLink="/giełda">
-      Giełda
-    </a>
+    <span class="lg:block hidden">{{facts.value()?.fact?.fact}}</span>
     @if(!authenticated) {
       <span
       class="text-accent text-xl underline cursor-pointer"
@@ -24,10 +20,8 @@
       (click)="logout()">Wyloguj</span>
     }
   </nav>
-
-    <router-outlet></router-outlet>
-
+  <router-outlet></router-outlet>
   <footer class="bg-secondary text-center">
-      <span class="text-center">{{facts.value()?.fact?.fact}}</span>
+      <span class="text-center"></span>
   </footer>
 </div>
