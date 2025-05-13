@@ -33,7 +33,6 @@ export class PostCardComponent {
 
   authenticated = computed(() => this.#authService.authenticated());
   loggedUser = this.#authService.user
-  imgPath = input.required<string>();
   id = input.required<number>();
   author = input<string>()
 

@@ -48,7 +48,7 @@ export async function getStockQuotes(): Promise<StockQuote[]> {
 
 export const stooqApiController = new Hono();
 
-stooqApiController.get("/quotes", async (c) => {
+stooqApiController.get("/public/quotes", async (c) => {
     try {
         const quotes = await getStockQuotes();
         return c.json(quotes);
@@ -58,7 +58,7 @@ stooqApiController.get("/quotes", async (c) => {
     }
 });
 
-// app.route('/stooqapi', stooqApiController);
+
 
 // zfeczuj se tym
 //const res = await fetch("http://localhost:8000/stooqapi/quotes");

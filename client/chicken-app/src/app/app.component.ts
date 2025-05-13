@@ -1,18 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
+import {StooqService} from './features/stooq/stooq.service';
+import {KeyValuePipe} from '@angular/common';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
   ],
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
   authService = inject(AuthService);
+
 
   get authenticated() {
     return this.authService.authenticated();

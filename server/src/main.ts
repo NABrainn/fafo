@@ -7,6 +7,7 @@ import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
 import { authController } from "./controller/authController.ts";
 import { except } from 'hono/combine';
+import {stooqApiController} from "./NBPApiRepo/StooqApiController.ts";
 
 type Variables = JwtVariables
 
@@ -38,4 +39,5 @@ app.route('/api/comments', commentController);
 app.route('/api/users', userController);
 app.route('/auth', authController);
 
+app.route('/api/stooqapi', stooqApiController);
 Deno.serve(app.fetch)
