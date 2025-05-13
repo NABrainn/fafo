@@ -10,9 +10,9 @@ zaprojektować widok posta (po wywołaniu z listy)
 Roadmap 26.04-24.05
 
 autentykacja i autoryzacja z wykorzystaniem JWT (zrobione)
-integracja z zewnętrznym API
+integracja z zewnętrznym API (zrobione)
 walidacja errorów
-komunikacja frontendu z API (powiedziałbym że feature complete jeżeli chodzi o wewnętrzne api)
+komunikacja frontendu z API (zrobione)
 testy jednostkowe (do wszystkiego co zostało zaimplementowane)
 integracja SWAGGERA
 
