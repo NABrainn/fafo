@@ -5,9 +5,9 @@
     routerLink="/"
     routerLinkActive="active">
       <img class="w-16 h-auto" src="/chick.svg" alt="obrazek pokazujący logo">
-      <span class="text-accent text-2xl font-bold">Hotwings</span>
+      <span class="text-accent text-2xl font-bold md:block hidden">Hotwings</span>
     </div>
-    <span class="lg:block hidden">{{facts.value()?.fact?.fact}}</span>
+    <span class="max-w-120 md:block hidden">{{facts.value()?.fact?.fact}}</span>
     @if(!authenticated) {
       <span
       class="text-accent text-xl underline cursor-pointer"
