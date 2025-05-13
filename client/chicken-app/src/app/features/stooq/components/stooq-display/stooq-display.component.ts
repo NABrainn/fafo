@@ -1,5 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {StooqService} from '../../stooq.service';
+import {ChickenFactService} from '../../../chicken-facts/chicken-fact.service';
 
 @Component({
   selector: 'app-stooq-display',
@@ -11,6 +12,5 @@ import {StooqService} from '../../stooq.service';
 })
 export class StooqDisplayComponent {
   stooqService = inject(StooqService)
-
   quotes = this.stooqService.loadQuotes()
 }
