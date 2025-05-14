@@ -1,7 +1,7 @@
 <form
 [formGroup]="form"
 (ngSubmit)="saveComment($event)">
-    <div class="sm:max-w-2/5 max-w-full flex flex-col bg-secondary/40 rounded mb-8 border-2 border-tertiary p-4">
+    <div class="md:max-w-2/5 max-w-full flex flex-col bg-secondary/40 rounded mb-8 border-2 border-tertiary p-4">
         <textarea
         [ngClass]="readonly() || !authenticated() ? 'cursor-default' : 'cursor-select'"
         [formControl]="form.controls.content"

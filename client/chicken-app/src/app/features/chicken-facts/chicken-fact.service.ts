@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, httpResource} from '@angular/common/http';
 import {environment} from '../../../environments/environment.development';
-import type {Fact} from '../../../../../../server/src/controller/external/chickenFacts/chickenApiModel';
+import type {Fact} from '../../../../../../server/src/controller/external/chickenFacts/chickenModel';
 
 export type Result = {
   fact?: Fact;

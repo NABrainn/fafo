@@ -1,15 +1,15 @@
 <form
-class="min-h-4/5 sm:w-3/5 w-full bg-primary rounded sm:p-16 p-8 flex flex-col gap-8"
+class="sm:w-4/5 w-full bg-primary rounded p-8 flex flex-col gap-0.5"
 (click)="$event.stopPropagation()"
 (ngSubmit)="onSubmit($event)"
 [formGroup]="form">
-    <h2 class="text-3xl font-semibold text-tertiary">Kreator postów</h2>
+    <h2 class="md:text-3xl text-2xl font-semibold text-tertiary">Kreator postów</h2>
     <div class="flex flex-col">
         <label for="title">Tytuł</label>
         <input
         type="text"
         id="title"
-        class="min-h-10 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary"
+        class=" bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary"
         [formControl]="form.controls.title">
         <span
         class="text-error"
@@ -19,7 +19,7 @@ class="min-h-4/5 sm:w-3/5 w-full bg-primary rounded sm:p-16 p-8 flex flex-col ga
         <label for="subtitle">Podtytuł</label>
         <textarea
         id="subtitle"
-        class="min-h-30 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
+        class=" bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
         [formControl]="form.controls.subtitle"></textarea>
         <span
         class="text-error"
@@ -29,7 +29,7 @@ class="min-h-4/5 sm:w-3/5 w-full bg-primary rounded sm:p-16 p-8 flex flex-col ga
         <label for="content">Treść</label>
         <textarea
         id="content"
-        class="min-h-45 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
+        class=" bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
         [formControl]="form.controls.content"></textarea>
         <span
         class="text-error"
@@ -39,7 +39,7 @@ class="min-h-4/5 sm:w-3/5 w-full bg-primary rounded sm:p-16 p-8 flex flex-col ga
         <a class="cursor-pointer underline text-tertiary">Dodaj zdjęcie</a>
         <button
         type="submit"
-        class="cursor-pointer bg-accent disabled:bg-accent/50 text-neutral-light py-2 px-8 rounded"
+        class="cursor-pointer bg-accent disabled:bg-accent/50 text-neutral-light md:py-2 md:px-8 py-1 px-2 rounded"
         [disabled]="form.invalid">Zatwierdź</button>
     </div>
 </form>
