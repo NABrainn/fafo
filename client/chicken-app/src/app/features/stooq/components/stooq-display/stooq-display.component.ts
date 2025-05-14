@@ -10,9 +10,9 @@ import {ToFixedPipe} from '../../pipes/to-fixed.pipe';
     ToFixedPipe
   ],
   templateUrl: './stooq-display.component.html',
-  // host: {
-  //   class: 'grow-1 flex flex-col justify-center items-center bg-primary'
-  // }
+  host: {
+    class: 'grow-1 max-w-100 mx-auto'
+  }
 })
 export class StooqDisplayComponent implements  OnInit{
   stooqService = inject(StooqService)
