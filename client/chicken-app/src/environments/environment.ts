@@ -1,5 +1,5 @@
 export const environment = {
-    apiUrl: 'http://localhost:8000/api',
-    authUrl: 'http://localhost:8000/auth',
+    apiUrl: 'https://hotwings.deno.dev/api',
+    authUrl: 'https://hotwings.deno.dev/auth',
     production: true,
 };

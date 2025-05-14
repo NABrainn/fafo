@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "DENO_ENV=dev deno run --env --allow-env --allow-net --watch src/main.ts",
+    "dev": "DENO_ENV=dev deno run --env --allow-env --allow-read --allow-net --watch src/main.ts",
     "test": "DENO_ENV=test deno test src/**/*.ts --env --allow-net --allow-env --allow-read --allow-run --no-check",
     "generate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit generate --config=drizzle-dev.config.ts",
     "push": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-sys --allow-run npm:drizzle-kit push --config=drizzle-dev.config.ts",
@@ -21,5 +21,9 @@
     "hono": "npm:hono@^4.7.5",
     "jose": "npm:jose@^6.0.10",
     "pg": "npm:pg@^8.14.1"
-  }
+  },
+  "deploy": {
+    "project": "hotwings",
+    "entrypoint": "src/main.ts",
+    "include": ["./src", "./out", "deno.json", ".env"]  }
 }
