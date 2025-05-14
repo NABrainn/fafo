@@ -14,7 +14,7 @@ export interface StockQuote {
 
 export let quotes: StockQuote[] = []
 
-export async function stooqInit() {
+export async function startService() {
     await assignStooqData();
     startStooqDataSync();
 }
