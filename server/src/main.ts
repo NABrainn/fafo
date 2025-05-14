@@ -10,7 +10,8 @@ import { except } from 'hono/combine';
 import {stooqController} from "./controller/external/stooq/stooqController.ts";
 import {chickenController} from "./controller/external/chickenFacts/chickenController.ts";
 import {startService, quotes, startStooqDataSync} from "./controller/external/stooq/stooqService.ts";
-import { serveStatic } from 'hono/node-server/serve-static'
+import { serveStatic } from 'hono/deno'
+
 
 type Variables = JwtVariables
 
