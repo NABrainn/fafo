@@ -11,7 +11,7 @@ import {ToFixedPipe} from '../../pipes/to-fixed.pipe';
   ],
   templateUrl: './stooq-display.component.html',
   host: {
-    class: 'basis-1/4'
+    class: 'basis-3/10'
   }
 })
 export class StooqDisplayComponent implements  OnInit{
