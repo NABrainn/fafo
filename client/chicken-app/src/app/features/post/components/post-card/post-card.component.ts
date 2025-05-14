@@ -24,7 +24,7 @@ import {AuthService} from '../../../../core/auth/auth.service';
   imports: [
     RouterLink
   ],
-  templateUrl: './post-card.component.html'
+  templateUrl: './post-card.component.html',
 })
 export class PostCardComponent {
 
