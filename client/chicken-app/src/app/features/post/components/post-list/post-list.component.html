@@ -14,12 +14,12 @@
   }
     @else {
       <div
-      class="flex md:flex-row flex-col md:gap-0 gap-12">
+      class="flex md:flex-row flex-col md:gap-4 gap-12">
         <div
         class="
-        grid grid-cols-1 grow-1
+        grid grid-cols-1
         md:grid-cols-2
-        2xl:grid-cols-3 gap-8 sm:w-3/5 w-full mx-auto">
+        2xl:grid-cols-3 gap-8 basis-3/4">
           @for(post of posts.value(); track $index) {
             <app-post-card
               [id]="post.id"
