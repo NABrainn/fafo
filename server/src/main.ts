@@ -9,7 +9,8 @@ import { authController } from "./controller/authController.ts";
 import { except } from 'hono/combine';
 import {stooqController} from "./controller/external/stooq/stooqController.ts";
 import {chickenController} from "./controller/external/chickenFacts/chickenController.ts";
-import {stooqInit, quotes, startStooqDataSync} from "./controller/external/stooq/stooqService.ts";
+import {startService, quotes, startStooqDataSync} from "./controller/external/stooq/stooqService.ts";
+import { serveStatic } from 'hono/node-server/serve-static'
 
 type Variables = JwtVariables
 
@@ -23,6 +24,11 @@ app.use('/*', cors({
     credentials: true,
 }))
 
+const jwtSecret = Deno.env.get('JWT_SECRET');
+if (!jwtSecret) {
+    throw new Error('JWT_SECRET environment variable is not set');
+}
+
 app.use('/api/*', 
     except(
         [
@@ -32,12 +38,13 @@ app.use('/api/*',
             '/api/chicken/public/*'
         ],
         jwt({
-            secret: Deno.env.get('JWT_SECRET') || '',
+            secret: jwtSecret,
             alg: 'HS256',
         })
     )
 )
 
+app.use('*', serveStatic({ path: './out/chicken-app/browser/index.html' }))
 app.route('/api/posts', blogPostController);
 app.route('/api/comments', commentController);
 app.route('/api/users', userController);
@@ -46,5 +53,5 @@ app.route('/auth', authController);
 app.route('/api/stooqapi', stooqController);
 app.route('/api/chicken', chickenController);
 
-await stooqInit()
+await startService()
 Deno.serve(app.fetch)
