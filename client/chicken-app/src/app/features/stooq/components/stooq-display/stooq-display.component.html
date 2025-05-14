@@ -1,4 +1,4 @@
-<div class="md:text-[1.1rem] text-md">
+<div class="md:text-[.9rem] text-md">
   @if(quotes.isLoading()) {
     Loading...
   }
@@ -7,18 +7,19 @@
   }
   @else {
     <div class="mx-auto border-x-1 border-t-1 bg-tertiary/50">
-      <div class="grid grid-cols-2 gap-2 bg-secondary divide-x-1 border-b-1">
-        <span class="p-2 cursor-default">Symbol</span>
-        <span class="p-2 cursor-default">Cena💸</span>
+      <div class="grid grid-cols-3 gap-2 bg-secondary divide-x-1 border-b-1">
+        <span class="lg:p-2 p-0 cursor-default">Symbol</span>
+        <span class="col-span-2 lg:p-2 p-0 cursor-default">Cena💸</span>
       </div>
       @for (quote of quotesDisplay(); track $index) {
-        <div class="grid grid-cols-2 gap-2 divide-x-1 border-b-1">
+        <div class="grid grid-cols-3 gap-2 divide-x-1 border-b-1">
           <span class="p-1">{{quote.ticker || "N/A"}}</span>
-          <span class="sm:gap-4 sm:p-2 flex grow-1 p-1 gap-0">
+          <span class="col-span-2 sm:p-2 flex grow-1 p-1 gap-2">
             <span class="basis-1/4">{{ (quote.close | toFixed:2) || 'N/A' }}</span>
+            <span class="md:hidden block">{{ quote.symbol }}</span>
             <span
               class="basis-3/4 grow"
-              [ngClass]="quote.changePositive ? 'text-green-400' : 'text-red-600'">{{ quote.symbol }} {{ quote.change || '' }}</span>
+              [ngClass]="quote.changePositive ? 'text-green-400' : 'text-red-600'"> {{ quote.change || '' }}</span>
           </span>
         </div>
       }
