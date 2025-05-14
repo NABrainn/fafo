@@ -1,5 +1,5 @@
 {
-  "id": "9b76ec8e-d62f-478f-8200-9e5226bfb8b4",
+  "id": "f6921bf0-9923-4e26-8a29-4495c808c2b1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -97,19 +97,25 @@
         },
         "title": {
           "name": "title",
-          "type": "varchar(30)",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true
         },
         "subtitle": {
           "name": "subtitle",
-          "type": "varchar(200)",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "varchar(250)",
           "primaryKey": false,
           "notNull": true
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "date",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
@@ -120,24 +126,24 @@
           "primaryKey": false,
           "notNull": true
         },
-        "author_id": {
-          "name": "author_id",
-          "type": "integer",
+        "username": {
+          "name": "username",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "blog_posts_author_id_users_id_fk": {
-          "name": "blog_posts_author_id_users_id_fk",
+        "blog_posts_username_users_username_fk": {
+          "name": "blog_posts_username_users_username_fk",
           "tableFrom": "blog_posts",
           "tableTo": "users",
           "columnsFrom": [
-            "author_id"
+            "username"
           ],
           "columnsTo": [
-            "id"
+            "username"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -176,9 +182,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "author_id": {
-          "name": "author_id",
-          "type": "integer",
+        "username": {
+          "name": "username",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -197,15 +203,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "comments_author_id_users_id_fk": {
-          "name": "comments_author_id_users_id_fk",
+        "comments_username_users_username_fk": {
+          "name": "comments_username_users_username_fk",
           "tableFrom": "comments",
           "tableTo": "users",
           "columnsFrom": [
-            "author_id"
+            "username"
           ],
           "columnsTo": [
-            "id"
+            "username"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
