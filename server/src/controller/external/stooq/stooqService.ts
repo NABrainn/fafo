@@ -1,5 +1,3 @@
-import { Hono } from "hono";
-
 export interface StockQuote {
     name: string;
     ticker: string;
@@ -14,9 +12,26 @@ export interface StockQuote {
     changePositive: boolean;
 }
 
-export const stooqApiController = new Hono();
+export let quotes: StockQuote[] = []
 
-export async function getStockQuotes(): Promise<StockQuote[]> {
+export async function stooqInit() {
+    await assignStooqData();
+    startStooqDataSync();
+}
+
+export async function assignStooqData() {
+    try {
+        quotes = await fetchStooqData();
+    } catch (err) {
+        console.error("💥 Błąd podczas pobierania danych:", err);
+    }
+}
+
+export function startStooqDataSync() {
+    setInterval(async () => await assignStooqData(), 1000 * 60 * 60)
+}
+
+async function fetchStooqData(): Promise<StockQuote[]> {
     const companies = [
         { name: "Grupa Azoty", ticker: "ATT" },
         { name: "Ciech", ticker: "CIE" },
@@ -60,20 +75,9 @@ export async function getStockQuotes(): Promise<StockQuote[]> {
             changePositive: change > 0
         });
     }
-
     return results;
 }
 
 function evalChange(close: number, open: number, precision: number): number {
     return parseFloat((((close - open) / open) * 2).toFixed(precision))
 }
-
-stooqApiController.get("/public/quotes", async (c) => {
-    try {
-        const quotes = await getStockQuotes();
-        return c.json(quotes, 200);
-    } catch (err) {
-        console.error("💥 Błąd podczas pobierania danych:", err);
-        return c.json({ error: "Wystąpił błąd serwera" }, 500);
-    }
-});

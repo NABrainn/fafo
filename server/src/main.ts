@@ -7,8 +7,9 @@ import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
 import { authController } from "./controller/authController.ts";
 import { except } from 'hono/combine';
-import {stooqApiController} from "./controller/external/stooqApiController.ts";
-import {chickenApiController} from "./controller/external/chickenFacts/chickenApiController.ts";
+import {stooqController} from "./controller/external/stooq/stooqController.ts";
+import {chickenController} from "./controller/external/chickenFacts/chickenController.ts";
+import {stooqInit, quotes, startStooqDataSync} from "./controller/external/stooq/stooqService.ts";
 
 type Variables = JwtVariables
 
@@ -42,6 +43,8 @@ app.route('/api/comments', commentController);
 app.route('/api/users', userController);
 app.route('/auth', authController);
 
-app.route('/api/stooqapi', stooqApiController);
-app.route('/api/chicken', chickenApiController);
+app.route('/api/stooqapi', stooqController);
+app.route('/api/chicken', chickenController);
+
+await stooqInit()
 Deno.serve(app.fetch)

@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 // @ts-ignore
-import { getFactById, getFactCount } from './chickenApiModel.ts';
-import type { Fact } from './chickenApiModel.ts';
+import { getFactById, getFactCount } from './chickenModel.ts';
+import type { Fact } from './chickenModel.ts';
 
 export type Result = {
     fact?: Fact;
@@ -9,9 +9,9 @@ export type Result = {
     last_counted?: string;
 }
 
-export const chickenApiController = new Hono();
+export const chickenController = new Hono();
 
-chickenApiController.get('/public/facts', async (c) => {
+chickenController.get('/public/facts', async (c) => {
     const factId = Math.floor(Math.random() * 31) + 1;
 
     try {
