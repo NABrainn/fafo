@@ -13,6 +13,7 @@
     "npm:@types/node@*": "22.12.0",
     "npm:@types/pg@^8.11.11": "8.11.11",
     "npm:@types/serve-static@1.15.7": "1.15.7",
+    "npm:bcrypt@6": "6.0.0",
     "npm:dotenv@^16.4.7": "16.4.7",
     "npm:drizzle-kit@*": "0.30.6_esbuild@0.19.12",
     "npm:drizzle-kit@~0.30.6": "0.30.6_esbuild@0.19.12",
@@ -250,6 +251,13 @@
         "@types/send"
       ]
     },
+    "bcrypt@6.0.0": {
+      "integrity": "sha512-cU8v/EGSrnH+HnxV2z0J7/blxH8gq7Xh2JFT6Aroax7UohdmiJJlxApMxtKfuI7z68NvvVcmR78k2LbT6efhRg==",
+      "dependencies": [
+        "node-addon-api",
+        "node-gyp-build"
+      ]
+    },
     "buffer-from@1.1.2": {
       "integrity": "sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ=="
     },
@@ -378,6 +386,12 @@
     },
     "ms@2.1.3": {
       "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
+    },
+    "node-addon-api@8.3.1": {
+      "integrity": "sha512-lytcDEdxKjGJPTLEfW4mYMigRezMlyJY8W4wxJK8zE533Jlb8L8dRuObJFWg2P+AuOIxoCgKF+2Oq4d4Zd0OUA=="
+    },
+    "node-gyp-build@4.8.4": {
+      "integrity": "sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ=="
     },
     "obuf@1.1.2": {
       "integrity": "sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg=="
@@ -605,6 +619,7 @@
       "jsr:@std/assert@1",
       "jsr:@std/testing@^1.0.11",
       "npm:@types/pg@^8.11.11",
+      "npm:bcrypt@6",
       "npm:dotenv@^16.4.7",
       "npm:drizzle-kit@~0.30.6",
       "npm:drizzle-orm@0.41",

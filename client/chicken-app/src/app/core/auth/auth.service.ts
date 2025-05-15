@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {computed, inject, Injectable, signal} from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { catchError, map, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginData } from './components/login-form/login-form.component';

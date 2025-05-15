@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, httpResource} from '@angular/common/http';
-import {environment} from '../../../environments/environment.development';
+import {environment} from '../../../environments/environment';
 import type {Fact} from '../../../../../../server/src/controller/external/chickenFacts/chickenModel';
 
 export type Result = {
