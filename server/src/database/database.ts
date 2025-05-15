@@ -5,10 +5,10 @@ const { Pool } = pg
 
 export type Connection = typeof db;
 
-const env = (Deno.env.get('DENO_ENV') || 'development') as keyof typeof dbConfig;
+const env = (Deno.env.get('DENO_ENV') || 'dev').toLowerCase() as keyof typeof dbConfig;
 
 const dbConfig = {
-    development: {
+    dev: {
         client: new Pool({
             connectionString: Deno.env.get('DATABASE_DEV_URL'),
         }),
@@ -20,7 +20,7 @@ const dbConfig = {
         }),
         schema: { ...schema },
     },
-    production: {
+    prod: {
         client: new Pool({
             connectionString: Deno.env.get('DATABASE_URL'),
         }),

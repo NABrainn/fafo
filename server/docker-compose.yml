@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DATABASE}
     ports:
-      - 5460:5432
+      - "5440:5432"
     networks:
       - pg
 networks:
