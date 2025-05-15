@@ -6,7 +6,7 @@ export default defineConfig({
     schema: './src/database/schema',
     dialect: 'postgresql',
     dbCredentials: {
-        url: Deno.env.get('DATABASE_TEST_URL') || 'postgresql://postgres:postgres@localhost:5450/blog'
+        url: Deno.env.get('DATABASE_URL') || "postgresql://postgres:postgres@localhost:5440/blog"
     },
     extensionsFilters: ["postgis"],
     schemaFilter: ["public"],

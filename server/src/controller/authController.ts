@@ -2,8 +2,7 @@ import { Hono } from "hono";
 import { UserRepository } from "../database/repository/userRepository.ts";
 import { db } from "../database/database.ts";
 import { generateJWT, verifyJWT } from "../util/jwtUtil.ts";
-import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
-import { jwtVerify } from "jose";
+import {verifyPassword} from "../util/cryptoUtil.ts";
 
 
 export const authController = new Hono();
@@ -47,7 +46,7 @@ authController.post("/login", async (c) => {
             return c.json('Niepoprawny email/hasło', 401);
         }
 
-        if (!await bcrypt.compare(password, user.password)) {
+        if (!await verifyPassword(password, user.password)) {
             return c.json('Niepoprawny email/hasło', 401);
         }
 

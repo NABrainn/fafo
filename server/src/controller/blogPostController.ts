@@ -13,7 +13,7 @@ blogPostController.get('/public/:id', async (c) => {
         if(!blogPost) {
             return c.json({error: 'Nie znaleziono posta'}, 404)
         } 
-        return c.json(blogPost);
+        return c.json(blogPost, 200);
     } catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
         return c.json({ error: "Wystąpił błąd serwera" }, 500);

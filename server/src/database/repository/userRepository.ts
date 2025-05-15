@@ -1,7 +1,7 @@
 import { User, users } from "../schema/users.ts";
 import { Connection } from "../database.ts";
 import { eq } from "drizzle-orm/expressions";
-import * as bcrypt from "https://deno.land/x/bcrypt/mod.ts";
+import {hashPassword} from "../../util/cryptoUtil.ts";
 
 export class UserRepository {
 
@@ -41,7 +41,7 @@ export class UserRepository {
     async create(data: Extract<User, typeof users.$inferInsert>) {        
         const user = {
             ...data,
-            password: await bcrypt.hash(data.password),
+            password: await hashPassword(data.password),
         }
         const created = await this.pool.insert(users).values(user).returning();
         return created[0];

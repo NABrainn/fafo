@@ -12,6 +12,8 @@ import {chickenController} from "./controller/external/chickenFacts/chickenContr
 import {startService, quotes, startStooqDataSync} from "./controller/external/stooq/stooqService.ts";
 import { serveStatic } from 'hono/deno'
 import { resolve, join } from "node:path";
+import { compress } from 'hono/compress'
+
 
 
 type Variables = JwtVariables
@@ -27,12 +29,14 @@ app.use('/*', cors({
 }))
 
 app.use('/*', cors({
-    origin: 'http://localhost:4200',
+    origin: 'https://hotwings.deno.dev',
     allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
     allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
     maxAge: 6000,
     credentials: true,
 }))
+
+app.use(compress())
 
 const jwtSecret = Deno.env.get('JWT_SECRET');
 if (!jwtSecret) {
@@ -54,12 +58,6 @@ app.use('/api/*',
     )
 )
 
-const staticRoot = resolve(Deno.cwd(), '../out/chicken-app/browser')
-console.log(staticRoot)
-
-app.use('*', serveStatic({ root: staticRoot }));
-app.get('*', serveStatic({ path: join(staticRoot, 'index.html') }))
-
 app.route('/api/posts', blogPostController);
 app.route('/api/comments', commentController);
 app.route('/api/users', userController);
@@ -69,4 +67,8 @@ app.route('/api/stooqapi', stooqController);
 app.route('/api/chicken', chickenController);
 
 await startService()
+
+const staticRoot = resolve(Deno.cwd(), '../dist/chicken-app/browser')
+app.use('*', serveStatic({ root: staticRoot }));
+app.get('*', serveStatic({ path: join(staticRoot, 'index.html') }))
 Deno.serve(app.fetch)
