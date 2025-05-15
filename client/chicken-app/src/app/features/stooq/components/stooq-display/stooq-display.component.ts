@@ -2,17 +2,17 @@ import {Component, computed, effect, inject, OnInit, signal} from '@angular/core
 import {StooqService} from '../../stooq.service';
 import {NgClass} from '@angular/common';
 import {ToFixedPipe} from '../../pipes/to-fixed.pipe';
+import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-stooq-display',
   imports: [
     NgClass,
-    ToFixedPipe
+    ToFixedPipe,
+    LoadingSpinnerComponent
   ],
   templateUrl: './stooq-display.component.html',
-  host: {
-    class: 'md:basis-1/4 basis-3/10'
-  }
+
 })
 export class StooqDisplayComponent implements  OnInit{
   stooqService = inject(StooqService)

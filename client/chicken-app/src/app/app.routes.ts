@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
-import {numericIdGuard} from './core/page-not-found/numeric-id.guard';
+import {numericIdGuard} from './shared/components/page-not-found/numeric-id.guard';
 
 export const routes: Routes = [
     {path: 'posty', loadComponent: () => import('./features/post/components/post-list/post-list.component').then(c => c.PostListComponent), children: [
@@ -10,5 +10,5 @@ export const routes: Routes = [
     {path: 'rejestracja', loadComponent: () => import('./core/auth/components/register-form/register-form.component').then(c => c.RegisterFormComponent)},
     {path: 'logowanie', loadComponent: () => import('./core/auth/components/login-form/login-form.component').then(c => c.LoginFormComponent)},
     {path: '', redirectTo: '/posty', pathMatch: 'full'},
-    {path: '**', loadComponent: () => import('./core/page-not-found/page-not-found.component').then(c => c.PageNotFoundComponent)}
+    {path: '**', loadComponent: () => import('./shared/components/page-not-found/page-not-found.component').then(c => c.PageNotFoundComponent)}
 ];

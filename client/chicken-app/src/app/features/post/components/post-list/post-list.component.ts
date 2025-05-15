@@ -4,6 +4,7 @@ import { PostCardComponent } from '../post-card/post-card.component';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {AuthService} from '../../../../core/auth/auth.service';
 import {StooqDisplayComponent} from '../../../stooq/components/stooq-display/stooq-display.component';
+import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-post-list',
@@ -12,7 +13,8 @@ import {StooqDisplayComponent} from '../../../stooq/components/stooq-display/sto
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
-    StooqDisplayComponent
+    StooqDisplayComponent,
+    LoadingSpinnerComponent
   ],
   templateUrl: './post-list.component.html',
   host: {

@@ -1,6 +1,6 @@
 <div class="md:text-[1rem] text-md">
   @if(quotes.isLoading()) {
-    Loading...
+    <app-loading-spinner></app-loading-spinner>
   }
   @if(quotes.error()) {
     <div class="text-error bg-secondary p-8">Błąd przy wczytywaniu danych z giełdy</div>
@@ -24,6 +24,7 @@
         </div>
       }
     </div>
+
   }
   </div>
 
