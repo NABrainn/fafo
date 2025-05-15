@@ -18,7 +18,7 @@ import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spi
   ],
   templateUrl: './post-list.component.html',
   host: {
-    class: 'grow-1 flex flex-col'
+    class: 'grow-1 bg-primary flex flex-col'
   }
 })
 export class PostListComponent implements OnInit{

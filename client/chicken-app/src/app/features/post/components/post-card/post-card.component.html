@@ -1,35 +1,40 @@
-<div class="flex flex-col lg:min-h-80 min-h-60 gap-4 overflow-y-hidden text-ellipsis bg-secondary p-4 rounded">
-    <h3 class="text-neutral-dark text-2xl font-semibold">
-        <ng-content select="title">
+<div class="flex flex-col lg:min-h-80 min-h-60 gap-4 overflow-y-hidden text-ellipsis bg-secondary rounded">
+    <img class="min-h-20" src="" alt="there shall be an image">
+    <main class="grow-1 flex flex-col gap-4 p-4">
+      <div class="grow-1 flex flex-col">
+        <h3 class="text-neutral-dark text-2xl font-semibold">
+          <ng-content select="title">
 
-        </ng-content>
-    </h3>
-    <div class="flex flex-col justify-between text-neutral-light overflow-y-hidden border text-tertiary border-tertiary border-2 grow-1 rounded p-4">
-        <ng-content select="description">
+          </ng-content>
+        </h3>
+        <div class="grow-1">
+          <ng-content select="description">
 
-        </ng-content>
+          </ng-content>
+        </div>
         <span
           routerLink="/posty/{{id()}}"
-        class="text-accent cursor-pointer">Czytaj więcej...</span>
-    </div>
-    <footer class="flex items-center justify-between">
-        <div class="text-neutral-dark text-xs font-semibold">
-            <ng-content select="footer">
-
-            </ng-content>
-        </div>
-      <div class="flex gap-2">
-<!--        <button-->
-<!--          class="bg-accent px-2 py-1 rounded">-->
-<!--          Aktualizuj-->
-<!--        </button>-->
-        @if (authenticated() && author() === loggedUser()?.username) {
-          <button
-            (click)="onDelete(id())"
-            class="bg-error/80 px-2 py-1 rounded">
-            Usuń
-          </button>
-        }
+          class="text-accent cursor-pointer">Czytaj więcej...</span>
       </div>
-    </footer>
+      <footer class="flex items-center justify-between">
+        <div class="text-neutral-dark text-xs font-semibold">
+          <ng-content select="footer">
+
+          </ng-content>
+        </div>
+        <div class="flex gap-2">
+          <!--        <button-->
+          <!--          class="bg-accent px-2 py-1 rounded">-->
+          <!--          Aktualizuj-->
+          <!--        </button>-->
+          @if (authenticated() && author() === loggedUser()?.username) {
+            <button
+              (click)="onDelete(id())"
+              class="bg-error/80 px-2 py-1 rounded">
+              Usuń
+            </button>
+          }
+        </div>
+      </footer>
+    </main>
 </div>
