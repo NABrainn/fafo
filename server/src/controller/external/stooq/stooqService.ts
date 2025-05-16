@@ -12,9 +12,10 @@ export interface StockQuote {
     changePositive: boolean;
 }
 
+
 export let quotes: StockQuote[] = []
 
-export async function startService() {
+export async function start() {
     await assignStooqData();
     startStooqDataSync();
 }
