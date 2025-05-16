@@ -5,12 +5,12 @@ import {ImageForm} from "../imageController.ts";
 const imageRepository = new ImageRepository(db)
 
 export async function uploadImage(image: ImageForm) {
-    const fileName = `${crypto.randomUUID()}-${image.imageData.name}`
+    const fileName = `${crypto.randomUUID()}-${image.data.name}`
     const filePath = `./uploads/${fileName}`;
-    const fileSize = image.imageData.size
-    const contentType = image.imageData.type
+    const fileSize = image.data.size
+    const contentType = image.data.type
 
-    const arrayBuffer = await image.imageData.arrayBuffer();
+    const arrayBuffer = await image.data.arrayBuffer();
     await Deno.writeFile(filePath, new Uint8Array(arrayBuffer));
 
     await imageRepository.saveImage({
