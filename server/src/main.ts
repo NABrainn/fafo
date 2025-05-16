@@ -9,11 +9,11 @@ import { authController } from "./controller/authController.ts";
 import { except } from 'hono/combine';
 import {stooqController} from "./controller/external/stooq/stooqController.ts";
 import {chickenController} from "./controller/external/chickenFacts/chickenController.ts";
-import {start, quotes, startStooqDataSync} from "./controller/external/stooq/stooqService.ts";
 import { serveStatic } from 'hono/deno'
 import { resolve, join } from "node:path";
 import { compress } from 'hono/compress'
-import {saveImage} from "./controller/image/imageService.ts";
+import {imageController} from "./controller/imageController.ts";
+import {start} from "./controller/external/stooq/stooqService.ts";
 
 
 type Variables = JwtVariables
@@ -58,6 +58,7 @@ app.use('/api/*',
     )
 )
 
+app.route('/api/images', imageController)
 app.route('/api/posts', blogPostController);
 app.route('/api/comments', commentController);
 app.route('/api/users', userController);
