@@ -1,8 +1,7 @@
-
 import { blogPosts, blogPostsRelations } from "../blogPosts.ts";
 import { comments, commentsRelations } from "../comments.ts";
 import { users, usersRelations } from "../users.ts";
-import {files} from "../files.ts";
+import { images, imagesRelations } from "../images.ts";
 
 export default {
     blogPosts,
@@ -11,5 +10,6 @@ export default {
     commentsRelations,
     users,
     usersRelations,
-    files
+    images,
+    imagesRelations
 }

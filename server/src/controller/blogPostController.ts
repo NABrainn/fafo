@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { BlogPost, blogPosts } from "../database/schema/blogPosts.ts";
 import { BlogPostRepository } from "../database/repository/blogPostRepository.ts";
 import { db } from "../database/database.ts";
+import {ImageRepository} from "../database/repository/imageRepository.ts";
 
 export const blogPostController = new Hono()
 const blogPostRepository = new BlogPostRepository(db)
@@ -39,10 +40,8 @@ blogPostController.post('/', async (c) => {
         if(payload)
             body.author = payload.sub
         const blogPost = await blogPostRepository.create(body)
-        
         if(!blogPost)
             return c.json({error: 'Nie udało się utworzyć posta'}, 400)
-
         return c.json(blogPost, 200);
     } catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);

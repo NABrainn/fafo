@@ -57,7 +57,6 @@ export class BlogPostRepository {
         const updated = await this.pool.update(blogPosts).set({
            title: data.title,
            subtitle: data.subtitle,
-           imgUrl: data.imgUrl
         }).where(eq(blogPosts.id, id)).returning();
         return updated[0]
     }
