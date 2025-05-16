@@ -1,49 +1,51 @@
-<div class="bg-primary grow-1 flex flex-col gap-4 p-8 justify-between">
-  @if(posts.isLoading()) {
+<div class="grow-1 flex flex-col gap-4 py-8">
+  <div class="grow-1 flex flex-col sm:w-4/5 w-full mx-auto sm:px-0 px-4">
+    @if (posts.isLoading()) {
     <app-loading-spinner></app-loading-spinner>
   }
-  @if(posts.error()) {
-    <div class="text-error bg-secondary p-8">Błąd przy wczytywaniu postów</div>
-  }
-  @if(!posts.value()?.length) {
-        <div class="flex flex-col gap-8 items-center">
-          <p class="text-xl pt-20 text-center">Lista postów jest obecnie pusta</p>
-        </div>
-  }
-  @else {
-    <div
-    class="flex md:flex-row flex-col lg:gap-8 gap-3">
-      <div
-      class="
-      grid grid-cols-1
-      md:grid-cols-2
-      2xl:grid-cols-3 gap-8 md:basis-3/4 basis-7/10">
-        @for(post of posts.value(); track $index) {
-          <app-post-card
-            [id]="post.id"
-            [author]="post.author.username">
-            <h2 ngProjectAs="title">
-              {{post.title}}
-            </h2>
-            <span ngProjectAs="description">
-                      {{post.subtitle}}
-                  </span>
-            <div ngProjectAs="footer">
-              <span>{{post.author.username}} | {{post.createdAt}}</span>
-            </div>
-          </app-post-card>
-        }
-        </div>
-      <div class="md:basis-1/4 basis-3/10">
-        <app-stooq-display></app-stooq-display>
+    @if (posts.error()) {
+      <div class="text-error bg-secondary p-8">Błąd przy wczytywaniu postów</div>
+    }
+    @if (!posts.value()?.length) {
+      <div class="flex flex-col gap-8 items-center">
+        <p class="text-xl pt-20 text-center">Lista postów jest obecnie pusta</p>
       </div>
-    </div>
-  }
+    } @else {
+      <div
+        class="flex md:flex-row justify-between flex-col lg:gap-8 gap-3">
+        <div
+          class="
+          grow-5
+          grid grid-cols-1
+          md:grid-cols-2
+          2xl:grid-cols-3 gap-8">
+          @for (post of posts.value(); track $index) {
+            <app-post-card
+              [id]="post.id"
+              [author]="post.author.username">
+              <h2 ngProjectAs="title">
+                {{ post.title }}
+              </h2>
+              <span ngProjectAs="description">
+                      {{ post.subtitle }}
+                  </span>
+              <div ngProjectAs="footer">
+                <span>{{ post.author.username }} | {{ post.createdAt }}</span>
+              </div>
+            </app-post-card>
+          }
+          </div>
+        <div class="grow-1">
+          <app-stooq-display></app-stooq-display>
+        </div>
+      </div>
+    }
     <button
-      class="fixed bottom-5 right-5 sm:block self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
+      class="fixed bottom-2 right-2 sm:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
       routerLink="/posty/nowy"
       routerLinkActive="active">
       Wstaw nowy post
     </button>
-    <router-outlet></router-outlet>
+  </div>
+  <router-outlet></router-outlet>
 </div>
