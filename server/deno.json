@@ -29,7 +29,9 @@
     "drizzle-orm": "npm:drizzle-orm@^0.41.0",
     "hono": "npm:hono@^4.7.5",
     "jose": "npm:jose@^6.0.10",
-    "pg": "npm:pg@^8.14.1"
+    "pg": "npm:pg@^8.14.1",
+    "zod": "npm:zod@^3.24.4",
+    "zod-validator": "npm:zod-validator@^1.0.1"
   },
   "deploy": {
     "project": "hotwings",
