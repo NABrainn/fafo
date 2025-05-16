@@ -28,6 +28,7 @@ imageController.post(
     '/',
     zValidator('form', schema, (result, c) => {
         if (!result.success) {
+            console.error("💥 Błąd podczas pobierania danych:", result.error.flatten());
             return c.json({
                 error: 'Validation failed', details: result.error.flatten()
             }, 400);
@@ -42,9 +43,43 @@ imageController.post(
         }
 })
 
-Deno.test('/api/images no body', async () => {
+Deno.test('/api/images empty body', async () => {
     const res = await imageController.request('/', {
         method: 'POST',
     })
     assertEquals(res.status, 400)
+})
+
+Deno.test('/api/images empty form data', async () => {
+    const request = new Request('http://localhost:8000/', {
+        method: 'POST',
+        body: new FormData()
+    })
+
+    const response = await imageController.fetch(request);
+    assertEquals(response.status, 400)
+})
+
+Deno.test('/api/images form data invalid max len title', async () => {
+    const formData = new FormData()
+    formData.set('title', 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz<<<<<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz')
+    const request = new Request('http://localhost:8000/', {
+        method: 'POST',
+        body: new FormData()
+    })
+
+    const response = await imageController.fetch(request);
+    assertEquals(response.status, 400)
+})
+
+Deno.test('/api/images form data invalid min len title', async () => {
+    const formData = new FormData()
+    formData.set('title', '')
+    const request = new Request('http://localhost:8000/', {
+        method: 'POST',
+        body: new FormData()
+    })
+
+    const response = await imageController.fetch(request);
+    assertEquals(response.status, 400)
 })
