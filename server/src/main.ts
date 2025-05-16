@@ -9,11 +9,11 @@ import { authController } from "./controller/authController.ts";
 import { except } from 'hono/combine';
 import {stooqController} from "./controller/external/stooq/stooqController.ts";
 import {chickenController} from "./controller/external/chickenFacts/chickenController.ts";
-import {startService, quotes, startStooqDataSync} from "./controller/external/stooq/stooqService.ts";
+import {start, quotes, startStooqDataSync} from "./controller/external/stooq/stooqService.ts";
 import { serveStatic } from 'hono/deno'
 import { resolve, join } from "node:path";
 import { compress } from 'hono/compress'
-
+import {saveImage} from "./controller/image/imageService.ts";
 
 
 type Variables = JwtVariables
@@ -66,7 +66,7 @@ app.route('/auth', authController);
 app.route('/api/stooqapi', stooqController);
 app.route('/api/chicken', chickenController);
 
-await startService()
+await start()
 
 const staticRoot = resolve(Deno.cwd(), '../dist/chicken-app/browser')
 app.use('*', serveStatic({ root: staticRoot }));
