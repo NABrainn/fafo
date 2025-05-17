@@ -16,9 +16,9 @@
         <div
           class="
           grid grid-cols-1
-          2xl:grid-cols-3 gap-8">
+          2xl:grid-cols-2 gap-8">
           @for (post of posts.value(); track $index) {
-            <div class=" max-w-140">
+            <div class=" max-w-130">
               <app-post-card
                 [imageId]="post.imageId"
                 [id]="post.id"
@@ -36,7 +36,7 @@
             </div>
           }
           </div>
-        <div class="grow-1">
+        <div class="">
           <app-stooq-display></app-stooq-display>
         </div>
       </div>
