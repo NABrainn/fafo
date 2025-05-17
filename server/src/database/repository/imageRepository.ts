@@ -2,7 +2,7 @@ import {Connection} from "../database.ts";
 import {Image, images} from "../schema/images.ts";
 
 export class ImageRepository {
-    pool!: Connection;
+    pool: Connection;
 
     constructor(pool: Connection) {
         this.pool = pool;
