@@ -6,12 +6,12 @@ const imageRepository = new ImageRepository(db)
 
 export async function uploadImage(image: ImageForm) {
     const fileName = `${crypto.randomUUID()}-${image.data.name}`
-    const filePath = `${Deno.cwd()}/resources/blogPostImages/${fileName}`;
+    const filePath = `resources/blogPostImages/${fileName}`;
     const fileSize = image.data.size
     const contentType = image.data.type
 
     const arrayBuffer = await image.data.arrayBuffer();
-    await Deno.writeFile(filePath, new Uint8Array(arrayBuffer));
+    await Deno.writeFile(`${Deno.cwd()}/filePath`, new Uint8Array(arrayBuffer));
 
     await imageRepository.saveImage({
         fileName,
