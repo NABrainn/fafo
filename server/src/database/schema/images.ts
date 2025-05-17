@@ -1,5 +1,5 @@
-import {integer, pgTable, varchar} from "npm:drizzle-orm@0.41.0/pg-core";
-import {relations} from "npm:drizzle-orm@0.41.0";
+import {integer, pgTable, varchar} from "drizzle-orm/pg-core";
+import {relations} from "drizzle-orm/relations";
 import {blogPosts} from "./blogPosts.ts";
 
 export type  Image = typeof images.$inferSelect | typeof images.$inferInsert
@@ -10,6 +10,7 @@ export const images = pgTable('images', {
     filePath: varchar('file_path', {length: 50}).notNull(),
     fileSize: integer('file_size').notNull(),
     contentType: varchar('content_type', {length: 50}).notNull(),
+    ext: varchar('ext', {length: 5}).notNull(),
 })
 
 export const imagesRelations = relations(images, ({ many }) => ({
