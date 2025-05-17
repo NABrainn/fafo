@@ -2,6 +2,8 @@ import { Connection } from "../database.ts";
 import { BlogPost, blogPosts } from "../schema/blogPosts.ts";
 import { asc, desc, eq } from "drizzle-orm/expressions";
 import { comments } from "../schema/comments.ts";
+import {images} from "../schema/images.ts";
+
 
 export class BlogPostRepository {
 
@@ -49,7 +51,11 @@ export class BlogPostRepository {
             }
         })        
     }
-    async create (data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {                
+    async create (data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {
+        if(!data.imageId) {
+            const placeholderId = await this.pool.select({id: images.id}).from(images).where(eq(images.fileName, 'placeholder'));
+            data.imageId = placeholderId[0].id;
+        }
         const inserted = await this.pool.insert(blogPosts).values(data).returning();
         return inserted[0]
     }

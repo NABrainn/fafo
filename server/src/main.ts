@@ -12,7 +12,7 @@ import {chickenController} from "./controller/external/chickenFacts/chickenContr
 import { serveStatic } from 'hono/deno'
 import { resolve, join } from "node:path";
 import { compress } from 'hono/compress'
-import {imageController} from "./controller/imageController.ts";
+import {imageController} from "./controller/image/imageController.ts";
 import {start} from "./controller/external/stooq/stooqService.ts";
 
 
@@ -49,7 +49,8 @@ app.use('/api/*',
             '/api/posts/public/*',
             '/api/comments/public/*',
             '/api/stooqapi/public/*',
-            '/api/chicken/public/*'
+            '/api/chicken/public/*',
+            '/api/images/public/*'
         ],
         jwt({
             secret: jwtSecret,

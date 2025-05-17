@@ -25,7 +25,6 @@ export class PostListComponent implements OnInit{
   service = inject(PostService)
   #authService = inject(AuthService)
   posts = this.service.loadPosts()
-
   ngOnInit() {
     this.#authService.verifyAuthenticated().subscribe()
   }

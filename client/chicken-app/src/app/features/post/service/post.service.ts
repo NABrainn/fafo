@@ -14,7 +14,7 @@ export type SelectBlogPost = {
   subtitle: string,
   content: string,
   createdAt?: string,
-  imgUrl: string,
+  imageId: number
 }
 
 export type InsertBlogPost = {
@@ -22,7 +22,6 @@ export type InsertBlogPost = {
   subtitle: string,
   content: string,
   createdAt?: string,
-  imgUrl: string,
 }
 
 @Injectable({

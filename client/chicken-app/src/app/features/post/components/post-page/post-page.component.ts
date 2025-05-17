@@ -1,10 +1,10 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
-import { BlogPost, PostService, SelectBlogPost } from '../../service/post.service';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import {Component, computed, DestroyRef, effect, inject, signal} from '@angular/core';
+import { PostService, SelectBlogPost } from '../../service/post.service';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { PostCommentComponent } from '../post-comment/post-comment.component';
-import { CommentService, InsertComment, SelectComment } from '../../service/comment.service';
-import { httpResource } from '@angular/common/http';
-import {comment} from 'postcss';
+import { CommentService, SelectComment } from '../../service/comment.service';
+import {environment} from '../../../../../environments/environment';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-post-page',
@@ -21,14 +21,19 @@ export class PostPageComponent {
   postService = inject(PostService);
   commentService = inject(CommentService)
   route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   #post = signal<SelectBlogPost | undefined>(undefined);
   post = computed(() => this.#post())
 
   #comments = signal<SelectComment[]>([]);
   comments = computed(() => this.#comments());
+  reqUrl = computed(() => {
+    const imageId = this.post()?.imageId;
+    return imageId ? `${environment.apiUrl}/images/public/${imageId}` : '';
+  });
 
-  onCommentStateChange(commentId: number) {
+  onCommentStateChange() {
       const postId = this.post()?.id;
       if (postId) {
         this.commentService.findAllCommentsByBlogId(postId)?.subscribe((data) => {
@@ -38,7 +43,7 @@ export class PostPageComponent {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: ParamMap) => {
       const id = params.get('id');
       if(id)
         this.postService.findById(Number(id)).subscribe((data: SelectBlogPost) => {

@@ -1,50 +1,8 @@
-import {Hono} from "npm:hono@4.7.5";
-import { assertEquals } from '@std/assert'
-import { zValidator } from 'npm:@hono/zod-validator'
-import { z } from 'zod'
-import {uploadImage} from "./image/imageService.ts";
-import {catchError} from "../util/error.ts";
+import {imageController} from "./imageController.ts";
 import { assertNotEquals } from "@std/assert/not-equals";
+import { assertEquals } from '@std/assert'
 
-export type ImageForm = {
-    title: string,
-    data: File
-}
 
-export const imageController = new Hono();
-
-//obiekt który opisuje co i jak ma być walidowane
-const schema = z.object({
-    title: z.string().min(1, 'Tytuł musi mieć więcej niż 1 znak').max(100, 'Tytuł nie może być dłuższy niż 100 znaków'),
-    data: z
-        .instanceof(File)
-        .refine(
-            (file) => ['image/png', 'image/jpeg', 'image/gif'].includes(file.type),
-            'Obrazek musi być w formacie PNG / JPEG / GIF',
-        )
-        .refine((file) => file.size <= 5 * 1024 * 1024, 'Obrazek musi być mniejszy niż 5MB'),
-})
-
-imageController.post(
-    '/',
-    zValidator('form', schema, (result, c) => {
-        if (!result.success) {
-            console.error("💥 Błąd podczas pobierania danych:", result.error.flatten());
-            return c.json({
-                error: 'Walidacja nie powiodła się', details: result.error.flatten()
-            }, 400);
-        }
-    }),
-    async c => {
-        const image: ImageForm = c.req.valid('form')
-        const [err] = await catchError(uploadImage(image));
-        if(err) {
-            console.error("💥 Błąd podczas pobierania danych:", err);
-            return c.json({ error: "Wystąpił błąd serwera" }, 500);
-        }
-})
-
-//-------------------------------------TESTY------------------------------------------------
 Deno.test('/api/images empty body | no File', async () => {
     const res = await imageController.request('/', {
         method: 'POST',

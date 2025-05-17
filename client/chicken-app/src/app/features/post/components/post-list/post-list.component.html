@@ -1,5 +1,5 @@
 <div class="grow-1 flex flex-col gap-4 py-8">
-  <div class="grow-1 flex flex-col sm:w-4/5 w-full mx-auto sm:px-0 px-4">
+  <div class="grow-1 flex flex-col justify-between sm:w-4/5 w-full mx-auto sm:px-0 px-4">
     @if (posts.isLoading()) {
     <app-loading-spinner></app-loading-spinner>
   }
@@ -12,40 +12,40 @@
       </div>
     } @else {
       <div
-        class="flex md:flex-row justify-between flex-col lg:gap-8 gap-3">
+        class="flex lg:flex-row justify-between flex-col lg:gap-8 gap-3">
         <div
           class="
-          grow-5
           grid grid-cols-1
-          md:grid-cols-2
-          2xl:grid-cols-3 gap-8">
+          2xl:grid-cols-2 gap-8">
           @for (post of posts.value(); track $index) {
-            <app-post-card
-              [id]="post.id"
-              [author]="post.author.username">
-              <h2 ngProjectAs="title">
-                {{ post.title }}
-              </h2>
-              <span ngProjectAs="description">
+            <div class=" max-w-130">
+              <app-post-card
+                [imageId]="post.imageId"
+                [id]="post.id"
+                [author]="post.author.username">
+                <h2 ngProjectAs="title">
+                  {{ post.title }}
+                </h2>
+                <span ngProjectAs="description">
                       {{ post.subtitle }}
                   </span>
-              <div ngProjectAs="footer">
-                <span>{{ post.author.username }} | {{ post.createdAt }}</span>
-              </div>
-            </app-post-card>
+                <div ngProjectAs="footer">
+                  <span>{{ post.author.username }} | {{ post.createdAt }}</span>
+                </div>
+              </app-post-card>
+            </div>
           }
           </div>
-        <div class="grow-1">
+        <div class="">
           <app-stooq-display></app-stooq-display>
         </div>
       </div>
     }
     <button
-      class="fixed bottom-2 right-2 sm:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
+      class="fixed bottom-2 right-2 lg:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
       routerLink="/posty/nowy"
       routerLinkActive="active">
       Wstaw nowy post
     </button>
   </div>
-  <router-outlet></router-outlet>
 </div>

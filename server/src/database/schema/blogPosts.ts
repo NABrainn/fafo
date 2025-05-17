@@ -13,7 +13,7 @@ export const blogPosts = pgTable('blog_posts', {
     content: varchar('content', {length: 250}).notNull(),
     createdAt: date('created_at').defaultNow().notNull(),
 
-    imageId: varchar('image_id').references(() => images.id).notNull(),
+    imageId: integer('image_id').references(() => images.id).notNull(),
     author: varchar('username').references(() => users.username, {onDelete: 'cascade'}).notNull(),
 })
 

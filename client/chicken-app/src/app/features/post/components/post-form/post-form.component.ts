@@ -3,7 +3,6 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PostService } from '../../service/post.service';
-import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-post-form',
@@ -13,8 +12,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
   ],
   templateUrl: './post-form.component.html',
   host: {
-    class: 'fixed inset-0 flex items-center justify-center z-50 bg-black/50',
-    '(click)': 'closeModal($event)',
+    class: 'grow-1 bg-primary flex flex-col',
   }
 })
 export class PostFormComponent {
@@ -24,9 +22,9 @@ export class PostFormComponent {
   service = inject(PostService);
 
   form = this.fb.nonNullable.group({
-    title: ['', [Validators.required, Validators.maxLength(50)]],
-    subtitle: ['', Validators.maxLength(100)],
-    content: ['', [Validators.required, Validators.maxLength(500)]]
+    title: ['', [Validators.required, Validators.minLength(80), Validators.maxLength(100)]],
+    subtitle: ['', [Validators.minLength(120), Validators.maxLength(150)]],
+    content: ['', [Validators.required, Validators.minLength(750), Validators.maxLength(1000)]]
   });
 
   closeModal(event: Event) {
@@ -40,7 +38,6 @@ export class PostFormComponent {
       title: this.form.controls.title.value,
       subtitle: this.form.controls.subtitle.value,
       content: this.form.controls.content.value,
-      imgUrl: 'https://via.placeholder.com/150'
     }).subscribe(() => {
       this.closeModal(event);
       this.service.reload();
