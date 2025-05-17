@@ -1,5 +1,6 @@
 import {Connection} from "../database.ts";
 import {Image, images} from "../schema/images.ts";
+import {eq} from "npm:drizzle-orm@0.41.0";
 
 export class ImageRepository {
     pool: Connection;
@@ -12,5 +13,11 @@ export class ImageRepository {
         return await this.pool
             .insert(images)
             .values(image)
+    }
+
+    async getImageById(id: number) {
+        return await this.pool.query.images.findFirst({
+            where: eq(images.id, id),
+        })
     }
 }
