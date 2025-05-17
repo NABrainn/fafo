@@ -6,7 +6,7 @@ const imageRepository = new ImageRepository(db)
 
 export async function uploadImage(image: ImageForm) {
     const fileName = `${crypto.randomUUID()}-${image.data.name}`
-    const filePath = `./uploads/${fileName}`;
+    const filePath = `${Deno.cwd()}/resources/blogPostImages/${fileName}`;
     const fileSize = image.data.size
     const contentType = image.data.type
 
