@@ -12,12 +12,11 @@
       </div>
     } @else {
       <div
-        class="flex md:flex-row justify-between flex-col lg:gap-8 gap-3">
+        class="flex lg:flex-row justify-between flex-col lg:gap-8 gap-3">
         <div
           class="
           grow-5
           grid grid-cols-1
-          md:grid-cols-2
           2xl:grid-cols-3 gap-8">
           @for (post of posts.value(); track $index) {
             <app-post-card
@@ -42,7 +41,7 @@
       </div>
     }
     <button
-      class="fixed bottom-2 right-2 sm:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
+      class="fixed bottom-2 right-2 lg:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
       routerLink="/posty/nowy"
       routerLinkActive="active">
       Wstaw nowy post

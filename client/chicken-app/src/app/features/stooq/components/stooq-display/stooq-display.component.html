@@ -16,7 +16,7 @@
           <span class="p-1">{{quote.ticker || "N/A"}}</span>
           <span class="col-span-2 sm:p-2 flex grow-1 p-1 gap-2">
             <span>{{ (quote.close | toFixed:2) || 'N/A' }}</span>
-            <span class="lg:block hidden">{{ quote.symbol }}</span>
+            <span>{{ quote.symbol }}</span>
             <span
               class="grow-1"
               [ngClass]="quote.changePositive ? 'text-green-400' : 'text-red-600'"> {{ quote.change || '' }}</span>
