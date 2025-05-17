@@ -15,24 +15,25 @@
         class="flex lg:flex-row justify-between flex-col lg:gap-8 gap-3">
         <div
           class="
-          grow-5
           grid grid-cols-1
           2xl:grid-cols-3 gap-8">
           @for (post of posts.value(); track $index) {
-            <app-post-card
-              [imageId]="post.imageId"
-              [id]="post.id"
-              [author]="post.author.username">
-              <h2 ngProjectAs="title">
-                {{ post.title }}
-              </h2>
-              <span ngProjectAs="description">
+            <div class=" max-w-140">
+              <app-post-card
+                [imageId]="post.imageId"
+                [id]="post.id"
+                [author]="post.author.username">
+                <h2 ngProjectAs="title">
+                  {{ post.title }}
+                </h2>
+                <span ngProjectAs="description">
                       {{ post.subtitle }}
                   </span>
-              <div ngProjectAs="footer">
-                <span>{{ post.author.username }} | {{ post.createdAt }}</span>
-              </div>
-            </app-post-card>
+                <div ngProjectAs="footer">
+                  <span>{{ post.author.username }} | {{ post.createdAt }}</span>
+                </div>
+              </app-post-card>
+            </div>
           }
           </div>
         <div class="grow-1">
@@ -47,5 +48,4 @@
       Wstaw nowy post
     </button>
   </div>
-  <router-outlet></router-outlet>
 </div>
