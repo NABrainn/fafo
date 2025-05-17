@@ -3,7 +3,6 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PostService } from '../../service/post.service';
-import { AuthService } from '../../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-post-form',
@@ -40,7 +39,6 @@ export class PostFormComponent {
       title: this.form.controls.title.value,
       subtitle: this.form.controls.subtitle.value,
       content: this.form.controls.content.value,
-      imgUrl: 'https://via.placeholder.com/150'
     }).subscribe(() => {
       this.closeModal(event);
       this.service.reload();

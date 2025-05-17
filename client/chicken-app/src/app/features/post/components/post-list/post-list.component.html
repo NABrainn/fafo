@@ -1,5 +1,5 @@
 <div class="grow-1 flex flex-col gap-4 py-8">
-  <div class="grow-1 flex flex-col sm:w-4/5 w-full mx-auto sm:px-0 px-4">
+  <div class="grow-1 flex flex-col justify-between sm:w-4/5 w-full mx-auto sm:px-0 px-4">
     @if (posts.isLoading()) {
     <app-loading-spinner></app-loading-spinner>
   }
@@ -21,6 +21,7 @@
           2xl:grid-cols-3 gap-8">
           @for (post of posts.value(); track $index) {
             <app-post-card
+              [imageId]="post.imageId"
               [id]="post.id"
               [author]="post.author.username">
               <h2 ngProjectAs="title">
