@@ -13,6 +13,7 @@ export class ImageRepository {
         return await this.pool
             .insert(images)
             .values(image)
+            .returning({id: images.id})
     }
 
     async getImageById(id: number) {
