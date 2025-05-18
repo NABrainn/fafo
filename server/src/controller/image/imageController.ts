@@ -36,6 +36,9 @@ imageController.get(
         console.error("💥 Błąd podczas pobierania danych:", dbErr);
         return c.json({ error: "Wystąpił błąd serwera" }, 500);
     }
+    if (!imageProps) {
+        return c.json({ error: "Nie znaleziono obrazka w bazie danych" }, 404);
+    }
     const filePath = `${Deno.cwd()}/${imageProps?.filePath}.${imageProps?.ext}`;
     const [notFoundErr] = await catchError(Deno.stat(filePath));
     if(notFoundErr) {

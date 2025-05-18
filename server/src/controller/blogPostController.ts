@@ -10,10 +10,15 @@ const blogPostRepository = new BlogPostRepository(db)
 blogPostController.get('/public/:id', async (c) => {
     try {
         const id = c.req.param('id');
+
+        if (isNaN(Number(id))) {
+            return c.json({ error: 'Nieprawidłowy identyfikator posta' }, 400);
+        }
+
         const blogPost = await blogPostRepository.findById(parseFloat(id))
         if(!blogPost) {
             return c.json({error: 'Nie znaleziono posta'}, 404)
-        } 
+        }
         return c.json(blogPost);
     } catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
@@ -23,9 +28,11 @@ blogPostController.get('/public/:id', async (c) => {
 
 blogPostController.get('/public', async (c) => {
     try {
-        const blogPosts = await blogPostRepository.findAll()  
-        if(!blogPosts) 
+        const blogPosts = await blogPostRepository.findAll()
+
+        if(!blogPosts)
             return c.json({error: 'Nie znaleziono postów'}, 404)
+
         return c.json(blogPosts, 200);
     } catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
@@ -35,7 +42,12 @@ blogPostController.get('/public', async (c) => {
 
 blogPostController.post('/', async (c) => {
     try {
-        const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferInsert>>()    
+        const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferInsert>>()
+
+        if (!body.title || !body.content) {
+            return c.json({ error: 'Brak wymaganych danych posta' }, 400);
+        }
+
         const payload = c.get('jwtPayload')
         if(payload)
             body.author = payload.sub
@@ -52,11 +64,16 @@ blogPostController.post('/', async (c) => {
 blogPostController.put('/:id', async (c) => {
     try {
         const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferSelect>>()
+
+        if (!body.id || !body.title || !body.content) {
+            return c.json({ error: 'Brak wymaganych danych do aktualizacji' }, 400);
+        }
+
         const payload = c.get('jwtPayload')
         if(payload)
             body.author = payload.sub
         const blogPost = await blogPostRepository.updateById(body.id, body)
-        if(!blogPost) 
+        if(!blogPost)
             return c.json({error: 'Nie znaleziono posta'}, 404)
         return c.json(blogPost, 200);
     } catch (err) {
@@ -68,10 +85,16 @@ blogPostController.put('/:id', async (c) => {
 blogPostController.delete('/:id', async (c) => {
     try {
         const id = c.req.param('id');
+
+        if (isNaN(Number(id))) {
+            return c.json({ error: 'Nieprawidłowy identyfikator posta' }, 400);
+        }
+
         const blogPost = await blogPostRepository.deleteById(Number(id))
-        if(blogPost.rowCount === 0) 
+
+        if(blogPost.rowCount === 0)
             return c.json({error: 'Nie znaleziono posta'}, 404)
-        
+
         return c.json(blogPost, 200);
     } catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
