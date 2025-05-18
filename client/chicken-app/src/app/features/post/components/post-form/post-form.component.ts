@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import {Component, inject, input, signal} from '@angular/core';
+import {Component, computed, inject, input, signal} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PostService } from '../../service/post.service';
@@ -30,6 +30,9 @@ export class PostFormComponent {
 
   imageName = signal<string | undefined>('')
 
+  #imageId = signal<number>(0)
+  imageId = computed(() => this.#imageId())
+
   closeModal(event: Event) {
     event.stopPropagation();
     this.router.navigate(['posty'])
@@ -40,7 +43,9 @@ export class PostFormComponent {
     const formData = new FormData();
     formData.append('title', this.imageName() ?? '')
     formData.append('data', input.files?.[0] as File)
-    this.imageService.uploadImage(formData).subscribe()
+    this.imageService.uploadImage(formData).subscribe(
+      (id: any) => this.#imageId.set(id)
+    )
   }
 
   onSubmit(event: Event) {
@@ -49,6 +54,7 @@ export class PostFormComponent {
       title: this.form.controls.title.value,
       subtitle: this.form.controls.subtitle.value,
       content: this.form.controls.content.value,
+      imageId: this.imageId()
     }).subscribe(() => {
       this.closeModal(event);
     })
