@@ -11,22 +11,24 @@ class="grow-1 w-4/5 mx-auto bg-primary rounded p-8 flex flex-col gap-4"
         id="title"
         class=" min-h-12 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
         [formControl]="form.controls.title"></textarea>
-        @if (form.controls.title.hasError('required')) {
-          <span
-            class="text-error"
-            [ngClass]="form.controls.title.invalid && form.controls.title.touched ? '' : 'invisible'">Pole nie może być puste</span>
-        }
-        @if (form.controls.title.hasError('minlength')) {
-          <span
-            class="text-error"
-            [ngClass]="form.controls.title.invalid && form.controls.title.touched ? '' : 'invisible'">Pole nie może być krótsze niż 80 znaków</span>
-        }
-        @if (form.controls.title.hasError('maxlength')) {
-          <span
-            class="text-error"
-            [ngClass]="form.controls.title.invalid && form.controls.title.touched ? '' : 'invisible'">Pole nie może być dłuższe niż 100 znaków</span>
-        }
-
+        <div class="flex gap-4">
+            <span>Znaki: {{ form.controls.title.value.split('').length }} / 100</span>
+            @if (form.controls.title.hasError('required')) {
+                <span
+                class="text-error"
+                [ngClass]="form.controls.title.invalid && form.controls.title.dirty && form.controls.title.touched ? '' : 'invisible'">Pole nie może być puste</span>
+            }
+            @if (form.controls.title.hasError('minlength')) {
+                <span
+                  class="text-error"
+                  [ngClass]="form.controls.title.invalid && form.controls.title.dirty && form.controls.title.touched ? '' : 'invisible'">Pole nie może być krótsze niż 80 znaków</span>
+            }
+            @if (form.controls.title.hasError('maxlength')) {
+                <span
+                  class="text-error"
+                  [ngClass]="form.controls.title.invalid && form.controls.title.dirty && form.controls.title.touched ? '' : 'invisible'">Pole nie może być dłuższe niż 100 znaków</span>
+            }
+        </div>
     </div>
     <div class="flex flex-col">
         <label for="subtitle">Podtytuł</label>
@@ -34,21 +36,24 @@ class="grow-1 w-4/5 mx-auto bg-primary rounded p-8 flex flex-col gap-4"
         id="subtitle"
         class="min-h-18 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
         [formControl]="form.controls.subtitle"></textarea>
-      @if (form.controls.subtitle.hasError('required')) {
-        <span
-          class="text-error"
-          [ngClass]="form.controls.subtitle.invalid && form.controls.subtitle.touched ? '' : 'invisible'">Pole nie może być puste</span>
-      }
-      @if (form.controls.subtitle.hasError('minlength')) {
-        <span
-          class="text-error"
-          [ngClass]="form.controls.subtitle.invalid && form.controls.subtitle.touched ? '' : 'invisible'">Pole nie może być krótsze niż 120 znaków</span>
-      }
-      @if (form.controls.subtitle.hasError('maxlength')) {
-        <span
-          class="text-error"
-          [ngClass]="form.controls.subtitle.invalid && form.controls.subtitle.touched ? '' : 'invisible'">Pole nie może być dłuższe niż 150 znaków</span>
-      }
+        <div class="flex gap-4">
+            <span>Znaki: {{ form.controls.subtitle.value.split('').length }} / 150</span>
+            @if (form.controls.subtitle.hasError('required')) {
+                <span
+                    class="text-error"
+                    [ngClass]="form.controls.subtitle.invalid && form.controls.subtitle.dirty && form.controls.subtitle.touched ? '' : 'invisible'">Pole nie może być puste</span>
+            }
+            @if (form.controls.subtitle.hasError('minlength')) {
+                <span
+                    class="text-error"
+                    [ngClass]="form.controls.subtitle.invalid && form.controls.subtitle.dirty && form.controls.subtitle.touched ? '' : 'invisible'">Pole nie może być krótsze niż 120 znaków</span>
+            }
+            @if (form.controls.subtitle.hasError('maxlength')) {
+                <span
+                    class="text-error"
+                    [ngClass]="form.controls.subtitle.invalid && form.controls.subtitle.dirty && form.controls.subtitle.touched ? '' : 'invisible'">Pole nie może być dłuższe niż 150 znaków</span>
+            }
+        </div>
     </div>
     <div class="flex flex-col">
         <label for="content">Treść</label>
@@ -56,24 +61,41 @@ class="grow-1 w-4/5 mx-auto bg-primary rounded p-8 flex flex-col gap-4"
         id="content"
         class="min-h-100 bg-secondary/40 border border-2 border-tertiary rounded focus:outline-none focus:border-tertiary focus:bg-secondary resize-none"
         [formControl]="form.controls.content"></textarea>
-      @if (form.controls.content.hasError('required')) {
-        <span
-          class="text-error"
-          [ngClass]="form.controls.content.invalid && form.controls.content.touched ? '' : 'invisible'">Pole nie może być puste</span>
-      }
-      @if (form.controls.content.hasError('minlength')) {
-        <span
-          class="text-error"
-          [ngClass]="form.controls.content.invalid && form.controls.content.touched ? '' : 'invisible'">Pole nie może być krótsze niż 750 znaków</span>
-      }
-      @if (form.controls.content.hasError('maxlength')) {
-        <span
-          class="text-error"
-          [ngClass]="form.controls.content.invalid && form.controls.content.touched ? '' : 'invisible'">Pole nie może być dłuższe niż 1000 znaków</span>
-      }
+
+        <div class="flex gap-4">
+            <span>Znaki: {{ form.controls.content.value.split('').length }} / 750</span>
+            @if (form.controls.content.hasError('required')) {
+            <span
+                class="text-error"
+                [ngClass]="form.controls.content.invalid && form.controls.content.dirty && form.controls.content.touched ? '' : 'invisible'">Pole nie może być puste</span>
+        }
+            @if (form.controls.content.hasError('minlength')) {
+                <span
+                    class="text-error"
+                    [ngClass]="form.controls.content.invalid && form.controls.content.dirty && form.controls.content.touched ? '' : 'invisible'">Pole nie może być krótsze niż 750 znaków</span>
+            }
+            @if (form.controls.content.hasError('maxlength')) {
+                <span
+                    class="text-error"
+                    [ngClass]="form.controls.content.invalid && form.controls.content.dirty && form.controls.content.touched ? '' : 'invisible'">Pole nie może być dłuższe niż 1000 znaków</span>
+            }
+        </div>
     </div>
     <div class="flex justify-between">
-        <a class="cursor-pointer underline text-tertiary">Dodaj zdjęcie</a>
+        <input
+        (change)="onFileUpload(fileInput)"
+        #fileInput
+        class="hidden"
+        type="file"
+        id="imgInput"
+        accept=".jpg, .jpeg, .png">
+        <div class="flex gap-4">
+          <a
+          (click)="fileInput.click()"
+          class="cursor-pointer underline text-tertiary"
+          >Dodaj zdjęcie</a>
+          <span>{{imageName()}}</span>
+        </div>
         <div class="flex gap-4">
           <button
             type="submit"
