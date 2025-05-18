@@ -8,9 +8,9 @@ export type BlogPost = typeof blogPosts.$inferSelect | typeof blogPosts.$inferIn
 
 export const blogPosts = pgTable('blog_posts', {
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-    title: varchar('title', {length: 50}).notNull(),
-    subtitle: varchar('subtitle', {length: 100}).notNull(),
-    content: varchar('content', {length: 250}).notNull(),
+    title: varchar('title', {length: 100}).notNull(),
+    subtitle: varchar('subtitle', {length: 150}).notNull(),
+    content: varchar('content', {length: 1000}).notNull(),
     createdAt: date('created_at').defaultNow().notNull(),
 
     imageId: integer('image_id').references(() => images.id).notNull(),

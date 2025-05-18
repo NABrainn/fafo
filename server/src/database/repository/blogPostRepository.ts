@@ -34,6 +34,7 @@ export class BlogPostRepository {
                     },
                     orderBy: asc(comments.id)
                 },
+                image: true
             },
         });
         return found;
@@ -47,13 +48,15 @@ export class BlogPostRepository {
                         username: true,
                         verified: true
                     }
-                }
+                },
+                image: true
             }
         })        
     }
     async create (data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {
         if(!data.imageId) {
             const placeholderId = await this.pool.select({id: images.id}).from(images).where(eq(images.fileName, 'placeholder'));
+            if(!placeholderId.length) throw new Error('Nie znaleziono obrazka');
             data.imageId = placeholderId[0].id;
         }
         const inserted = await this.pool.insert(blogPosts).values(data).returning();

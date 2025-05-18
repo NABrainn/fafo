@@ -1,8 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import {Component, inject, input, signal} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PostService } from '../../service/post.service';
+import {ImageService} from '../../service/image.service';
 
 @Component({
   selector: 'app-post-form',
@@ -16,20 +17,30 @@ import { PostService } from '../../service/post.service';
   }
 })
 export class PostFormComponent {
-
   router = inject(Router);
   fb = inject(FormBuilder);
   service = inject(PostService);
+  imageService = inject(ImageService)
 
   form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.minLength(80), Validators.maxLength(100)]],
     subtitle: ['', [Validators.minLength(120), Validators.maxLength(150)]],
-    content: ['', [Validators.required, Validators.minLength(750), Validators.maxLength(1000)]]
+    content: ['', [Validators.required, Validators.minLength(750), Validators.maxLength(1000)]],
   });
+
+  imageName = signal<string | undefined>('')
 
   closeModal(event: Event) {
     event.stopPropagation();
     this.router.navigate(['posty'])
+  }
+
+  onFileUpload(input: HTMLInputElement) {
+    this.imageName.set(input.files?.[0].name);
+    const formData = new FormData();
+    formData.append('title', this.imageName() ?? '')
+    formData.append('data', input.files?.[0] as File)
+    this.imageService.uploadImage(formData).subscribe()
   }
 
   onSubmit(event: Event) {
@@ -40,7 +51,6 @@ export class PostFormComponent {
       content: this.form.controls.content.value,
     }).subscribe(() => {
       this.closeModal(event);
-      this.service.reload();
     })
   }
 }

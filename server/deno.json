@@ -36,7 +36,7 @@
   "deploy": {
     "project": "hotwings",
     "entrypoint": "src/main.ts",
-    "include": ["./src", "./dist", "deno.json", ".env.prod"],
+    "include": ["./src", "./dist", "./resources", "deno.json", ".env.prod"],
     "exclude": [".docker-compose.yml", "drizzle-test.config.ts", "drizzle-prod.config.ts", "./node_modules", ".README.md, .env"]
   }
 }
