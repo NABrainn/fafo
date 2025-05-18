@@ -1,12 +1,17 @@
 import {ImageRepository} from "../../database/repository/imageRepository.ts";
 import {db} from "../../database/database.ts";
 import {ImageForm} from "./imageController.ts";
-import {resolve} from "node:path";
+import {join} from "node:path";
+import {catchError} from "../../util/error.ts";
+
 const imageRepository = new ImageRepository(db)
-const filePath = resolve(Deno.cwd(), '../resources/blogPostImages');
+
 
 export async function uploadImage(image: ImageForm) {
+    await Deno.mkdir(join('resources', 'blogPostImages'), { recursive: true });
+
     const fileName = `${crypto.randomUUID()}-${image.data.name}`
+    const filePath = join('resources', 'blogPostImages', fileName);
     const fileSize = image.data.size
     const contentType = image.data.type
 
@@ -14,13 +19,19 @@ export async function uploadImage(image: ImageForm) {
     const ext = extensions.find(ext => contentType.endsWith(ext)) ?? 'png';
 
     const arrayBuffer = await image.data.arrayBuffer();
-    await Deno.writeFile(`${filePath}/${fileName}`, new Uint8Array(arrayBuffer));
-
-    await imageRepository.saveImage({
+    const [writeErr] = await catchError(Deno.writeFile(filePath, new Uint8Array(arrayBuffer)))
+    if(writeErr) {
+        console.error('an error occurred writing image', writeErr)
+    }
+    const [dbErr,id] = await catchError(imageRepository.saveImage({
         fileName,
         filePath,
         fileSize,
         contentType,
         ext
-    })
+    }))
+    if(dbErr) {
+        console.error('an error occurred uploading image', dbErr)
+    }
+    return id?.[0];
 }
