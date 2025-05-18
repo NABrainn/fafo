@@ -12,6 +12,11 @@ authController.post("/register", async (c) => {
     try {
         const body = await c.req.json();
         const { username, email, password } = body;
+
+        if (!username || !email || !password) {
+            return c.json({ error: "Brak wymaganych danych" }, 400);
+        }
+
         const existingUsername = await userRepository.findByUsername(username);
         if(existingUsername) {
             return c.json('Wprowadź inną nazwę użytkownika', 409);
@@ -40,6 +45,10 @@ authController.post("/login", async (c) => {
         const body = await c.req.json();
         const username = body.username;
         const password = body.password;
+
+        if (!username || !password) {
+            return c.json({ error: "Brak loginu lub hasła" }, 400);
+        }
 
         const user = await userRepository.findByUsername(username);
         if (!user) {
