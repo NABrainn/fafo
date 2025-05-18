@@ -8,9 +8,9 @@ import {HttpClient} from '@angular/common/http';
 export class ImageService {
 
   http = inject(HttpClient)
-  URL_PUBLIC = `${environment.apiUrl}/images`;
+  URL = `${environment.apiUrl}/images`;
 
   uploadImage(formData: FormData) {
-    return this.http.post(`${this.URL_PUBLIC}/public/`, formData)
+    return this.http.post(`${this.URL}`, formData)
   }
 }
