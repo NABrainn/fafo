@@ -39,11 +39,17 @@ imageController.get(
     if (!imageProps) {
         return c.json({ error: "Nie znaleziono obrazka w bazie danych" }, 404);
     }
-    const filePath = `${Deno.cwd()}/${imageProps?.filePath}.${imageProps?.ext}`;
+    let filePath = ''
+    if(!imageProps?.filePath.endsWith(imageProps.ext)) {
+        filePath = `${Deno.cwd()}/${imageProps?.filePath}.${imageProps?.ext}`;
+    }
+    else {
+        filePath = `${Deno.cwd()}/${imageProps?.filePath}`;
+    }
     const [notFoundErr] = await catchError(Deno.stat(filePath));
     if(notFoundErr) {
         console.error("💥 Nie znaleziono obrazka:", notFoundErr);
-        return c.json({ error: "Nie znaleziono obrazka" }, 404);
+        return c.json({ error: "Nie znaleziono obrazka na dysku" }, 404);
     }
     const [imageErr, image] = await catchError(Deno.readFile(filePath));
     if(imageErr) {
@@ -77,9 +83,10 @@ imageController.post(
     }),
     async c => {
         const image: ImageForm = c.req.valid('form')
-        const [err] = await catchError(uploadImage(image));
+        const [err, savedImage] = await catchError(uploadImage(image));
         if(err) {
             console.error("💥 Błąd podczas pobierania danych:", err);
             return c.json({ error: "Wystąpił błąd serwera" }, 500);
         }
+        return c.json(savedImage?.id, 200)
 })

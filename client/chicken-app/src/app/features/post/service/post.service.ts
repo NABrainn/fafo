@@ -21,7 +21,7 @@ export type InsertBlogPost = {
   title: string,
   subtitle: string,
   content: string,
-  createdAt?: string,
+  imageId: number
 }
 
 @Injectable({
