@@ -44,7 +44,9 @@ export class PostService {
   }
 
   save(post: Extract<BlogPost, InsertBlogPost>) {
-    return this.http.post<BlogPost>(this.URL, post)
+    return this.http.post<BlogPost>(this.URL, post).pipe(
+        tap(() => this.#posts.reload())
+    )
   }
 
   deleteById(id: number) {
@@ -57,9 +59,5 @@ export class PostService {
     return this.http.put<BlogPost>(this.URL, post).pipe(
       catchError(() => of(undefined))
     )
-  }
-
-  reload() {
-    this.#posts.reload()
   }
 }
