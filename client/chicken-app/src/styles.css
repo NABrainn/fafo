@@ -12,7 +12,17 @@
     --color-secondary: #A0C878;
     --color-tertiary: #143D60;
     --color-accent: #EB5B00;
-    
+
+  --animate-fade: fadeIn .25s ease-in-out;
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
 }
 
 @theme static {
