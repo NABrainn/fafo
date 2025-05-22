@@ -26,8 +26,8 @@ export class PostCardComponent implements OnInit{
   authenticated = computed(() => this.#authService.authenticated());
   loggedUser = this.#authService.user
 
-  id = input.required<number>();
-  imageId = input<number>();
+  id = input<number>();
+  imageId = input<number>(123);
   author = input<string>()
 
   onDelete(id: number | undefined) {

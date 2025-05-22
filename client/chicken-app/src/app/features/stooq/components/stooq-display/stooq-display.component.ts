@@ -17,7 +17,7 @@ import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spi
 export class StooqDisplayComponent implements  OnInit{
   stooqService = inject(StooqService)
   quotes = this.stooqService.loadQuotes()
-  quotesDisplay = computed(() => {
+  quotesComputed = computed(() => {
     return this.quotes.value()?.map((quote) => ({
       ...quote,
       symbol: quote.changePositive
