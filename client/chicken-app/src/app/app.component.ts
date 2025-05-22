@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import {ChickenFactService} from './features/chicken-facts/chicken-fact.service';
-import {NgOptimizedImage} from '@angular/common';
 import {ChickenFactsComponent} from './features/chicken-facts/components/chicken-facts/chicken-facts.component';
 
 @Component({
@@ -25,6 +24,7 @@ export class AppComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
+
 
   ngOnInit(): void {
     this.authService.verifyAuthenticated().subscribe()
