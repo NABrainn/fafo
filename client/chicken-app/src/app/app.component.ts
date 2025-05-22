@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
 import {ChickenFactService} from './features/chicken-facts/chicken-fact.service';
 import {NgOptimizedImage} from '@angular/common';
+import {ChickenFactsComponent} from './features/chicken-facts/components/chicken-facts/chicken-facts.component';
 
 @Component({
   selector: 'app-root',
@@ -10,15 +11,12 @@ import {NgOptimizedImage} from '@angular/common';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    NgOptimizedImage,
+    ChickenFactsComponent,
   ],
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
   authService = inject(AuthService);
-  factService = inject(ChickenFactService)
-
-  facts = this.factService.loadFacts()
 
   get authenticated() {
     return this.authService.authenticated();
@@ -30,6 +28,5 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.verifyAuthenticated().subscribe()
-    setInterval(() => this.facts.reload(), 10000)
   }
 }
