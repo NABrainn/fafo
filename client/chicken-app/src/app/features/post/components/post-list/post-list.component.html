@@ -41,15 +41,11 @@
         </div>
       </div>
     }
-    @defer {
-      <button
-        class="fixed bottom-2 right-2 lg:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
-        routerLink="/posty/nowy"
-        routerLinkActive="active">
-        Wstaw nowy post
-      </button>
-    } @placeholder(minimum 100ms) {
-      <app-loading-spinner></app-loading-spinner>
-    }
+    <button
+      class="fixed bottom-2 right-2 lg:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
+      routerLink="/posty/nowy"
+      routerLinkActive="active">
+      Wstaw nowy post
+    </button>
   </div>
 </div>
