@@ -19,14 +19,9 @@
             (click)="logout()">Wyloguj</span>
         }</div>
     </nav>
-    @if (facts.isLoading()) {
-      <span class="text-center p-2 bg-tertiary text-neutral-light animate-pulse"></span>
-    }
-    <span class="text-center p-2 bg-tertiary text-neutral-light">{{ facts.value()?.fact?.fact }}</span>
-    <div class="grow-1">
-      <router-outlet></router-outlet>
-
-    </div>
+    <app-chicken-facts
+    [interval]="10000"></app-chicken-facts>
+    <router-outlet></router-outlet>
     <footer class="bg-secondary text-center">
       <span class="text-center">Autorowie</span>
     </footer>
