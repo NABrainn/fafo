@@ -21,7 +21,7 @@ export class AuthService {
   #authenticated = signal<boolean>(false)
   #message = signal<string>('');
   #user = signal<AuthUser | undefined>(undefined);
-  #csrfToken = signal<string>('');
+  #csrfToken = signal<string | undefined>('');
 
   register(user: RegisterData) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
@@ -80,10 +80,18 @@ export class AuthService {
 
   logout() {
     return this.#http.post(`${environment.authUrl}/logout`, {}, {withCredentials: true}).pipe(
-      tap((res: any) => {
+      tap(() => {
+        this.#authenticated.set(false);
         this.#user.set(undefined);
-        this.authenticated.set(false);
-        this.#router.navigate(['logowanie']);
+        this.#csrfToken.set(undefined);
+        this.#router.navigate(["/logowanie"]);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        this.#authenticated.set(false);
+        this.#user.set(undefined);
+        this.#csrfToken.set(undefined);
+        this.#router.navigate(["/logowanie"]);
+        return of(null);
       })
     )
   }
