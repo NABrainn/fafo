@@ -54,7 +54,6 @@ export class AuthService {
     return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
       map(() => true),
       tap((data: any) => {
-        console.log(data)
         this.#user.set({username: data})
         this.authenticated.set(true);
       }),
@@ -73,16 +72,20 @@ export class AuthService {
     return this.#verify().pipe(
       tap((verified: boolean) => {
         if(!verified) {
-          this.logout();
+          this.logout().subscribe();
         }
       })
     );
   }
 
   logout() {
-    this.#user.set(undefined);
-    this.authenticated.set(false);
-    this.#router.navigate(['logowanie']);
+    return this.#http.post(`${environment.authUrl}/logout`, {}, {withCredentials: true}).pipe(
+      tap((res: any) => {
+        this.#user.set(undefined);
+        this.authenticated.set(false);
+        this.#router.navigate(['logowanie']);
+      })
+    )
   }
 
   navigateHome() {
