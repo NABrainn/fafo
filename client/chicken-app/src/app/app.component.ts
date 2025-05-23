@@ -24,7 +24,6 @@ export class AppComponent implements OnInit {
     this.authService.logout();
   }
 
-
   ngOnInit(): void {
     this.authService.verifyAuthenticated().subscribe();
   }

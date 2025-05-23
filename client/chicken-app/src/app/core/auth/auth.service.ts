@@ -21,6 +21,7 @@ export class AuthService {
   #authenticated = signal<boolean>(false)
   #message = signal<string>('');
   #user = signal<AuthUser | undefined>(undefined);
+  #csrfToken = signal<string>('');
 
   register(user: RegisterData) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
@@ -104,5 +105,9 @@ export class AuthService {
 
   get user() {
     return computed(() => this.#user());
+  }
+
+  get csrfToken() {
+    return computed(() => this.#csrfToken())
   }
 }
