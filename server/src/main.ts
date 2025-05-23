@@ -15,16 +15,14 @@ import { compress } from 'hono/compress'
 import {imageController} from "./controller/image/imageController.ts";
 import {start} from "./controller/external/stooq/stooqService.ts";
 
-
 type Variables = JwtVariables
 
 const app = new Hono<{ Variables: Variables }>()
 
 app.use('/*', cors({
     origin: 'http://localhost:4200',
-    allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
+    allowHeaders: ["Content-Type", "X-CSRF-Token"],
     allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
-    maxAge: 6000,
     credentials: true,
 }))
 

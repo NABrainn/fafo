@@ -35,10 +35,9 @@ export class AuthService {
   }
 
   login(user: LoginData) {
-    return this.#http.post(`${environment.authUrl}/login`, user).pipe(
+    return this.#http.post(`${environment.authUrl}/login`, user, {withCredentials: true}).pipe(
       tap((res: any) => {
         if (res.token) {
-          localStorage.setItem('token', res.token);
           this.authenticated.set(true);
           this.#user.set({username: user.username})
           this.navigateHome()
@@ -53,12 +52,13 @@ export class AuthService {
   }
 
   #verify() {
-    return this.#http.post(`${environment.authUrl}/verify`, {}).pipe(
+    return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
+      map(() => true),
       tap((data: any) => {
+        console.log(data)
         this.#user.set({username: data})
         this.authenticated.set(true);
       }),
-      map(() => true),
       catchError((err: HttpErrorResponse) => {
         this.authenticated.set(false);
         return of(false);
@@ -81,7 +81,7 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
+    // localStorage.removeItem('token');
     this.authenticated.set(false);
     this.#router.navigate(['logowanie']);
   }

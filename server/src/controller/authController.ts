@@ -3,7 +3,7 @@ import { UserRepository } from "../database/repository/userRepository.ts";
 import { db } from "../database/database.ts";
 import { generateJWT, verifyJWT } from "../util/jwtUtil.ts";
 import {verifyPassword} from "../util/cryptoUtil.ts";
-
+import {setCookie, getCookie} from 'hono/cookie';
 
 export const authController = new Hono();
 export const userRepository = new UserRepository(db);
@@ -61,6 +61,13 @@ authController.post("/login", async (c) => {
 
         const token = await generateJWT(user.username);
 
+        setCookie(c, 'jwt', token, {
+            secure: true,
+            httpOnly: true,
+            maxAge: 60 * 60 * 24,
+            sameSite: 'Strict',
+            path: '/'
+        })
         return c.json({ token }, 200);
     }
     catch (err) {
@@ -71,11 +78,8 @@ authController.post("/login", async (c) => {
 
 authController.post('/verify', async (c) => {
     try {
-        const authHeader = c.req.header('Authorization')
-        if (!authHeader) {
-            return c.json('Brak tokenu', 401);
-        }
-        const token = authHeader.split(' ')[1]
+        const token = getCookie(c, 'jwt');
+        console.log(token)
         if (!token) {
             return c.json('Brak tokenu', 401);
         }
@@ -84,6 +88,13 @@ authController.post('/verify', async (c) => {
             return c.json('Niepoprawny token', 401);
         }
 
+        setCookie(c, 'jwt', token, {
+            secure: true,
+            httpOnly: true,
+            maxAge: 60 * 60 * 24,
+            sameSite: 'Strict',
+            path: '/'
+        })
         return c.json(payload.sub, 200);
     }
     catch(err) {
