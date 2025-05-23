@@ -34,8 +34,7 @@ app.use('/*', cors({
     credentials: true,
 }))
 
-app.use(csrf())
-app.use(csrf({origin: 'https://hotwings.deno.dev'}))
+app.use(csrf({origin: ['http://localhost:4200', 'https://hotwings.deno.dev']}))
 
 app.use(compress())
 
@@ -55,6 +54,7 @@ app.use('/api/*',
         ],
         jwt({
             secret: jwtSecret,
+            cookie: 'jwt',
             alg: 'HS256',
         })
     )
