@@ -68,7 +68,7 @@ authController.post("/login", async (c) => {
             sameSite: 'Strict',
             path: '/'
         })
-        return c.json({ token }, 200);
+        return c.json(200);
     }
     catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
@@ -79,7 +79,6 @@ authController.post("/login", async (c) => {
 authController.post('/verify', async (c) => {
     try {
         const token = getCookie(c, 'jwt');
-        console.log(token)
         if (!token) {
             return c.json('Brak tokenu', 401);
         }
@@ -95,7 +94,7 @@ authController.post('/verify', async (c) => {
             sameSite: 'Strict',
             path: '/'
         })
-        return c.json(payload.sub, 200);
+        return c.json(200);
     }
     catch(err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
