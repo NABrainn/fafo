@@ -38,11 +38,9 @@ export class AuthService {
   login(user: LoginData) {
     return this.#http.post(`${environment.authUrl}/login`, user, {withCredentials: true}).pipe(
       tap((res: any) => {
-        if (res.token) {
-          this.authenticated.set(true);
-          this.#user.set({username: user.username})
-          this.navigateHome()
-        }
+        this.authenticated.set(true);
+        this.#user.set({username: user.username})
+        this.navigateHome()
       }),
       catchError((err: HttpErrorResponse) => {
         this.authenticated.set(false);
@@ -82,7 +80,7 @@ export class AuthService {
   }
 
   logout() {
-    // localStorage.removeItem('token');
+    this.#user.set(undefined);
     this.authenticated.set(false);
     this.#router.navigate(['logowanie']);
   }

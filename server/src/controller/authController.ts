@@ -3,7 +3,7 @@ import { UserRepository } from "../database/repository/userRepository.ts";
 import { db } from "../database/database.ts";
 import { generateJWT, verifyJWT } from "../util/jwtUtil.ts";
 import {verifyPassword} from "../util/cryptoUtil.ts";
-import {setCookie, getCookie} from 'hono/cookie';
+import {setCookie, getCookie, deleteCookie} from 'hono/cookie';
 
 export const authController = new Hono();
 export const userRepository = new UserRepository(db);
@@ -80,10 +80,12 @@ authController.post('/verify', async (c) => {
     try {
         const token = getCookie(c, 'jwt');
         if (!token) {
+            deleteCookie(c, 'jwt')
             return c.json('Brak tokenu', 401);
         }
         const payload = await verifyJWT(token)
         if (!payload) {
+            deleteCookie(c, 'jwt')
             return c.json('Niepoprawny token', 401);
         }
 
