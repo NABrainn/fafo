@@ -10,7 +10,7 @@ export class ChickenFactsComponent implements OnInit{
   factService = inject(ChickenFactService)
 
   interval = input<number>(10000)
-  facts = this.factService.loadFacts()
+  facts = this.factService.facts
 
   ngOnInit() {
     setInterval(() => this.facts.reload(), this.interval())
