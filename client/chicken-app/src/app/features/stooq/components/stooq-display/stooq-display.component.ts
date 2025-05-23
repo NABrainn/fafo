@@ -3,13 +3,14 @@ import {StooqService} from '../../stooq.service';
 import {NgClass} from '@angular/common';
 import {ToFixedPipe} from '../../pipes/to-fixed.pipe';
 import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import {StooqDisplayPlaceholderComponent} from '../stooq-display-placeholder/stooq-display-placeholder.component';
 
 @Component({
   selector: 'app-stooq-display',
   imports: [
     NgClass,
     ToFixedPipe,
-    LoadingSpinnerComponent
+    StooqDisplayPlaceholderComponent,
   ],
   templateUrl: './stooq-display.component.html',
 
