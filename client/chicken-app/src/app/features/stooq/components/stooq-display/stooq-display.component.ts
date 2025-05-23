@@ -1,8 +1,7 @@
-import {Component, computed, effect, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnInit} from '@angular/core';
 import {StooqService} from '../../stooq.service';
 import {NgClass} from '@angular/common';
 import {ToFixedPipe} from '../../pipes/to-fixed.pipe';
-import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spinner/loading-spinner.component';
 import {StooqDisplayPlaceholderComponent} from '../stooq-display-placeholder/stooq-display-placeholder.component';
 
 @Component({
