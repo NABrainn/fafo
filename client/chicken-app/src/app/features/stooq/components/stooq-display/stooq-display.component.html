@@ -1,4 +1,7 @@
 <div class="md:text-[1rem] text-md">
+  <div class="mx-auto border-x-1 border-t-1 bg-tertiary/50">
+
+
   @if(quotes.isLoading()) {
     <app-stooq-display-placeholder></app-stooq-display-placeholder>
   }
@@ -6,11 +9,10 @@
     <div class="text-error bg-secondary p-8">Błąd przy wczytywaniu danych z giełdy</div>
   }
   @else {
-    <div class="mx-auto border-x-1 border-t-1 bg-tertiary/50">
-      <div class="grid grid-cols-3 gap-2 bg-secondary divide-x-1 border-b-1">
-        <span class="lg:p-2 cursor-default">Symbol</span>
-        <span class="col-span-2 lg:p-2 p-0 cursor-default">Cena💸</span>
-      </div>
+    <div class="grid grid-cols-3 gap-2 bg-secondary divide-x-1 border-b-1">
+      <span class="lg:p-2 cursor-default">Symbol</span>
+      <span class="col-span-2 lg:p-2 p-0 cursor-default">Cena💸</span>
+    </div>
       @for (quote of quotesComputed(); track $index) {
         <div class="grid grid-cols-3 gap-2 divide-x-1 border-b-1">
           <span class="p-1">{{quote.ticker || "N/A"}}</span>
@@ -23,8 +25,7 @@
           </span>
         </div>
       }
-    </div>
-
   }
   </div>
+</div>
 
