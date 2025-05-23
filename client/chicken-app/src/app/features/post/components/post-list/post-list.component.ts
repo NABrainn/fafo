@@ -1,10 +1,10 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { PostService } from '../../service/post.service';
 import { PostCardComponent } from '../post-card/post-card.component';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import {AuthService} from '../../../../core/auth/auth.service';
 import {StooqDisplayComponent} from '../../../stooq/components/stooq-display/stooq-display.component';
-import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import {PostListPlaceholderComponent} from '../post-list-placeholder/post-list-placeholder.component';
 
 @Component({
   selector: 'app-post-list',
@@ -12,9 +12,8 @@ import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spi
     PostCardComponent,
     RouterLink,
     RouterLinkActive,
-    RouterOutlet,
     StooqDisplayComponent,
-    LoadingSpinnerComponent
+    PostListPlaceholderComponent,
   ],
   templateUrl: './post-list.component.html',
   host: {

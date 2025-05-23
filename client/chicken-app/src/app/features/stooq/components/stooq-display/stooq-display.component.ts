@@ -1,15 +1,15 @@
-import {Component, computed, effect, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnInit} from '@angular/core';
 import {StooqService} from '../../stooq.service';
 import {NgClass} from '@angular/common';
 import {ToFixedPipe} from '../../pipes/to-fixed.pipe';
-import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import {StooqDisplayPlaceholderComponent} from '../stooq-display-placeholder/stooq-display-placeholder.component';
 
 @Component({
   selector: 'app-stooq-display',
   imports: [
     NgClass,
     ToFixedPipe,
-    LoadingSpinnerComponent
+    StooqDisplayPlaceholderComponent,
   ],
   templateUrl: './stooq-display.component.html',
 
@@ -17,7 +17,7 @@ import {LoadingSpinnerComponent} from '../../../../shared/components/loading-spi
 export class StooqDisplayComponent implements  OnInit{
   stooqService = inject(StooqService)
   quotes = this.stooqService.loadQuotes()
-  quotesDisplay = computed(() => {
+  quotesComputed = computed(() => {
     return this.quotes.value()?.map((quote) => ({
       ...quote,
       symbol: quote.changePositive

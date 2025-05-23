@@ -1,8 +1,8 @@
 <div class="grow-1 flex flex-col gap-4 py-8">
   <div class="grow-1 flex flex-col justify-between sm:w-4/5 w-full mx-auto sm:px-0 px-4">
     @if (posts.isLoading()) {
-    <app-loading-spinner></app-loading-spinner>
-  }
+      <app-post-list-placeholder></app-post-list-placeholder>
+    }
     @if (posts.error()) {
       <div class="text-error bg-secondary p-8">Błąd przy wczytywaniu postów</div>
     }
@@ -10,46 +10,45 @@
       <div class="flex flex-col gap-8 items-center">
         <p class="text-xl pt-20 text-center">Lista postów jest obecnie pusta</p>
       </div>
-    } @else {
+    }
+    @else {
       <div
-        class="flex lg:flex-row justify-between flex-col lg:gap-8 gap-3">
-        <div
+      class="
+      flex justify-between flex-col gap-8
+      md:flex-row">
+          <div
           class="
           grid grid-cols-1
           2xl:grid-cols-2 gap-8">
-          @for (post of posts.value(); track $index) {
-            <div class=" max-w-130">
-              <app-post-card
-                [imageId]="post.imageId"
-                [id]="post.id"
-                [author]="post.author.username">
-                <h2 ngProjectAs="title">
-                  {{ post.title }}
-                </h2>
-                <span ngProjectAs="description">
+            @for (post of posts.value(); track $index) {
+              <div class=" max-w-130">
+                <app-post-card
+                  [imageId]="post.imageId"
+                  [id]="post.id"
+                  [author]="post.author.username">
+                  <h2 ngProjectAs="title">
+                    {{ post.title }}
+                  </h2>
+                  <span ngProjectAs="description">
                       {{ post.subtitle }}
                   </span>
-                <div ngProjectAs="footer">
-                  <span>{{ post.author.username }} | {{ post.createdAt }}</span>
-                </div>
-              </app-post-card>
-            </div>
-          }
+                  <div ngProjectAs="footer">
+                    <span>{{ post.author.username }} | {{ post.createdAt }}</span>
+                  </div>
+                </app-post-card>
+              </div>
+            }
           </div>
-        <div class="">
-          <app-stooq-display></app-stooq-display>
-        </div>
+        @defer (when !posts.isLoading()) {
+           <app-stooq-display></app-stooq-display>
+        }
       </div>
     }
-    @defer {
-      <button
-        class="fixed bottom-2 right-2 lg:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
-        routerLink="/posty/nowy"
-        routerLinkActive="active">
-        Wstaw nowy post
-      </button>
-    } @placeholder(minimum 100ms) {
-      <app-loading-spinner></app-loading-spinner>
-    }
+    <button
+      class="fixed bottom-2 right-2 lg:relative self-end py-4 px-12 rounded cursor-pointer bg-accent text-neutral-light"
+      routerLink="/posty/nowy"
+      routerLinkActive="active">
+      Wstaw nowy post
+    </button>
   </div>
 </div>
