@@ -27,7 +27,7 @@
           <!--          class="bg-accent px-2 py-1 rounded">-->
           <!--          Aktualizuj-->
           <!--        </button>-->
-          @if (authenticated() && author() === loggedUser()?.username) {
+          @if (authenticated() && author() === user()?.username) {
             <button
               (click)="onDelete(id())"
               class="bg-error/80 px-2 py-1 rounded">

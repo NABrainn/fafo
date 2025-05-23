@@ -39,7 +39,7 @@ export class AuthService {
     return this.#http.post(`${environment.authUrl}/login`, user, {withCredentials: true}).pipe(
       tap((res: any) => {
         this.authenticated.set(true);
-        this.#user.set({username: user.username})
+        this.#user.set({username: res.username})
         this.navigateHome()
       }),
       catchError((err: HttpErrorResponse) => {
@@ -52,15 +52,15 @@ export class AuthService {
 
   #verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
-      map(() => true),
       tap((data: any) => {
-        this.#user.set({username: data})
+        this.#user.set({username: data.user})
         this.authenticated.set(true);
       }),
       catchError((err: HttpErrorResponse) => {
         this.authenticated.set(false);
         return of(false);
-      })
+      }),
+      map(() => true)
     )
   }
 

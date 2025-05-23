@@ -7,7 +7,6 @@ import {
 import { PostService } from '../../service/post.service';
 import {RouterLink} from '@angular/router';
 import {AuthService} from '../../../../core/auth/auth.service';
-import {ImageService} from '../../service/image.service';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
@@ -24,7 +23,7 @@ export class PostCardComponent implements OnInit{
 
   reqUrl: string = '';
   authenticated = computed(() => this.#authService.authenticated());
-  loggedUser = this.#authService.user
+  user = this.#authService.user
 
   id = input<number>();
   imageId = input<number>(123);
