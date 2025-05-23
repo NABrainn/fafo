@@ -3,10 +3,15 @@ import { UserRepository } from "../database/repository/userRepository.ts";
 import { db } from "../database/database.ts";
 import { generateJWT, verifyJWT } from "../util/jwtUtil.ts";
 import {verifyPassword} from "../util/cryptoUtil.ts";
-
+import {setCookie, getCookie, deleteCookie} from 'hono/cookie';
+import { randomBytes } from "node:crypto";
 
 export const authController = new Hono();
 export const userRepository = new UserRepository(db);
+
+function generateCsrfToken() {
+    return randomBytes(32).toString("hex");
+}
 
 authController.post("/register", async (c) => {
     try {
@@ -60,8 +65,22 @@ authController.post("/login", async (c) => {
         }
 
         const token = await generateJWT(user.username);
+        const csrfToken = generateCsrfToken();
 
-        return c.json({ token }, 200);
+        setCookie(c, 'jwt', token, {
+            secure: true,
+            httpOnly: true,
+            maxAge: 60 * 60 * 24,
+            sameSite: 'Strict',
+            path: '/'
+        })
+
+        setCookie(c, "csrfToken", csrfToken, {
+            sameSite: "Strict",
+            path: "/",
+        });
+
+        return c.json(200);
     }
     catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
@@ -69,13 +88,26 @@ authController.post("/login", async (c) => {
     }
 });
 
+authController.post("/logout", async (c) => {
+    try {
+        deleteCookie(c, "jwt", {
+            sameSite: "Strict",
+            path: "/",
+        });
+        deleteCookie(c, "csrfToken", {
+            sameSite: "Strict",
+            path: "/",
+        });
+        return c.json({ message: "Wylogowano pomyślnie" }, 200);
+    } catch (err) {
+        console.error("💥 Błąd podczas wylogowywania:", err);
+        return c.json({ error: "Wystąpił błąd serwera" }, 500);
+    }
+});
+
 authController.post('/verify', async (c) => {
     try {
-        const authHeader = c.req.header('Authorization')
-        if (!authHeader) {
-            return c.json('Brak tokenu', 401);
-        }
-        const token = authHeader.split(' ')[1]
+        const token = getCookie(c, 'jwt');
         if (!token) {
             return c.json('Brak tokenu', 401);
         }
@@ -84,7 +116,14 @@ authController.post('/verify', async (c) => {
             return c.json('Niepoprawny token', 401);
         }
 
-        return c.json(payload.sub, 200);
+        setCookie(c, 'jwt', token, {
+            secure: true,
+            httpOnly: true,
+            maxAge: 60 * 60 * 24,
+            sameSite: 'Strict',
+            path: '/'
+        })
+        return c.json(200);
     }
     catch(err) {
         console.error("💥 Błąd podczas pobierania danych:", err);

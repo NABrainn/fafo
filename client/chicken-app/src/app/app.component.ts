@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
-import {ChickenFactService} from './features/chicken-facts/chicken-fact.service';
 import {ChickenFactsComponent} from './features/chicken-facts/components/chicken-facts/chicken-facts.component';
 
 @Component({
@@ -22,11 +21,10 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
+    this.authService.logout().subscribe();
   }
 
-
   ngOnInit(): void {
-    this.authService.verifyAuthenticated().subscribe()
+    this.authService.verifyAuthenticated().subscribe();
   }
 }

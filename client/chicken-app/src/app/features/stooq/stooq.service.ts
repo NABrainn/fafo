@@ -24,7 +24,7 @@ export class StooqService {
   PUBLIC_URL = `${environment.apiUrl}/stooqapi/public`
   #quotes = httpResource<Quote[]>(() => `${this.PUBLIC_URL}/quotes`)
 
-  loadQuotes() {
+  get quotes() {
     return this.#quotes
   }
 }

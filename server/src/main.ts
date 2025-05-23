@@ -14,7 +14,7 @@ import { resolve, join } from "node:path";
 import { compress } from 'hono/compress'
 import {imageController} from "./controller/image/imageController.ts";
 import {start} from "./controller/external/stooq/stooqService.ts";
-
+import { csrf } from 'hono/csrf'
 
 type Variables = JwtVariables
 
@@ -22,19 +22,19 @@ const app = new Hono<{ Variables: Variables }>()
 
 app.use('/*', cors({
     origin: 'http://localhost:4200',
-    allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
+    allowHeaders: ["Content-Type", "X-CSRF-Token", "Access-Control-Allow-Origin"],
     allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
-    maxAge: 6000,
     credentials: true,
 }))
 
 app.use('/*', cors({
     origin: 'https://hotwings.deno.dev',
-    allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
+    allowHeaders: ["Content-Type", "X-CSRF-Token", "Access-Control-Allow-Origin"],
     allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
-    maxAge: 6000,
     credentials: true,
 }))
+
+app.use(csrf({origin: ['http://localhost:4200', 'https://hotwings.deno.dev']}))
 
 app.use(compress())
 
@@ -54,6 +54,7 @@ app.use('/api/*',
         ],
         jwt({
             secret: jwtSecret,
+            cookie: 'jwt',
             alg: 'HS256',
         })
     )

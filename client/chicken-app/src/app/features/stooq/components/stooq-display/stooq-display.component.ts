@@ -1,5 +1,5 @@
 import {Component, computed, inject, OnInit} from '@angular/core';
-import {StooqService} from '../../stooq.service';
+import {Quote, StooqService} from '../../stooq.service';
 import {NgClass} from '@angular/common';
 import {ToFixedPipe} from '../../pipes/to-fixed.pipe';
 import {StooqDisplayPlaceholderComponent} from '../stooq-display-placeholder/stooq-display-placeholder.component';
@@ -16,9 +16,9 @@ import {StooqDisplayPlaceholderComponent} from '../stooq-display-placeholder/sto
 })
 export class StooqDisplayComponent implements  OnInit{
   stooqService = inject(StooqService)
-  quotes = this.stooqService.loadQuotes()
+  quotes = this.stooqService.quotes
   quotesComputed = computed(() => {
-    return this.quotes.value()?.map((quote) => ({
+    return this.quotes.value()?.map((quote: Quote) => ({
       ...quote,
       symbol: quote.changePositive
         ? '↗️'

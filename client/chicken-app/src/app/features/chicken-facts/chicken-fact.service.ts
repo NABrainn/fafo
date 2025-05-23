@@ -17,7 +17,7 @@ export class ChickenFactService {
   PUBLIC_URL = `${environment.apiUrl}/chicken/public/facts`
   #facts = httpResource<Result>(() => this.PUBLIC_URL)
 
-  loadFacts() {
+  get facts() {
     return this.#facts
   }
 }

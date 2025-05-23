@@ -21,6 +21,7 @@ export class AuthService {
   #authenticated = signal<boolean>(false)
   #message = signal<string>('');
   #user = signal<AuthUser | undefined>(undefined);
+  #csrfToken = signal<string | undefined>('');
 
   register(user: RegisterData) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
@@ -35,14 +36,11 @@ export class AuthService {
   }
 
   login(user: LoginData) {
-    return this.#http.post(`${environment.authUrl}/login`, user).pipe(
+    return this.#http.post(`${environment.authUrl}/login`, user, {withCredentials: true}).pipe(
       tap((res: any) => {
-        if (res.token) {
-          localStorage.setItem('token', res.token);
-          this.authenticated.set(true);
-          this.#user.set({username: user.username})
-          this.navigateHome()
-        }
+        this.authenticated.set(true);
+        this.#user.set({username: user.username})
+        this.navigateHome()
       }),
       catchError((err: HttpErrorResponse) => {
         this.authenticated.set(false);
@@ -53,12 +51,12 @@ export class AuthService {
   }
 
   #verify() {
-    return this.#http.post(`${environment.authUrl}/verify`, {}).pipe(
+    return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
+      map(() => true),
       tap((data: any) => {
         this.#user.set({username: data})
         this.authenticated.set(true);
       }),
-      map(() => true),
       catchError((err: HttpErrorResponse) => {
         this.authenticated.set(false);
         return of(false);
@@ -74,16 +72,28 @@ export class AuthService {
     return this.#verify().pipe(
       tap((verified: boolean) => {
         if(!verified) {
-          this.logout();
+          this.logout().subscribe();
         }
       })
     );
   }
 
   logout() {
-    localStorage.removeItem('token');
-    this.authenticated.set(false);
-    this.#router.navigate(['logowanie']);
+    return this.#http.post(`${environment.authUrl}/logout`, {}, {withCredentials: true}).pipe(
+      tap(() => {
+        this.#authenticated.set(false);
+        this.#user.set(undefined);
+        this.#csrfToken.set(undefined);
+        this.#router.navigate(["/logowanie"]);
+      }),
+      catchError((err: HttpErrorResponse) => {
+        this.#authenticated.set(false);
+        this.#user.set(undefined);
+        this.#csrfToken.set(undefined);
+        this.#router.navigate(["/logowanie"]);
+        return of(null);
+      })
+    )
   }
 
   navigateHome() {
@@ -104,5 +114,9 @@ export class AuthService {
 
   get user() {
     return computed(() => this.#user());
+  }
+
+  get csrfToken() {
+    return computed(() => this.#csrfToken())
   }
 }
