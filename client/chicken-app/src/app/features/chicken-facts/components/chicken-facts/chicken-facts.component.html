@@ -1,3 +1,6 @@
 <div class="min-h-12 text-center p-2 bg-tertiary text-neutral-light">
+  @if (facts.isLoading()) {
+    <span>Loading chicken facts...</span>
+  }
   <span>{{ facts.value()?.fact?.fact }}</span>
 </div>
