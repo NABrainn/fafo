@@ -4,9 +4,14 @@ import { db } from "../database/database.ts";
 import { generateJWT, verifyJWT } from "../util/jwtUtil.ts";
 import {verifyPassword} from "../util/cryptoUtil.ts";
 import {setCookie, getCookie, deleteCookie} from 'hono/cookie';
+import { randomBytes } from "node:crypto";
 
 export const authController = new Hono();
 export const userRepository = new UserRepository(db);
+
+function generateCsrfToken() {
+    return randomBytes(32).toString("hex");
+}
 
 authController.post("/register", async (c) => {
     try {
@@ -60,6 +65,7 @@ authController.post("/login", async (c) => {
         }
 
         const token = await generateJWT(user.username);
+        const csrfToken = generateCsrfToken();
 
         setCookie(c, 'jwt', token, {
             secure: true,
@@ -68,6 +74,12 @@ authController.post("/login", async (c) => {
             sameSite: 'Strict',
             path: '/'
         })
+
+        setCookie(c, "csrfToken", csrfToken, {
+            sameSite: "Strict",
+            path: "/",
+        });
+
         return c.json(200);
     }
     catch (err) {
@@ -78,7 +90,14 @@ authController.post("/login", async (c) => {
 
 authController.post("/logout", async (c) => {
     try {
-        deleteCookie(c, 'jwt')
+        deleteCookie(c, "jwt", {
+            sameSite: "Strict",
+            path: "/",
+        });
+        deleteCookie(c, "csrfToken", {
+            sameSite: "Strict",
+            path: "/",
+        });
         return c.json({ message: "Wylogowano pomyślnie" }, 200);
     } catch (err) {
         console.error("💥 Błąd podczas wylogowywania:", err);
