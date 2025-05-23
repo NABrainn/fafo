@@ -40,11 +40,11 @@ export class PostService {
   }
 
   findById(id: number) {
-    return this.http.get<Extract<BlogPost, SelectBlogPost>>(`${this.PUBLIC_URL}/${id}`)
+    return this.http.get<Extract<BlogPost, SelectBlogPost>>(`${this.PUBLIC_URL}/${id}`, { withCredentials: true })
   }
 
   save(post: Extract<BlogPost, InsertBlogPost>) {
-    return this.http.post<BlogPost>(this.URL, post).pipe(
+    return this.http.post<BlogPost>(this.URL, post, { withCredentials: true }).pipe(
         tap(() => this.#posts.reload())
     )
   }
