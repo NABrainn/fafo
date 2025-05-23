@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { UserRepository } from "../database/repository/userRepository.ts";
 import { db } from "../database/database.ts";
-import { generateJWT, verifyJWT } from "../util/jwtUtil.ts";
+import {decodeJWT, generateJWT, verifyJWT} from "../util/jwtUtil.ts";
 import {verifyPassword} from "../util/cryptoUtil.ts";
 import {setCookie, getCookie, deleteCookie} from 'hono/cookie';
 import { randomBytes } from "node:crypto";
@@ -79,8 +79,7 @@ authController.post("/login", async (c) => {
             sameSite: "Strict",
             path: "/",
         });
-
-        return c.json(200);
+        return c.json({user: user.username}, 200);
     }
     catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
@@ -112,10 +111,11 @@ authController.post('/verify', async (c) => {
             return c.json('Brak tokenu', 401);
         }
         const payload = await verifyJWT(token)
+
         if (!payload) {
             return c.json('Niepoprawny token', 401);
         }
-
+        const username = payload.sub
         setCookie(c, 'jwt', token, {
             secure: true,
             httpOnly: true,
@@ -123,7 +123,7 @@ authController.post('/verify', async (c) => {
             sameSite: 'Strict',
             path: '/'
         })
-        return c.json(200);
+        return c.json({user: username},200);
     }
     catch(err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
