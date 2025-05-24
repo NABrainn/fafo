@@ -44,13 +44,13 @@ export class PostService {
   }
 
   save(post: Extract<BlogPost, InsertBlogPost>) {
-    return this.http.post<BlogPost>(this.URL, post, { withCredentials: true }).pipe(
+    return this.http.post<BlogPost>(this.URL, post, {withCredentials: true}).pipe(
         tap(() => this.#posts.reload())
     )
   }
 
   deleteById(id: number) {
-    return this.http.delete<void>(`${this.URL}/${id}`).pipe(
+    return this.http.delete<void>(`${this.URL}/${id}`, {withCredentials: true}).pipe(
       catchError(err => throwError(() => err))
     )
   }

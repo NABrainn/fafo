@@ -33,7 +33,7 @@ export class CommentService{
   }
 
   addComment(comment: InsertComment) {
-    return this.http.post<InsertComment>(`${this.URL}`, comment).pipe(
+    return this.http.post<InsertComment>(`${this.URL}`, comment, {withCredentials: true}).pipe(
       tap({
         next: () => {
           this.state.isLoading = false;
@@ -52,7 +52,7 @@ export class CommentService{
   }
 
   updateComment(comment: InsertComment) {
-    return this.http.put<InsertComment>(`${this.URL}/${comment.id}`, comment).pipe(
+    return this.http.put<InsertComment>(`${this.URL}/${comment.id}`, comment, {withCredentials: true}).pipe(
       tap({
         next: () => {
           this.state.isLoading = false;
@@ -92,7 +92,7 @@ export class CommentService{
   }
 
   delete(id: number | undefined) {
-    return this.http.delete<void>(`${this.URL}/${id}`).pipe(
+    return this.http.delete<void>(`${this.URL}/${id}`, {withCredentials: true}).pipe(
       tap({
         next: () => {
           this.state.isLoading = false;
