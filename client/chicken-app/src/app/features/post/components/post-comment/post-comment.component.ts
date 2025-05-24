@@ -18,8 +18,8 @@ export class PostCommentComponent {
   #commentService = inject(CommentService)
   #authService = inject(AuthService)
 
-  loggedUser = computed(() => this.#authService.user()?.username)
-  authenticated = computed(() => this.#authService.authenticated())
+  user = this.#authService.user
+  authenticated = this.#authService.authenticated
   commentStateChange = output<number>()
 
   fb = inject(FormBuilder)
