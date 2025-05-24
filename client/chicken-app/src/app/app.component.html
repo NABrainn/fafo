@@ -8,7 +8,7 @@
           <img class="w-16 h-auto" src="/chick.svg" alt="obrazek pokazujący logo" height="16" width="16">
           <span class="text-accent text-2xl font-bold md:block hidden">Hotwings</span>
         </div>
-        @if (!authenticated) {
+        @if (!authenticated()) {
           <span
             class="text-accent text-xl underline cursor-pointer"
             routerLink="/logowanie"

@@ -30,6 +30,10 @@ export class AuthService {
     authenticated: false
   })
 
+  authenticated = computed(() => this.state().authenticated);
+  message = computed(() => this.state().message);
+  username = computed(() => this.state().username);
+  csrfToken = computed(() => this.state().csrfToken);
   register(user: RegisterData) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
       catchError((err: HttpErrorResponse) => {
@@ -48,7 +52,7 @@ export class AuthService {
 
   #verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
-      map(() => true),
+      map((data: any) => !!data),
       catchError((err: HttpErrorResponse) => {
         return throwError(() => err.error)
       }),
@@ -61,35 +65,33 @@ export class AuthService {
 
   verifyToken() {
     return this.#verify().pipe(
-      tap((verified: boolean) => {
-        if(!verified) {
-          this.logout().subscribe({
-            next: () => {
-              this.state.update((prev) => ({
-                ...prev,
-                isLoading: false,
-                error: true,
-                message: 'Nieprawidłowy token',
-                authenticated: true,
-                username: undefined,
-                csrfToken: ''
-              }))
-              this.#router.navigate(["/logowanie"]);
-            },
-            error: () => {
-              this.state.update((prev) => ({
-                ...prev,
-                isLoading: false,
-                error: true,
-                message: 'Nieprawidłowy token',
-                authenticated: true,
-                username: undefined,
-                csrfToken: ''
-              }))
-              this.#router.navigate(["/logowanie"]);
-            }
-          });
+      tap({
+        next: (verified: boolean) => {
+          this.state.update((prev) => ({
+            ...prev,
+            isLoading: false,
+            error: !verified,
+            message: '',
+            authenticated: verified,
+            username: verified ? prev.username : undefined,
+            csrfToken: verified ? prev.csrfToken : ''
+          }));
+        },
+        error: () => {
+          this.state.update((prev) => ({
+            ...prev,
+            isLoading: false,
+            error: true,
+            message: '',
+            authenticated: false,
+            username: undefined,
+            csrfToken: ''
+          }));
         }
+      }),
+
+      catchError(err => {
+        return of(false)
       })
     );
   }
@@ -115,28 +117,5 @@ export class AuthService {
       ...prev,
       message: ''
     }))
-  }
-
-  get authenticated() {
-    return computed(() => this.state().authenticated)();
-  }
-
-  get message() {
-    return computed(() => this.state().message)();
-  }
-
-  get user() {
-    return computed(() => this.state().username)();
-  }
-
-  set user(username: string | undefined) {
-    this.state.update((prev) => ({
-      ...prev,
-      username: username
-    }))
-  }
-
-  get csrfToken() {
-    return computed(() => this.state().csrfToken)()
   }
 }

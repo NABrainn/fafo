@@ -23,7 +23,7 @@ export class PostCardComponent implements OnInit{
 
   reqUrl: string = '';
   authenticated = computed(() => this.#authService.authenticated);
-  user = this.#authService.user
+  user = this.#authService.username()
 
   id = input<number>();
   imageId = input<number>(123);
