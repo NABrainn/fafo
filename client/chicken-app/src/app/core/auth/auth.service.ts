@@ -60,7 +60,7 @@ export class AuthService {
         this.authenticated.set(false);
         return of(false);
       }),
-      map(() => true)
+      map(() => this.authenticated())
     )
   }
 
