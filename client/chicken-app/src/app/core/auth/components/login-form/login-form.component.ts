@@ -32,7 +32,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     password: ['', [Validators.required]]
   });
 
-  message = linkedSignal(() => this.loginService.message);
+  message = linkedSignal(() => this.loginService.message());
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -60,7 +60,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
           ...prev,
           isLoading: false,
           error: true,
-          message: err.error,
+          message: err,
           authenticated: false,
           username: undefined
         }))
@@ -69,7 +69,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.loginService.authenticated) {
+    if (this.loginService.authenticated()) {
       this.loginService.navigateHome()
     }
   }

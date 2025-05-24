@@ -30,6 +30,10 @@ export class AuthService {
     authenticated: false
   })
 
+  authenticated = computed(() => this.state().authenticated);
+  message = computed(() => this.state().message);
+  username = computed(() => this.state().username);
+  csrfToken = computed(() => this.state().csrfToken);
   register(user: RegisterData) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
       catchError((err: HttpErrorResponse) => {
@@ -115,28 +119,5 @@ export class AuthService {
       ...prev,
       message: ''
     }))
-  }
-
-  get authenticated() {
-    return computed(() => this.state().authenticated)();
-  }
-
-  get message() {
-    return computed(() => this.state().message)();
-  }
-
-  get user() {
-    return computed(() => this.state().username)();
-  }
-
-  set user(username: string | undefined) {
-    this.state.update((prev) => ({
-      ...prev,
-      username: username
-    }))
-  }
-
-  get csrfToken() {
-    return computed(() => this.state().csrfToken)()
   }
 }

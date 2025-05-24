@@ -35,7 +35,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     password: ['', [Validators.required]]
   });
 
-  message = linkedSignal(() => this.registerService.message);
+  message = linkedSignal(() => this.registerService.message());
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -51,19 +51,19 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       next: () => {
         this.registerService.navigateLogin()
       },
-      error: (err: HttpErrorResponse) => {
+      error: (err) => {
         this.registerService.state.update((prev) => ({
           ...prev,
           isLoading: false,
           error: true,
-          message: err.error
+          message: err
         }))
       }
     })
   }
 
   ngOnInit(): void {
-    if (this.registerService.authenticated) {
+    if (this.registerService.authenticated()) {
       this.registerService.navigateHome()
     }
   }

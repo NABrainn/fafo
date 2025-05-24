@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
         this.authService.state.update((prev) => ({
           ...prev,
           authenticated: verified,
-          username: this.authService.user,
+          username: this.authService.username(),
           error: false,
           message: ''
         }))
