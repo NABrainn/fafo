@@ -52,7 +52,7 @@ export class AuthService {
 
   #verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
-      map(() => true),
+      map((data: any) => !!data),
       catchError((err: HttpErrorResponse) => {
         return throwError(() => err.error)
       }),
@@ -65,35 +65,33 @@ export class AuthService {
 
   verifyToken() {
     return this.#verify().pipe(
-      tap((verified: boolean) => {
-        if(!verified) {
-          this.logout().subscribe({
-            next: () => {
-              this.state.update((prev) => ({
-                ...prev,
-                isLoading: false,
-                error: true,
-                message: 'Nieprawidłowy token',
-                authenticated: true,
-                username: undefined,
-                csrfToken: ''
-              }))
-              this.#router.navigate(["/logowanie"]);
-            },
-            error: () => {
-              this.state.update((prev) => ({
-                ...prev,
-                isLoading: false,
-                error: true,
-                message: 'Nieprawidłowy token',
-                authenticated: true,
-                username: undefined,
-                csrfToken: ''
-              }))
-              this.#router.navigate(["/logowanie"]);
-            }
-          });
+      tap({
+        next: (verified: boolean) => {
+          this.state.update((prev) => ({
+            ...prev,
+            isLoading: false,
+            error: !verified,
+            message: '',
+            authenticated: verified,
+            username: verified ? prev.username : undefined,
+            csrfToken: verified ? prev.csrfToken : ''
+          }));
+        },
+        error: () => {
+          this.state.update((prev) => ({
+            ...prev,
+            isLoading: false,
+            error: true,
+            message: '',
+            authenticated: false,
+            username: undefined,
+            csrfToken: ''
+          }));
         }
+      }),
+
+      catchError(err => {
+        return of(false)
       })
     );
   }
