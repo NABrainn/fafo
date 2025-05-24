@@ -30,7 +30,7 @@ export class PostCardComponent implements OnInit{
   author = input<string>()
 
   onDelete(id: number | undefined) {
-    if(id) this.service.deleteById(id!).subscribe(() => this.service.loadPosts().reload());
+    if(id) this.service.deleteById(id!).subscribe(() => this.service.posts.reload());
   }
   ngOnInit() {
     this.reqUrl = `${environment.apiUrl}/images/public/${this.imageId()}`

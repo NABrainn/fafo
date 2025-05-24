@@ -3,6 +3,7 @@ import { CommentService, InsertComment } from '../../service/comment.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../../../core/auth/auth.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-post-comment',
@@ -44,9 +45,25 @@ export class PostCommentComponent {
     this.#commentService.addComment({
       content: this.form.controls.content.value,
       blogPostId: this.blogPostId()
-    } as InsertComment).subscribe((data) => {
-      this.form.reset()
-      this.commentStateChange.emit(this.commentId()!)
+    } as InsertComment).subscribe({
+      next: (data) => {
+        this.#commentService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: false,
+          message: ''
+        }))
+        this.form.reset()
+        this.commentStateChange.emit(this.commentId()!)
+      },
+      error: (err: HttpErrorResponse) => {
+        this.#commentService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: true,
+          message: 'Błąd podczas dodawania komentarza'
+        }))
+      }
     })
   }
 
@@ -60,8 +77,24 @@ export class PostCommentComponent {
       id: this.commentId(),
       content: this.form.controls.content.value,
       blogPostId: this.blogPostId()
-    } as InsertComment).subscribe(() => {
-      this.commentStateChange.emit(this.commentId()!)
+    } as InsertComment).subscribe({
+      next: () => {
+        this.#commentService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: false,
+          message: ''
+        }))
+        this.commentStateChange.emit(this.commentId()!)
+      },
+      error: (err: HttpErrorResponse) => {
+        this.#commentService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: true,
+          message: 'Błąd podczas edycji komentarza'
+        }))
+      }
     })
   }
 
@@ -70,8 +103,24 @@ export class PostCommentComponent {
   }
 
   onDelete() {
-    this.#commentService.delete(this.commentId()).subscribe(() => {
-      this.commentStateChange.emit(this.commentId()!)
+    this.#commentService.delete(this.commentId()).subscribe({
+      next: () => {
+        this.#commentService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: false,
+          message: ''
+        }))
+        this.commentStateChange.emit(this.commentId()!)
+      },
+      error: (err: HttpErrorResponse) => {
+        this.#commentService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: true,
+          message: 'Błąd podczas usuwania komentarza'
+        }))
+      }
     })
   }
 

@@ -57,6 +57,7 @@ export class PostFormComponent {
       imageId: this.imageId()
     }).subscribe(() => {
       this.closeModal(event);
+      this.service.posts.reload()
     })
   }
 }

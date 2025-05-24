@@ -35,7 +35,7 @@ export class PostService {
   PUBLIC_URL = `${environment.apiUrl}/posts/public`
   #posts = httpResource<Extract<BlogPost, SelectBlogPost>[]>(() => `${this.PUBLIC_URL}`)
 
-  loadPosts() {
+  get posts() {
     return this.#posts
   }
 
@@ -44,9 +44,7 @@ export class PostService {
   }
 
   save(post: Extract<BlogPost, InsertBlogPost>) {
-    return this.http.post<BlogPost>(this.URL, post, {withCredentials: true}).pipe(
-        tap(() => this.#posts.reload())
-    )
+    return this.http.post<BlogPost>(this.URL, post, {withCredentials: true})
   }
 
   deleteById(id: number) {
