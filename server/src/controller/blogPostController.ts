@@ -64,12 +64,16 @@ blogPostController.post('/', async (c) => {
 blogPostController.put('/:id', async (c) => {
     try {
         const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferSelect>>()
+        const payload = c.get('jwtPayload')
+
+        if (payload.sub !== body.author) {
+            return c.json({ error: 'Brak wymaganych uprawnień do aktualizacji posta' }, 401);
+        }
 
         if (!body.id || !body.title || !body.content) {
             return c.json({ error: 'Brak wymaganych danych do aktualizacji' }, 400);
         }
 
-        const payload = c.get('jwtPayload')
         if(payload)
             body.author = payload.sub
         const blogPost = await blogPostRepository.updateById(body.id, body)
@@ -85,9 +89,16 @@ blogPostController.put('/:id', async (c) => {
 blogPostController.delete('/:id', async (c) => {
     try {
         const id = c.req.param('id');
+        const payload = c.get('jwtPayload')
 
         if (isNaN(Number(id))) {
             return c.json({ error: 'Nieprawidłowy identyfikator posta' }, 400);
+        }
+
+        const found = await blogPostRepository.findById(Number(id))
+
+        if (payload.sub !== found?.author.username) {
+            return c.json({ error: 'Brak wymaganych uprawnień do usunięcia posta' }, 401);
         }
 
         const blogPost = await blogPostRepository.deleteById(Number(id))
