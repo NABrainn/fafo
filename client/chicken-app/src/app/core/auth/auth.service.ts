@@ -1,13 +1,16 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { catchError, map, of, tap } from 'rxjs';
+import {catchError, map, of, tap, throwError} from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginData } from './components/login-form/login-form.component';
 import { RegisterData } from './components/register-form/register-form.component';
+import {ServiceState} from '../../shared/service-state';
 
-export type AuthUser = {
-  username: string,
+interface AuthState extends ServiceState {
+  username: string | undefined,
+  csrfToken: string,
+  authenticated: boolean,
 }
 
 @Injectable({
@@ -18,49 +21,37 @@ export class AuthService {
   #http = inject(HttpClient);
   #router = inject(Router);
 
-  #authenticated = signal<boolean>(false)
-  #message = signal<string>('');
-  #user = signal<AuthUser | undefined>(undefined);
-  #csrfToken = signal<string | undefined>('');
+  state = signal<AuthState>({
+    isLoading: false,
+    error: false,
+    message: '',
+    username: '',
+    csrfToken: '',
+    authenticated: false
+  })
 
   register(user: RegisterData) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
-      tap((res: any) => {
-        this.#router.navigate(['/logowanie']);
-      }),
       catchError((err: HttpErrorResponse) => {
-        this.#message.set(err.error);
-        throw new Error(err.error);
-      })
+        return throwError(() => err.error)
+      }),
     )
   }
 
   login(user: LoginData) {
     return this.#http.post(`${environment.authUrl}/login`, user, {withCredentials: true}).pipe(
-      tap((res: any) => {
-        this.authenticated.set(true);
-        this.#user.set({username: res.username})
-        this.navigateHome()
-      }),
       catchError((err: HttpErrorResponse) => {
-        this.authenticated.set(false);
-        this.#message.set(err.error);
-        throw new Error(err.error);
-      })
+        return throwError(() => err.error)
+      }),
     );
   }
 
   #verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
-      tap((data: any) => {
-        this.#user.set({username: data.user})
-        this.authenticated.set(true);
-      }),
+      map(() => true),
       catchError((err: HttpErrorResponse) => {
-        this.authenticated.set(false);
-        return of(false);
+        return throwError(() => err.error)
       }),
-      map(() => this.authenticated())
     )
   }
 
@@ -72,7 +63,32 @@ export class AuthService {
     return this.#verify().pipe(
       tap((verified: boolean) => {
         if(!verified) {
-          this.logout().subscribe();
+          this.logout().subscribe({
+            next: () => {
+              this.state.update((prev) => ({
+                ...prev,
+                isLoading: false,
+                error: true,
+                message: 'Nieprawidłowy token',
+                authenticated: true,
+                username: undefined,
+                csrfToken: ''
+              }))
+              this.#router.navigate(["/logowanie"]);
+            },
+            error: () => {
+              this.state.update((prev) => ({
+                ...prev,
+                isLoading: false,
+                error: true,
+                message: 'Nieprawidłowy token',
+                authenticated: true,
+                username: undefined,
+                csrfToken: ''
+              }))
+              this.#router.navigate(["/logowanie"]);
+            }
+          });
         }
       })
     );
@@ -80,19 +96,9 @@ export class AuthService {
 
   logout() {
     return this.#http.post(`${environment.authUrl}/logout`, {}, {withCredentials: true}).pipe(
-      tap(() => {
-        this.#authenticated.set(false);
-        this.#user.set(undefined);
-        this.#csrfToken.set(undefined);
-        this.#router.navigate(["/logowanie"]);
-      }),
       catchError((err: HttpErrorResponse) => {
-        this.#authenticated.set(false);
-        this.#user.set(undefined);
-        this.#csrfToken.set(undefined);
-        this.#router.navigate(["/logowanie"]);
-        return of(null);
-      })
+        return throwError(() => err.error)
+      }),
     )
   }
 
@@ -100,23 +106,37 @@ export class AuthService {
     this.#router.navigate(['/']);
   }
 
+  navigateLogin() {
+    this.#router.navigate(['/logowanie']);
+  }
+
   clearMessage() {
-    this.#message.set('');
+    this.state.update((prev) => ({
+      ...prev,
+      message: ''
+    }))
   }
 
   get authenticated() {
-    return this.#authenticated;
+    return computed(() => this.state().authenticated)();
   }
 
   get message() {
-    return this.#message;
+    return computed(() => this.state().message)();
   }
 
   get user() {
-    return computed(() => this.#user());
+    return computed(() => this.state().username)();
+  }
+
+  set user(username: string | undefined) {
+    this.state.update((prev) => ({
+      ...prev,
+      username: username
+    }))
   }
 
   get csrfToken() {
-    return computed(() => this.#csrfToken())
+    return computed(() => this.state().csrfToken)()
   }
 }

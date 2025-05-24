@@ -1,8 +1,5 @@
 <div class="grow-1 flex flex-col gap-4 py-8">
   <div class="grow-1 flex flex-col justify-between sm:w-4/5 w-full mx-auto sm:px-0 px-4">
-    @if (posts.isLoading()) {
-      <app-post-list-placeholder></app-post-list-placeholder>
-    }
     @if (posts.error()) {
       <div class="text-error bg-secondary p-8">Błąd przy wczytywaniu postów</div>
     }

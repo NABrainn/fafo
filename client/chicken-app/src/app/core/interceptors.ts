@@ -6,7 +6,7 @@ import {AuthService} from './auth/auth.service';
 export function csrfInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const authService = inject(AuthService);
   const csrfReq = req.clone({
-    headers:req.headers.set("X-CSRF-Token",  authService.csrfToken() ?? '')
+    headers:req.headers.set("X-CSRF-Token",  authService.csrfToken ?? '')
   });
   return next(csrfReq);
 }

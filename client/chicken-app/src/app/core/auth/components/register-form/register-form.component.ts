@@ -3,6 +3,7 @@ import { AuthService } from '../../auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
+import {HttpErrorResponse} from '@angular/common/http';
 
 export type RegisterData = {
   username: string;
@@ -34,7 +35,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     password: ['', [Validators.required]]
   });
 
-  message = linkedSignal(() => this.registerService.message());
+  message = linkedSignal(() => this.registerService.message);
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -46,11 +47,23 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       username: this.form.value.username,
       email: this.form.value.email,
       password: this.form.value.password
-    } as RegisterData).subscribe()
+    } as RegisterData).subscribe({
+      next: () => {
+        this.registerService.navigateLogin()
+      },
+      error: (err: HttpErrorResponse) => {
+        this.registerService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: true,
+          message: err.error
+        }))
+      }
+    })
   }
 
   ngOnInit(): void {
-    if (this.registerService.authenticated()) {
+    if (this.registerService.authenticated) {
       this.registerService.navigateHome()
     }
   }

@@ -3,17 +3,17 @@
 (ngSubmit)="saveComment($event)">
     <div class="md:max-w-1/2 min-h-30 max-w-full flex flex-col bg-secondary/40 rounded mb-8 border-2 border-tertiary p-4">
         <textarea
-        [ngClass]="readonly() || !authenticated() ? 'cursor-default' : 'cursor-select'"
+        [ngClass]="readonly() || !authenticated ? 'cursor-default' : 'cursor-select'"
         [formControl]="form.controls.content"
-        [readonly]="readonly() || !authenticated()"
+        [readonly]="readonly() || !authenticated"
         class="focus:outline-none resize-none w-full min-h-16"
         [placeholder]="readonly() ? ''
-                     : !authenticated() ? 'Zaloguj się aby zamieścić komentarz'
+                     : !authenticated ? 'Zaloguj się aby zamieścić komentarz'
                      : 'Miejsce na komentarz'"></textarea>
         <div class="flex justify-end">
-            @if (loggedUser() === author()) {
+            @if (user === author()) {
               <div class="flex gap-4">
-                @if(authenticated()){
+                @if(authenticated){
                   @if(readonly()) {
                     <button
                       type="button"
@@ -38,7 +38,7 @@
                 }
               </div>
             }
-            @if(createMode() && authenticated()) {
+            @if(createMode() && authenticated) {
                 <button
                 type="submit"
                 [disabled]="form.invalid || !authenticated"

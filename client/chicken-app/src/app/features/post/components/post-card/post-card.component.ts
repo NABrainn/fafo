@@ -22,7 +22,7 @@ export class PostCardComponent implements OnInit{
   #authService = inject(AuthService)
 
   reqUrl: string = '';
-  authenticated = computed(() => this.#authService.authenticated());
+  authenticated = computed(() => this.#authService.authenticated);
   user = this.#authService.user
 
   id = input<number>();
@@ -30,7 +30,7 @@ export class PostCardComponent implements OnInit{
   author = input<string>()
 
   onDelete(id: number | undefined) {
-    if(id) this.service.deleteById(id!).subscribe(() => this.service.loadPosts().reload());
+    if(id) this.service.deleteById(id!).subscribe(() => this.service.posts.reload());
   }
   ngOnInit() {
     this.reqUrl = `${environment.apiUrl}/images/public/${this.imageId()}`

@@ -36,8 +36,24 @@ export class PostPageComponent {
   onCommentStateChange() {
       const postId = this.post()?.id;
       if (postId) {
-        this.commentService.findAllCommentsByBlogId(postId)?.subscribe((data) => {
-          this.#comments.set(data)
+        this.commentService.findAllCommentsByBlogId(postId)?.subscribe({
+          next: (data) => {
+            this.commentService.state.update((prev) => ({
+              ...prev,
+              isLoading: false,
+              error: false,
+              message: ''
+            }))
+            this.#comments.set(data)
+          },
+          error: (err) => {
+            this.commentService.state.update((prev) => ({
+              ...prev,
+              isLoading: false,
+              error: true,
+              message: 'Błąd podczas pobierania komentarzy'
+            }))
+          }
         });
       }
   }

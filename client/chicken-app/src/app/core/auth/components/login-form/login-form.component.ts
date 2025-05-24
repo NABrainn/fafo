@@ -23,7 +23,7 @@ export type LoginData = {
   }
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
-  
+
   loginService = inject(AuthService);
   fb = inject(FormBuilder);
 
@@ -32,7 +32,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     password: ['', [Validators.required]]
   });
 
-  message = linkedSignal(() => this.loginService.message());
+  message = linkedSignal(() => this.loginService.message);
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -43,11 +43,33 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.loginService.login({
       username: this.form.value.username,
       password: this.form.value.password
-    } as LoginData).subscribe()
+    } as LoginData).subscribe({
+      next: (data: any) => {
+        this.loginService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: false,
+          message: 'Zalogowano pomyślnie',
+          authenticated: true,
+          username: data.username
+        }))
+        this.loginService.navigateHome()
+      },
+      error: (err: any) => {
+        this.loginService.state.update((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: true,
+          message: err.error,
+          authenticated: false,
+          username: undefined
+        }))
+      }
+    })
   }
 
   ngOnInit(): void {
-    if (this.loginService.authenticated()) {
+    if (this.loginService.authenticated) {
       this.loginService.navigateHome()
     }
   }

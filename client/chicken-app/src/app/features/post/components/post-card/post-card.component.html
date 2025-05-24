@@ -23,7 +23,7 @@
           </ng-content>
         </div>
         <div class="flex gap-2">
-        @if (authenticated() && author() === user()?.username) {
+        @if (authenticated() && author() === user) {
           <button
             (click)="onDelete(id())"
             class="bg-error/80 px-2 py-1 rounded">

@@ -108,12 +108,12 @@ authController.post('/verify', async (c) => {
     try {
         const token = getCookie(c, 'jwt');
         if (!token) {
-            return c.json('Brak tokenu', 401);
+            return c.json('Brak tokenu', 403);
         }
         const payload = await verifyJWT(token)
 
         if (!payload) {
-            return c.json('Niepoprawny token', 401);
+            return c.json('Niepoprawny token', 403);
         }
         const username = payload.sub
         setCookie(c, 'jwt', token, {
