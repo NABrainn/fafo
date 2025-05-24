@@ -1,5 +1,5 @@
 <div class="flex flex-col text-wrap bg-secondary rounded">
-    <img class="max-h-60 object-cover grow-1 basis-1/2" [src]="reqUrl" alt="there shall be an image">
+    <img class="object-cover grow-1 basis-1/2" [src]="reqUrl" alt="there shall be an image">
     <main class="grow-1 basis-1/2 flex flex-col gap-4 px-4 pb-4">
       <div class="grow-1 flex flex-col gap-4">
         <h3 class="min-h-20 text-neutral-dark text-xl font-semibold break-words">
@@ -23,17 +23,13 @@
           </ng-content>
         </div>
         <div class="flex gap-2">
-          <!--        <button-->
-          <!--          class="bg-accent px-2 py-1 rounded">-->
-          <!--          Aktualizuj-->
-          <!--        </button>-->
-          @if (authenticated() && author() === user()?.username) {
-            <button
-              (click)="onDelete(id())"
-              class="bg-error/80 px-2 py-1 rounded">
-              Usuń
-            </button>
-          }
+        @if (authenticated() && author() === user()?.username) {
+          <button
+            (click)="onDelete(id())"
+            class="bg-error/80 px-2 py-1 rounded">
+            Usuń
+          </button>
+        }
         </div>
       </footer>
     </main>
