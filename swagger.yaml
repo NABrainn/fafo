@@ -1,0 +1,537 @@
+openapi: 3.0.3
+info:
+  title: Image and Auth API
+  version: 1.0.0
+  description: API documentation for image upload and user authentication.
+paths:
+  /public/{id}:
+    get:
+      summary: Get image by ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Image ID
+      responses:
+        '200':
+          description: Image binary
+          content:
+            image/jpeg: {}
+            image/png: {}
+        '400':
+          description: Validation failed
+        '404':
+          description: Image not found
+        '500':
+          description: Server error
+  /:
+    post:
+      summary: Upload an image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                data:
+                  type: string
+                  format: binary
+                  description: Image file (JPEG, PNG, <= 5MB)
+              required:
+              - title
+              - data
+      responses:
+        '201':
+          description: Image uploaded successfully
+        '400':
+          description: Validation failed
+        '500':
+          description: Server error
+  /register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+              - username
+              - email
+              - password
+      responses:
+        '201':
+          description: User created
+        '400':
+          description: Missing data
+        '409':
+          description: Username or email already exists
+        '500':
+          description: Server error
+  /login:
+    post:
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+              - username
+              - password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Missing credentials
+        '401':
+          description: Invalid credentials
+        '500':
+          description: Server error
+  /verify:
+    post:
+      summary: Verify JWT token
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Bearer token
+      responses:
+        '200':
+          description: Token valid
+        '401':
+          description: Invalid or missing token
+        '500':
+          description: Server error
+  /blog/public/{id}:
+    get:
+      summary: Get blog post by ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Blog post ID
+      responses:
+        '200':
+          description: Blog post found
+        '400':
+          description: Invalid ID
+        '404':
+          description: Post not found
+        '500':
+          description: Server error
+  /blog/public:
+    get:
+      summary: Get all blog posts
+      responses:
+        '200':
+          description: List of blog posts
+        '404':
+          description: No posts found
+        '500':
+          description: Server error
+  /blog/:
+    post:
+      summary: Create blog post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                author:
+                  type: string
+              required:
+              - title
+              - content
+      responses:
+        '200':
+          description: Blog post created
+        '400':
+          description: Missing required data
+        '500':
+          description: Server error
+  /blog/{id}:
+    put:
+      summary: Update blog post
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                title:
+                  type: string
+                content:
+                  type: string
+                author:
+                  type: string
+              required:
+              - id
+              - title
+              - content
+      responses:
+        '200':
+          description: Blog post updated
+        '400':
+          description: Missing or invalid data
+        '403':
+          description: Lacking privileges
+        '404':
+          description: Post not found
+        '500':
+          description: Server error
+    delete:
+      summary: Delete blog post
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Post deleted
+        '400':
+          description: Invalid ID
+        '403':
+          description: Lacking privileges
+        '404':
+          description: Post not found
+        '500':
+          description: Server error
+  /comments/{id}:
+    get:
+      summary: Get comment by ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Comment ID
+      responses:
+        '200':
+          description: Comment retrieved
+        '400':
+          description: Invalid ID
+        '404':
+          description: Comment not found
+        '500':
+          description: Server error
+    put:
+      summary: Update comment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                content:
+                  type: string
+                author:
+                  type: string
+              required:
+              - id
+              - content
+      responses:
+        '200':
+          description: Comment updated
+        '400':
+          description: Missing or invalid data
+        '403':
+          description: Lacking privileges
+        '404':
+          description: Comment not found
+        '500':
+          description: Server error
+    delete:
+      summary: Delete comment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Comment deleted
+        '400':
+          description: Invalid ID
+        '403':
+          description: Lacking privileges
+        '404':
+          description: Comment not found
+        '500':
+          description: Server error
+  /comments/public:
+    get:
+      summary: Get all comments
+      responses:
+        '200':
+          description: List of comments
+        '404':
+          description: No comments found
+        '500':
+          description: Server error
+  /comments/author/{author}:
+    get:
+      summary: Get comments by author
+      parameters:
+      - name: author
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Comments found
+        '400':
+          description: Missing author
+        '404':
+          description: No comments found
+        '500':
+          description: Server error
+  /comments/public/blogposts/{id}:
+    get:
+      summary: Get comments for a blog post
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Comments found
+        '400':
+          description: Invalid blog post ID
+        '404':
+          description: No comments found
+        '500':
+          description: Server error
+  /comments/:
+    post:
+      summary: Create comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                blogPostId:
+                  type: integer
+                author:
+                  type: string
+              required:
+              - content
+              - blogPostId
+      responses:
+        '200':
+          description: Comment created
+        '400':
+          description: Missing required fields
+        '404':
+          description: Creation failed
+        '500':
+          description: Server error
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: User ID
+      responses:
+        '200':
+          description: User found
+        '400':
+          description: Invalid user ID
+        '404':
+          description: User not found
+        '500':
+          description: Server error
+    put:
+      summary: Update user by ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+              - id
+              - username
+              - email
+      responses:
+        '200':
+          description: User updated
+        '400':
+          description: Missing or invalid data
+        '404':
+          description: User not found
+        '500':
+          description: Server error
+    delete:
+      summary: Delete user by ID
+      responses:
+        '200':
+          description: User deleted
+        '400':
+          description: Invalid ID
+        '404':
+          description: User not found
+        '500':
+          description: Server error
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: User ID
+  /users/:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: List of users
+        '404':
+          description: No users found
+        '500':
+          description: Server error
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+              - username
+              - email
+              - password
+      responses:
+        '200':
+          description: User created
+        '400':
+          description: Missing required fields
+        '404':
+          description: User creation failed
+        '500':
+          description: Server error
+  /stooq/public/quotes:
+    get:
+      summary: Get public stock quotes
+      responses:
+        '200':
+          description: Quotes retrieved successfully
+        '500':
+          description: Error retrieving quotes
+  /chicken/public/facts:
+    get:
+      summary: Get a random chicken fact with count metadata
+      responses:
+        '200':
+          description: Returns a random chicken fact and optional count info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fact:
+                    type: object
+                    description: A chicken fact object
+                  count:
+                    type: integer
+                    description: Total number of facts
+                  last_counted:
+                    type: string
+                    format: date-time
+                    description: Timestamp of last count update
+        '500':
+          description: Server error
+
