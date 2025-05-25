@@ -67,7 +67,7 @@ blogPostController.put('/:id', async (c) => {
         const payload = c.get('jwtPayload')
 
         if (payload.sub !== body.author) {
-            return c.json({ error: 'Brak wymaganych uprawnień do aktualizacji posta' }, 401);
+            return c.json({ error: 'Brak wymaganych uprawnień do aktualizacji posta' }, 403);
         }
 
         if (!body.id || !body.title || !body.content) {
@@ -98,7 +98,7 @@ blogPostController.delete('/:id', async (c) => {
         const found = await blogPostRepository.findById(Number(id))
 
         if (payload.sub !== found?.author.username) {
-            return c.json({ error: 'Brak wymaganych uprawnień do usunięcia posta' }, 401);
+            return c.json({ error: 'Brak wymaganych uprawnień do usunięcia posta' }, 403);
         }
 
         const blogPost = await blogPostRepository.deleteById(Number(id))

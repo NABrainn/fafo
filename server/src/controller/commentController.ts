@@ -96,7 +96,7 @@ commentController.put('/:id', async (c) => {
         const payload = c.get('jwtPayload')
 
         if (payload.sub !== body.author) {
-            return c.json({ error: 'Brak wymaganych uprawnień do edycji komentarza' }, 401);
+            return c.json({ error: 'Brak wymaganych uprawnień do edycji komentarza' }, 403);
         }
 
         if (!body.id || !body.content) {
@@ -124,7 +124,7 @@ commentController.delete('/:id', async (c) => {
         const found = await commentRepository.findById(Number(id))
 
         if (payload.sub !== found?.author.username) {
-            return c.json({ error: 'Brak wymaganych uprawnień do usunięcia komentarza' }, 401);
+            return c.json({ error: 'Brak wymaganych uprawnień do usunięcia komentarza' }, 403);
         }
 
         const comment = await commentRepository.deleteById(Number(id))
