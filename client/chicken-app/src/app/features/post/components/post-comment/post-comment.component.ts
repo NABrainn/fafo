@@ -28,7 +28,6 @@ export class PostCommentComponent {
   })
 
   author = model<string>();
-  // readonly = model<boolean>();
   readonly = signal(true)
   canMutate = computed(() => this.user() === this.author() && this.authenticated() && !this.readonly())
   content = input<string>()
