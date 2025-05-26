@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { UserRepository } from "../database/repository/userRepository.ts";
 import { db } from "../database/database.ts";
-import {decodeJWT, generateJWT, verifyJWT} from "../util/jwtUtil.ts";
+import {generateJWT, verifyJWT} from "../util/jwtUtil.ts";
 import {verifyPassword} from "../util/cryptoUtil.ts";
 import {setCookie, getCookie, deleteCookie} from 'hono/cookie';
 import { randomBytes } from "node:crypto";

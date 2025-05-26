@@ -28,7 +28,6 @@ export class PostCommentComponent {
   })
 
   author = model<string>();
-  // readonly = model<boolean>();
   readonly = signal(true)
   canMutate = computed(() => this.user() === this.author() && this.authenticated() && !this.readonly())
   content = input<string>()
@@ -85,7 +84,7 @@ export class PostCommentComponent {
           error: false,
           message: ''
         }))
-        this.#toggleReadonly()
+        if(!this.readonly()) this.#toggleReadonly()
         this.commentStateChange.emit(this.commentId()!)
       },
       error: (err: HttpErrorResponse) => {

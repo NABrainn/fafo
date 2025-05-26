@@ -95,12 +95,19 @@ commentController.put('/:id', async (c) => {
         const body = await c.req.json<Extract<Comment, typeof comments.$inferSelect>>()
         const payload = c.get('jwtPayload')
 
-        if (payload.sub !== body.author) {
-            return c.json({ error: 'Brak wymaganych uprawnień do edycji komentarza' }, 403);
-        }
 
         if (!body.id || !body.content) {
             return c.json({ error: 'Brak ID lub treści komentarza' }, 400);
+        }
+
+        if (isNaN(Number(body.id))) {
+            return c.json({ error: 'Nieprawidłowy identyfikator komentarza' }, 400);
+        }
+
+        const found = await commentRepository.findById(Number(body.id))
+
+        if (payload.sub !== found?.author.username) {
+            return c.json({ error: 'Brak wymaganych uprawnień do edycji komentarza' }, 403);
         }
 
         const comment = await commentRepository.updateById(body.id, body)

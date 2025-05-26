@@ -66,16 +66,23 @@ blogPostController.put('/:id', async (c) => {
         const body = await c.req.json<Extract<BlogPost, typeof blogPosts.$inferSelect>>()
         const payload = c.get('jwtPayload')
 
-        if (payload.sub !== body.author) {
-            return c.json({ error: 'Brak wymaganych uprawnień do aktualizacji posta' }, 403);
-        }
+        if(payload)
+            body.author = payload.sub
 
         if (!body.id || !body.title || !body.content) {
             return c.json({ error: 'Brak wymaganych danych do aktualizacji' }, 400);
         }
 
-        if(payload)
-            body.author = payload.sub
+        if (isNaN(Number(body.id))) {
+            return c.json({ error: 'Nieprawidłowy identyfikator posta' }, 400);
+        }
+
+        const found = await blogPostRepository.findById(Number(body.id))
+
+        if (payload.sub !== found?.author.username) {
+            return c.json({ error: 'Brak wymaganych uprawnień do aktualizacji posta' }, 403);
+        }
+
         const blogPost = await blogPostRepository.updateById(body.id, body)
         if(!blogPost)
             return c.json({error: 'Nie znaleziono posta'}, 404)
