@@ -8,8 +8,8 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   return authService.verifyToken().pipe(
-    tap((verified: boolean) => {
-      if (!verified) {
+    tap((user: any) => {
+      if (!user) {
         authService.logout().subscribe({
           next: () => {
             authService.navigateLogin()
