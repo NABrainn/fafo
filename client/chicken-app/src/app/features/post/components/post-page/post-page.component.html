@@ -12,12 +12,9 @@
     <span class="md:text-4xl text-2xl">Komentarze</span>
     <div class="flex flex-col gap-6">
       @defer (on viewport) {
-        <app-post-comment
-          [createMode]="true"
-          [blogPostId]="post()?.id"
-          (commentStateChange)="onCommentStateChange()"
-        >
-        </app-post-comment>
+        <app-post-comment-form
+        [blogPostId]="post()?.id"
+        (commentStateChange)="onCommentStateChange()"></app-post-comment-form>
         @for(comment of comments(); track $index) {
           <div>
             <span>Autor: {{comment.author.username}}</span>
@@ -25,8 +22,6 @@
               (commentStateChange)="onCommentStateChange()"
               [blogPostId]="post()?.id"
               [commentId]="comment.id"
-              [createMode]="false"
-              [readonly]="true"
               [content]="comment.content"
               [author]="comment.author.username">
 
@@ -35,12 +30,9 @@
         }
       } @placeholder (minimum 250ms) {
         <div class="animate-pulse">
-          <app-post-comment
-          [readonly]="true"></app-post-comment>
-          <app-post-comment
-            [readonly]="true"></app-post-comment>
-          <app-post-comment
-            [readonly]="true"></app-post-comment>
+          <app-post-comment></app-post-comment>
+          <app-post-comment></app-post-comment>
+          <app-post-comment></app-post-comment>
         </div>
       }
     </div>

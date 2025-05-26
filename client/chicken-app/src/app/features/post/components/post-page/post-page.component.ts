@@ -5,11 +5,13 @@ import { PostCommentComponent } from '../post-comment/post-comment.component';
 import { CommentService, SelectComment } from '../../service/comment.service';
 import {environment} from '../../../../../environments/environment';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {PostCommentFormComponent} from '../post-comment-form/post-comment-form.component';
 
 @Component({
   selector: 'app-post-page',
   imports: [
-    PostCommentComponent
+    PostCommentComponent,
+    PostCommentFormComponent
   ],
   templateUrl: './post-page.component.html',
   host: {

@@ -18,8 +18,8 @@ export class PostCommentComponent {
   #commentService = inject(CommentService)
   #authService = inject(AuthService)
 
-  user = this.#authService.username()
-  authenticated = this.#authService.authenticated()
+  user = this.#authService.username
+  authenticated = this.#authService.authenticated
   commentStateChange = output<number>()
 
   fb = inject(FormBuilder)
@@ -27,45 +27,19 @@ export class PostCommentComponent {
     content: ['', [Validators.required, Validators.maxLength(50)]]
   })
 
-  createMode = input<boolean>()
   author = model<string>();
-  readonly = model<boolean>()
+  // readonly = model<boolean>();
+  readonly = signal(true)
+  canMutate = computed(() => this.user() === this.author() && this.authenticated() && !this.readonly())
   content = input<string>()
   blogPostId = input<number>();
   commentId = input<number>();
 
   commentEffect = effect(() => {
-    if (this.readonly() && this.content()) {
+    if (this.content()) {
       this.form.controls.content.setValue(this.content()!);
     }
   });
-
-  saveComment(event: Event) {
-    event.preventDefault()
-    this.#commentService.addComment({
-      content: this.form.controls.content.value,
-      blogPostId: this.blogPostId()
-    } as InsertComment).subscribe({
-      next: (data) => {
-        this.#commentService.state.update((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: false,
-          message: ''
-        }))
-        this.form.reset()
-        this.commentStateChange.emit(this.commentId()!)
-      },
-      error: (err: HttpErrorResponse) => {
-        this.#commentService.state.update((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: true,
-          message: 'Błąd podczas dodawania komentarza'
-        }))
-      }
-    })
-  }
 
   onUpdate() {
     this.#toggleReadonly()
@@ -111,6 +85,7 @@ export class PostCommentComponent {
           error: false,
           message: ''
         }))
+        this.#toggleReadonly()
         this.commentStateChange.emit(this.commentId()!)
       },
       error: (err: HttpErrorResponse) => {
