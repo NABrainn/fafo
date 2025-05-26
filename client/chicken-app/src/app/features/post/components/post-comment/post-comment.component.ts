@@ -84,7 +84,7 @@ export class PostCommentComponent {
           error: false,
           message: ''
         }))
-        this.#toggleReadonly()
+        if(!this.readonly()) this.#toggleReadonly()
         this.commentStateChange.emit(this.commentId()!)
       },
       error: (err: HttpErrorResponse) => {
