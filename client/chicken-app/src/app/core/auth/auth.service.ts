@@ -53,7 +53,6 @@ export class AuthService {
 
   #verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
-
       catchError((err: HttpErrorResponse) => {
         return throwError(() => err.error)
       }),
@@ -74,7 +73,7 @@ export class AuthService {
             error: false,
             message: '',
             authenticated: true,
-            username: user,
+            username: user.user,
           }));
         },
         error: () => {
@@ -89,7 +88,7 @@ export class AuthService {
           }));
         }
       }),
-
+      map((user: any) => !!user),
       catchError(err => {
         return of(false)
       })

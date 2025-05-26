@@ -8,15 +8,18 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   return authService.verifyToken().pipe(
-    tap((user: any) => {
-      if (!user) {
-        authService.logout().subscribe({
-          next: () => {
-            authService.navigateLogin()
-          },
-          error: () => {
-            authService.navigateLogin()
-          }
+    tap((verified: any) => {
+      if (!verified) {
+        authService.logout().subscribe(() => {
+          authService.state.update((prev) => ({
+            ...prev,
+            isLoading: false,
+            error: true,
+            message: '',
+            authenticated: false,
+            username: undefined,
+            csrfToken: ''
+          }));
         });
       }
     }),
