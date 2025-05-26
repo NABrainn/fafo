@@ -21,12 +21,3 @@ export const verifyJWT = async (jwt: string): Promise<JWTPayload | null> => {
     return null;
   }
 };
-
-export const decodeJWT = (jwt: string) => {
-  try {
-    const { header, payload } = decode(jwt);
-    return { header, payload };
-  } catch (_error) {
-    return null;
-  }
-};
