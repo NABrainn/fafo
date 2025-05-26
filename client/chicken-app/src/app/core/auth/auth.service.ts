@@ -34,6 +34,7 @@ export class AuthService {
   message = computed(() => this.state().message);
   username = computed(() => this.state().username);
   csrfToken = computed(() => this.state().csrfToken);
+
   register(user: RegisterData) {
     return this.#http.post(`${environment.authUrl}/register`, user).pipe(
       catchError((err: HttpErrorResponse) => {
@@ -52,7 +53,7 @@ export class AuthService {
 
   #verify() {
     return this.#http.post(`${environment.authUrl}/verify`, {}, {withCredentials: true}).pipe(
-      map((data: any) => !!data),
+
       catchError((err: HttpErrorResponse) => {
         return throwError(() => err.error)
       }),
@@ -66,15 +67,14 @@ export class AuthService {
   verifyToken() {
     return this.#verify().pipe(
       tap({
-        next: (verified: boolean) => {
+        next: (user: any) => {
           this.state.update((prev) => ({
             ...prev,
             isLoading: false,
-            error: !verified,
+            error: false,
             message: '',
-            authenticated: verified,
-            username: verified ? prev.username : undefined,
-            csrfToken: verified ? prev.csrfToken : ''
+            authenticated: true,
+            username: user,
           }));
         },
         error: () => {
@@ -91,7 +91,7 @@ export class AuthService {
       }),
 
       catchError(err => {
-        return of(false)
+        return throwError(() => err.error)
       })
     );
   }

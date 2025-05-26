@@ -49,11 +49,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.verifyAuthenticated().subscribe({
-      next: (verified: boolean) => {
+      next: (user: any) => {
         this.authService.state.update((prev) => ({
           ...prev,
-          authenticated: verified,
-          username: this.authService.username(),
+          authenticated: true,
+          username: user.user,
           error: false,
           message: ''
         }))

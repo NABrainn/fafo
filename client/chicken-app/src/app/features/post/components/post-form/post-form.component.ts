@@ -38,16 +38,6 @@ export class PostFormComponent {
     this.router.navigate(['posty'])
   }
 
-  onFileUpload(input: HTMLInputElement) {
-    this.imageName.set(input.files?.[0].name);
-    const formData = new FormData();
-    formData.append('title', this.imageName() ?? '')
-    formData.append('data', input.files?.[0] as File)
-    this.imageService.uploadImage(formData).subscribe(
-      (id: any) => this.#imageId.set(id)
-    )
-  }
-
   onSubmit(event: Event) {
     event.preventDefault();
     this.service.save({

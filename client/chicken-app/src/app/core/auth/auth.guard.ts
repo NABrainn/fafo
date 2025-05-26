@@ -12,10 +12,10 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (!verified) {
         authService.logout().subscribe({
           next: () => {
-            router.navigate(['/logowanie']);
+            authService.navigateLogin()
           },
           error: () => {
-            router.navigate(['/logowanie']);
+            authService.navigateLogin()
           }
         });
       }

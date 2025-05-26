@@ -51,7 +51,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
           error: false,
           message: 'Zalogowano pomyślnie',
           authenticated: true,
-          username: data.username
+          username: data.user
         }))
         this.loginService.navigateHome()
       },
