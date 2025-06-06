@@ -1,9 +1,7 @@
-// commentControllerTest.ts
 import { assertEquals } from "https://deno.land/std@0.204.0/assert/mod.ts";
 import { Hono } from "hono";
 import { createCommentController } from "../commentController.ts";
 
-// Minimalny interfejs bez typu CommentRepository
 const mockRepo = {
   findById: async (id: number) => id === 1 ? {
     id: 1,
@@ -32,7 +30,6 @@ const mockRepo = {
   deleteById: async (id: number) => ({ rowCount: id === 1 ? 1 : 0 }),
 };
 
-// Typ "as any" pozwala pominąć niezgodność typów z CommentRepository
 const app = new Hono().route("/comments", createCommentController(mockRepo as any));
 
 Deno.test("GET /:id - returns 404 if not found", async () => {

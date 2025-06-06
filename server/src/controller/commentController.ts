@@ -11,7 +11,7 @@ export interface CommentRepositoryLike {
   deleteById: (id: number) => Promise<{ rowCount: number }>;
 }
 
-export function createCommentController(commentRepository: CommentRepository) {
+export function createCommentController(commentRepository: CommentRepositoryLike) {
   const commentController = new Hono();
 
 commentController.get('/:id', async (c) => {
@@ -54,6 +54,3 @@ commentController.delete('/:id', async (c) => {
 
 return commentController;
 }
-
-const realRepo = new CommentRepository(db);
-export const commentController = createCommentController(realRepo);
