@@ -3,8 +3,16 @@ import { Comment, comments } from "../database/schema/comments.ts";
 import { CommentRepository } from "../database/repository/commentRepository.ts";
 import { db } from "../database/database.ts";
 
-export const commentController = new Hono()
-const commentRepository = new CommentRepository(db)
+export interface CommentRepositoryLike {
+  findById: (id: number) => Promise<Comment | null>;
+  findAll: () => Promise<Comment[]>;
+  create: (data: any) => Promise<Comment>;
+  updateById: (id: number, data: any) => Promise<Comment | null>;
+  deleteById: (id: number) => Promise<{ rowCount: number }>;
+}
+
+export function createCommentController(commentRepository: CommentRepository) {
+  const commentController = new Hono();
 
 commentController.get('/:id', async (c) => {
     const id = c.req.param('id');
@@ -42,4 +50,10 @@ commentController.delete('/:id', async (c) => {
         return c.json({error: 'Nie znaleziono komentarza'}, 404)
     
     return c.json(comment, 200);
-})
+});
+
+return commentController;
+}
+
+const realRepo = new CommentRepository(db);
+export const commentController = createCommentController(realRepo);
