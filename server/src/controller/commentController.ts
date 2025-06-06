@@ -2,17 +2,10 @@ import { Hono } from "hono";
 import { Comment, comments } from "../database/schema/comments.ts";
 import { CommentRepository } from "../database/repository/commentRepository.ts";
 import { db } from "../database/database.ts";
+import {BlogPostRepository} from "../database/repository/blogPostRepository.ts";
 
-export interface CommentRepositoryLike {
-  findById: (id: number) => Promise<Comment | null>;
-  findAll: () => Promise<Comment[]>;
-  create: (data: any) => Promise<Comment>;
-  updateById: (id: number, data: any) => Promise<Comment | null>;
-  deleteById: (id: number) => Promise<{ rowCount: number }>;
-}
-
-export function createCommentController(commentRepository: CommentRepositoryLike) {
-  const commentController = new Hono();
+export const commentController = new Hono();
+const commentRepository = new CommentRepository(db)
 
 commentController.get('/:id', async (c) => {
     try {

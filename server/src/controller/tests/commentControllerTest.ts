@@ -1,58 +1,27 @@
-import { assertEquals } from "https://deno.land/std@0.204.0/assert/mod.ts";
-import { Hono } from "hono";
-import { createCommentController } from "../commentController.ts";
-
-const mockRepo = {
-  findById: async (id: number) => id === 1 ? {
-    id: 1,
-    content: "Test Comment",
-    createdAt: new Date(),
-    author: "Tester"
-  } : null,
-  findAll: async () => [{
-    id: 1,
-    content: "Test Comment",
-    createdAt: new Date(),
-    author: "Tester"
-  }],
-  create: async (data: any) => ({
-    id: 2,
-    ...data,
-    createdAt: new Date(),
-    author: data.author ?? "Tester"
-  }),
-  updateById: async (id: number, data: any) => ({
-    id,
-    ...data,
-    createdAt: new Date(),
-    author: data.author ?? "Updated"
-  }),
-  deleteById: async (id: number) => ({ rowCount: id === 1 ? 1 : 0 }),
-};
-
-const app = new Hono().route("/comments", createCommentController(mockRepo as any));
+import { assertEquals } from "@std/assert/equals";
+import {commentController} from "../commentController.ts";
 
 Deno.test("GET /:id - returns 404 if not found", async () => {
-  const res = await app.request("/comments/999");
+  const res = await commentController.request("/comments/999");
   assertEquals(res.status, 404);
 });
 
 Deno.test("GET /:id - returns comment if found", async () => {
-  const res = await app.request("/comments/1");
+  const res = await commentController.request("/comments/1");
   const json = await res.json();
   assertEquals(res.status, 200);
   assertEquals(json.content, "Test Comment");
 });
 
 Deno.test("GET / - returns all comments", async () => {
-  const res = await app.request("/comments");
+  const res = await commentController.request("/comments");
   const json = await res.json();
   assertEquals(Array.isArray(json), true);
   assertEquals(json.length, 1);
 });
 
 Deno.test("POST / - creates a comment", async () => {
-  const res = await app.request("/comments", {
+  const res = await commentController.request("/comments", {
     method: "POST",
     body: JSON.stringify({ content: "Nowy Komentarz" }),
   });
@@ -62,7 +31,7 @@ Deno.test("POST / - creates a comment", async () => {
 });
 
 Deno.test("PUT /:id - updates a comment", async () => {
-  const res = await app.request("/comments/1", {
+  const res = await commentController.request("/comments/1", {
     method: "PUT",
     body: JSON.stringify({ id: 1, content: "Zmieniony Komentarz" }),
   });
@@ -72,7 +41,7 @@ Deno.test("PUT /:id - updates a comment", async () => {
 });
 
 Deno.test("DELETE /:id - deletes a comment", async () => {
-  const res = await app.request("/comments/1", {
+  const res = await commentController.request("/comments/1", {
     method: "DELETE",
     body: JSON.stringify({ id: 1 }),
   });
@@ -80,5 +49,3 @@ Deno.test("DELETE /:id - deletes a comment", async () => {
   assertEquals(res.status, 200);
   assertEquals(json.rowCount, 1);
 });
-
-export {};

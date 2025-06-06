@@ -14,6 +14,7 @@ import { compress } from 'hono/compress'
 import {imageController} from "./controller/image/imageController.ts";
 import {start} from "./controller/external/stooq/stooqService.ts";
 import { csrf } from 'hono/csrf'
+import {commentController} from "./controller/commentController.ts";
 
 type Variables = JwtVariables
 
