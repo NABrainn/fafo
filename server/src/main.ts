@@ -1,7 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { blogPostController } from "./controller/blogPostController.ts";
-import { commentController } from "./controller/commentController.ts";
 import { userController } from "./controller/userController.ts";
 import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
@@ -42,6 +41,7 @@ const jwtSecret = Deno.env.get('JWT_SECRET');
 if (!jwtSecret) {
     throw new Error(`JWT_SECRET environment variable is not set ${import.meta.url}`);
 }
+
 
 app.use('/api/*',
     except(
