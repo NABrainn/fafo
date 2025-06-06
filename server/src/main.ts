@@ -5,40 +5,73 @@ import { userController } from "./controller/userController.ts";
 import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
 import { authController } from "./controller/authController.ts";
-import { createCommentController } from "./controller/commentController.ts";
-import { CommentRepository } from "./database/repository/commentRepository.ts";
-import { db } from "./database/database.ts";
+import { except } from 'hono/combine';
+import {stooqController} from "./controller/external/stooq/stooqController.ts";
+import {chickenController} from "./controller/external/chickenFacts/chickenController.ts";
+import { serveStatic } from 'hono/deno'
+import { resolve, join } from "node:path";
+import { compress } from 'hono/compress'
+import {imageController} from "./controller/image/imageController.ts";
+import {start} from "./controller/external/stooq/stooqService.ts";
+import { csrf } from 'hono/csrf'
 
 type Variables = JwtVariables
 
 const app = new Hono<{ Variables: Variables }>()
 
-app.use('/api/*', cors({
+app.use('/*', cors({
     origin: 'http://localhost:4200',
-    allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
-    allowMethods: ['POST', 'GET', 'OPTIONS'],
-    maxAge: 6000,
+    allowHeaders: ["Content-Type", "X-CSRF-Token", "Access-Control-Allow-Origin"],
+    allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
 }))
 
-app.use('/auth/*', cors({
-    origin: 'http://localhost:4200',
-    allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
-    allowMethods: ['POST', 'GET', 'OPTIONS'],
-    maxAge: 6000,
+app.use('/*', cors({
+    origin: 'https://hotwings.deno.dev',
+    allowHeaders: ["Content-Type", "X-CSRF-Token", "Access-Control-Allow-Origin"],
+    allowMethods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
 }))
 
-app.use('/api/*', jwt({
-    secret: Deno.env.get('JWT_SECRET') || '',
-    alg: 'HS256',
-}))
+app.use(csrf({origin: ['http://localhost:4200', 'https://hotwings.deno.dev']}))
 
-const commentController = createCommentController(new CommentRepository(db));
+app.use(compress())
 
+const jwtSecret = Deno.env.get('JWT_SECRET');
+if (!jwtSecret) {
+    throw new Error(`JWT_SECRET environment variable is not set ${import.meta.url}`);
+}
+
+
+app.use('/api/*',
+    except(
+        [
+            '/api/posts/public/*',
+            '/api/comments/public/*',
+            '/api/stooqapi/public/*',
+            '/api/chicken/public/*',
+            '/api/images/public/*'
+        ],
+        jwt({
+            secret: jwtSecret,
+            cookie: 'jwt',
+            alg: 'HS256',
+        })
+    )
+)
+
+app.route('/api/images', imageController)
 app.route('/api/posts', blogPostController);
 app.route('/api/comments', commentController);
 app.route('/api/users', userController);
 app.route('/auth', authController);
 
-Deno.serve(app.fetch);
+app.route('/api/stooqapi', stooqController);
+app.route('/api/chicken', chickenController);
+
+await start()
+
+const staticRoot = resolve(Deno.cwd(), '../dist/chicken-app/browser')
+app.use('*', serveStatic({ root: staticRoot }));
+app.get('*', serveStatic({ path: join(staticRoot, 'index.html') }))
+Deno.serve(app.fetch)

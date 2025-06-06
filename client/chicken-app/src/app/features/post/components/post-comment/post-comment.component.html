@@ -1,0 +1,43 @@
+<form
+[formGroup]="form">
+    <div class="md:max-w-1/2 min-h-30 max-w-full flex flex-col bg-secondary/40 rounded mb-8 border-2 border-tertiary p-4">
+        <textarea
+        [ngClass]="readonly() || !authenticated ? 'cursor-default' : 'cursor-select'"
+        [formControl]="form.controls.content"
+        [readonly]="readonly() || !authenticated"
+        class="focus:outline-none resize-none w-full min-h-16"></textarea>
+        <div class="flex justify-end">
+          <div class="flex gap-4">
+            @if (this.user() === this.author()) {
+              @if (!canMutate()) {
+                <button
+                  type="button"
+                  class="bg-accent px-4 py-2 rounded"
+                  (click)="onUpdate()">
+                  Aktualizuj
+                </button>
+                <button
+                  (click)="onDelete()"
+                  type="button"
+                  class="bg-error/80 px-4 py-2 rounded">
+                  Usuń
+                </button>
+              } @else {
+                <button
+                  type="button"
+                  class="bg-accent px-4 py-2 rounded"
+                  (click)="onUpdateCommit()">
+                  Zapisz zmiany
+                </button>
+                <button
+                  (click)="onDelete()"
+                  type="button"
+                  class="bg-error/80 px-4 py-2 rounded">
+                  Usuń
+                </button>
+              }
+            }
+          </div>
+        </div>
+    </div>
+</form>

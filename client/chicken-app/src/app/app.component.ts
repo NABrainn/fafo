@@ -1,25 +1,72 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './core/auth/auth.service';
+import {ChickenFactsComponent} from './features/chicken-facts/components/chicken-facts/chicken-facts.component';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    ChickenFactsComponent,
   ],
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   authService = inject(AuthService);
 
   get authenticated() {
-    return this.authService.authenticated();
+    return this.authService.authenticated;
   }
 
   logout() {
-    this.authService.logout();
+    this.authService.logout().subscribe({
+      next: () => {
+        this.authService.state.update((prev) => ({
+          ...prev,
+          authenticated: false,
+          username: undefined,
+          error: false,
+          message: ''
+        }))
+        this.authService.navigateLogin()
+
+      },
+      error: () => {
+        this.authService.state.update((prev) => ({
+          ...prev,
+          authenticated: false,
+          username: undefined,
+          error: true,
+          message: 'Błąd podczas wylogowywania'
+        }));
+        this.authService.navigateLogin()
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.authService.verifyAuthenticated().subscribe({
+      next: (user: any) => {
+        this.authService.state.update((prev) => ({
+          ...prev,
+          authenticated: true,
+          username: user.user,
+          error: false,
+          message: ''
+        }))
+      },
+      error: (err: HttpErrorResponse) => {
+        this.authService.state.update((prev) => ({
+          ...prev,
+          authenticated: false,
+          username: undefined,
+          error: true,
+          message: err.error
+        }))
+      }
+    });
   }
 }

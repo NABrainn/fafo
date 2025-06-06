@@ -1,7 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { PostService } from '../../post.service';
+import {Component, inject, OnInit} from '@angular/core';
+import { PostService } from '../../service/post.service';
 import { PostCardComponent } from '../post-card/post-card.component';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import {AuthService} from '../../../../core/auth/auth.service';
+import {StooqDisplayComponent} from '../../../stooq/components/stooq-display/stooq-display.component';
 
 @Component({
   selector: 'app-post-list',
@@ -9,14 +11,18 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
     PostCardComponent,
     RouterLink,
     RouterLinkActive,
-    RouterOutlet
+    StooqDisplayComponent,
   ],
   templateUrl: './post-list.component.html',
   host: {
-    class: 'grow-1 flex flex-col'
+    class: 'grow-1 bg-primary flex flex-col'
   }
 })
-export class PostListComponent {
+export class PostListComponent implements OnInit{
   service = inject(PostService)
-  posts = this.service.loadPosts()
+  #authService = inject(AuthService)
+  posts = this.service.posts
+  ngOnInit() {
+    this.#authService.verifyAuthenticated().subscribe()
+  }
 }

@@ -1,32 +1,18 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: postgres
+    container_name: fafo_postgres
     environment:
       POSTGRES_USER: ${PG_USERNAME}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DATABASE}
     ports:
-    - 5440:5432
+      - "5440:5432"
     networks:
-    - pg
-  postgres_test:
-    image: postgres:latest
-    container_name: postgres_test
-    environment:
-      POSTGRES_USER: ${PG_USERNAME}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DATABASE}
-    ports:
-    - 5450:5432
-    networks:
-    - pg_test
+      - pg
 networks:
   pg:
     driver: bridge
-  pg_test:
-    driver: bridge
 volumes:
   postgres: {}
-  postgres_test: {}
 

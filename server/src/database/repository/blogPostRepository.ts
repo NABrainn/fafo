@@ -1,6 +1,9 @@
-import { Connection, db } from "../database.ts";
+import { Connection } from "../database.ts";
 import { BlogPost, blogPosts } from "../schema/blogPosts.ts";
-import { eq } from "drizzle-orm/expressions";
+import { asc, desc, eq } from "drizzle-orm/expressions";
+import { comments } from "../schema/comments.ts";
+import {images} from "../schema/images.ts";
+
 
 export class BlogPostRepository {
 
@@ -13,21 +16,48 @@ export class BlogPostRepository {
         const found = await this.pool.query.blogPosts.findFirst({
             where: eq(blogPosts.id, id),
             with: {
-                comments: true,
-                author: true
-            }
-        })
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
+                comments: {
+                    with: {
+                        author: {
+                            columns: {
+                                username: true,
+                                verified: true
+                            }
+                        },
+                        parentComment: true
+                    },
+                    orderBy: asc(comments.id)
+                },
+                image: true
+            },
+        });
         return found;
     }
     async findAll () {
         return await this.pool.query.blogPosts.findMany({
             with: {
                 comments: true,
-                author: true
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
             }
-        })
+        })        
     }
     async create (data: Extract<BlogPost, typeof blogPosts.$inferInsert>) {
+        if(!data.imageId) {
+            const placeholderId = await this.pool.select({id: images.id}).from(images).where(eq(images.fileName, 'placeholder'));
+            if(!placeholderId.length) throw new Error('Nie znaleziono placeholder obrazka');
+            data.imageId = placeholderId[0].id;
+        }
         const inserted = await this.pool.insert(blogPosts).values(data).returning();
         return inserted[0]
     }
@@ -35,7 +65,6 @@ export class BlogPostRepository {
         const updated = await this.pool.update(blogPosts).set({
            title: data.title,
            subtitle: data.subtitle,
-           imgUrl: data.imgUrl
         }).where(eq(blogPosts.id, id)).returning();
         return updated[0]
     }

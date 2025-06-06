@@ -1,6 +1,6 @@
-import { Connection, db } from "../database.ts";
+import { Connection } from "../database.ts";
 import { Comment, comments } from "../schema/comments.ts";
-import { eq } from "drizzle-orm/expressions";
+import { desc, asc, eq } from "drizzle-orm/expressions";
 
 export class CommentRepository {
 
@@ -11,11 +11,17 @@ export class CommentRepository {
     }
 
     async findById(id: number) {
+        console.log(id)
         return await this.pool.query.comments.findFirst({
             where: eq(comments.id, id),
             with: {
                 parentComment: true,
-                author: true,
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
                 blogPost: true
             }
         })
@@ -24,12 +30,50 @@ export class CommentRepository {
         return await this.pool.query.comments.findMany({
             with: {
                 parentComment: true,
-                author: true,
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
                 blogPost: true
             }
         })    
     }
+    async findAllByAuthor(author: string) {
+        return await this.pool.query.comments.findMany({
+            where: eq(comments.author, author),
+            with: {
+                parentComment: true,
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
+                blogPost: true
+            }
+        })    
+    }
+    async findAllCommentsByBlogId(id: number) {
+        return await this.pool.query.comments.findMany({
+            where: eq(comments.blogPostId, id),
+            with: {
+                parentComment: true,
+                author: {
+                    columns: {
+                        username: true,
+                        verified: true
+                    }
+                },
+                blogPost: true
+            },
+            orderBy: asc(comments.id)
+        })
+    }
     async create(data: Extract<Comment, typeof comments.$inferInsert>) {
+        console.log(data);
+        
         const created = await this.pool.insert(comments).values(data).returning();
         return created[0]
     }

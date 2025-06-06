@@ -1,17 +1,36 @@
-<div class="flex flex-col gap-4 overflow-y-hidden overflow-y-hidden text-ellipsis bg-secondary p-4 rounded">
-    <img [src]="imgPath()" alt="">
-    <h3 class="text-neutral-dark text-2xl font-semibold">
-        <ng-content select="title">
+<div class="flex flex-col text-wrap bg-secondary rounded">
+    <img class="object-cover grow-1 basis-1/2" [src]="reqUrl" alt="there shall be an image">
+    <main class="grow-1 basis-1/2 flex flex-col gap-4 px-4 pb-4">
+      <div class="grow-1 flex flex-col gap-4">
+        <h3 class="min-h-20 text-neutral-dark text-xl font-semibold break-words">
+          <ng-content select="title">
 
-        </ng-content>
-    </h3>
-    <div class="flex flex-col text-neutral-light overflow-y-hidden border text-tertiary border-tertiary border-2 grow-1 rounded p-4">
-        <ng-content select="description">
+          </ng-content>
+        </h3>
+        <div class="min-h-20 grow-1 break-words">
+          <ng-content select="description">
 
-        </ng-content>
-        <span class="text-accent cursor-pointer">Czytaj więcej...</span>
-    </div>
-    <footer class="flex justify-between">
-        <span class="text-neutral-dark text-xs font-semibold">{{author()}} | {{date()}}</span>
-    </footer>
+          </ng-content>
+        </div>
+        <span
+          routerLink="/posty/{{id()}}"
+          class="text-accent cursor-pointer">Czytaj więcej...</span>
+      </div>
+      <footer class="flex items-center justify-between">
+        <div class="text-neutral-dark text-xs font-semibold">
+          <ng-content select="footer">
+
+          </ng-content>
+        </div>
+        <div class="flex gap-2">
+        @if (authenticated() && author() === user) {
+          <button
+            (click)="onDelete(id())"
+            class="bg-error/80 px-2 py-1 rounded">
+            Usuń
+          </button>
+        }
+        </div>
+      </footer>
+    </main>
 </div>

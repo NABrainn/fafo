@@ -1,7 +1,7 @@
-
 import { blogPosts, blogPostsRelations } from "../blogPosts.ts";
 import { comments, commentsRelations } from "../comments.ts";
 import { users, usersRelations } from "../users.ts";
+import { images, imagesRelations } from "../images.ts";
 
 export default {
     blogPosts,
@@ -9,5 +9,7 @@ export default {
     comments,
     commentsRelations,
     users,
-    usersRelations
+    usersRelations,
+    images,
+    imagesRelations
 }

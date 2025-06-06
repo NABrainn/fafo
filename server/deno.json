@@ -1,15 +1,24 @@
 {
   "tasks": {
-    "dev": "DENO_ENV=dev deno run --env --allow-env --allow-net --watch src/main.ts",
-    "test": "DENO_ENV=test deno test src/**/*.ts --env --allow-net --allow-env --allow-read --allow-run --no-check",
+    "dev": "DENO_ENV=dev deno run --env --allow-env --allow-write --allow-read --allow-net --watch src/main.ts",
+    "test": "DENO_ENV=test deno test src/**/*.ts --env --allow-net --allow-env --allow-read --allow-write --allow-run --no-check",
+
     "generate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit generate --config=drizzle-dev.config.ts",
     "push": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-sys --allow-run npm:drizzle-kit push --config=drizzle-dev.config.ts",
     "pull": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit pull --config=drizzle-dev.config.ts",
     "migrate": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit migrate --config=drizzle-dev.config.ts",
+
     "push-test": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-sys --allow-run npm:drizzle-kit push --config=drizzle-test.config.ts",
     "pull-test": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit pull --config=drizzle-test.config.ts",
     "migrate-test": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit migrate --config=drizzle-test.config.ts",
-    "generate-test": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit generate --config=drizzle-test.config.ts"
+    "generate-test": "deno --env --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit generate --config=drizzle-test.config.ts",
+
+    "generate-prod": "deno --env-file=.env.prod --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit generate --config=drizzle-prod.config.ts",
+    "push-prod": "deno --env-file=.env.prod --node-modules-dir --allow-net --allow-env --allow-read --allow-sys --allow-run npm:drizzle-kit push --config=drizzle-prod.config.ts",
+    "pull-prod": "deno --env-file=.env.prod --node-modules-dir --allow-net --allow-env --allow-read --allow-write --allow-sys --allow-run npm:drizzle-kit pull --config=drizzle-prod.config.ts",
+
+    "build": "cd ../client/chicken-app/src && ng build &&  cd .. && cp dist -r ../../server",
+    "deploy": "deno task build && deno task push-prod && deployctl deploy --env-file=.env.prod --prod"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
@@ -20,6 +29,14 @@
     "drizzle-orm": "npm:drizzle-orm@^0.41.0",
     "hono": "npm:hono@^4.7.5",
     "jose": "npm:jose@^6.0.10",
-    "pg": "npm:pg@^8.14.1"
+    "pg": "npm:pg@^8.14.1",
+    "zod": "npm:zod@^3.24.4",
+    "zod-validator": "npm:zod-validator@^1.0.1"
+  },
+  "deploy": {
+    "project": "hotwings",
+    "entrypoint": "src/main.ts",
+    "include": ["./src", "./dist", "./resources", "deno.json", ".env.prod"],
+    "exclude": [".docker-compose.yml", "drizzle-test.config.ts", "drizzle-prod.config.ts", "./node_modules", ".README.md, .env"]
   }
 }
