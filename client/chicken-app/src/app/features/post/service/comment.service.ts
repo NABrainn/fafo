@@ -1,7 +1,7 @@
-import { HttpClient, httpResource } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {inject, Injectable, signal} from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import {catchError, tap, throwError} from 'rxjs';
+import {catchError, throwError} from 'rxjs';
 import {ServiceState} from '../../../shared/service-state';
 
 export type SelectComment = {

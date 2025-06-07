@@ -1,6 +1,6 @@
 import { Connection } from "../database.ts";
 import { BlogPost, blogPosts } from "../schema/blogPosts.ts";
-import { asc, desc, eq } from "drizzle-orm/expressions";
+import { asc, eq } from "drizzle-orm/expressions";
 import { comments } from "../schema/comments.ts";
 import {images} from "../schema/images.ts";
 

@@ -1,6 +1,6 @@
 import {
   Component,
-  computed, effect,
+  computed,
   inject,
   input, OnInit,
 } from '@angular/core';

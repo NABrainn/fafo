@@ -2,11 +2,9 @@ import { assertEquals } from "@std/assert/equals";
 import {BlogPost, blogPosts} from "../../database/schema/blogPosts.ts";
 import { sign } from 'hono/jwt'
 import {
-  deleteBlogPostHandler,
   getAllBlogPostHandler,
   getBlogPostHandler,
   postBlogPostHandler,
-  putBlogPostHandler
 } from "../blogPostController.ts";
 import {createMockContext} from "./utils/mockContext.ts";
 
@@ -46,10 +44,6 @@ const mockBlogPostRepository: BlogPostRepository = {
   }),
   deleteById: async (id: number): Promise<any> => ({}),
 };
-const mockKey = await sign({
-  sub: 'username',
-  exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
-}, '1234', 'HS256');
 
 Deno.test("GET /:id - returns 404 if not found", async () => {
   db.clear()
