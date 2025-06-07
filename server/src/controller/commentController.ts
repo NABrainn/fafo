@@ -106,7 +106,7 @@ export const putCommentHandler = async (c: Context, commentRepository: CommentRe
             return c.json({error: 'Nie znaleziono komentarza'}, 404)
         }
 
-        if (payload.sub !== found.author) {
+        if (payload.sub !== found.author.username) {
             return c.json({ error: 'Brak wymaganych uprawnień do edycji komentarza' }, 403);
         }
 
@@ -131,9 +131,7 @@ export const deleteCommentHandler = async (c: Context, commentRepository: Commen
         }
 
         const found = await commentRepository.findById(Number(id))
-
-        // Fix: Compare payload.sub with found?.author (string), not found?.author.username
-        if (found && payload.sub !== found.author) {
+        if (found && payload.sub !== found.author.username) {
             return c.json({ error: 'Brak wymaganych uprawnień do usunięcia komentarza' }, 403);
         }
 

@@ -1,6 +1,6 @@
 import {
   Component,
-  computed,
+  computed, effect,
   inject,
   input, OnInit,
 } from '@angular/core';
@@ -22,7 +22,7 @@ export class PostCardComponent implements OnInit{
   #authService = inject(AuthService)
 
   reqUrl: string = '';
-  authenticated = computed(() => this.#authService.authenticated);
+  authenticated = computed(() => this.#authService.authenticated());
   user = this.#authService.username()
 
   id = input<number>();

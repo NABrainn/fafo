@@ -88,8 +88,7 @@ export const putBlogPostHandler = (async (c: Context, blogPostRepository: BlogPo
 
         const found = await blogPostRepository.findById(Number(body.id))
 
-        if (payload.sub !== found?.author) {
-            console.log(`sub: ${payload.sub}, found: ${found?.author}`)
+        if (payload.sub !== found?.author.username) {
             return c.json({ error: 'Brak wymaganych uprawnień do aktualizacji posta' }, 403);
         }
 
@@ -113,7 +112,9 @@ export const deleteBlogPostHandler = (async (c: Context, blogPostRepository: Blo
         }
         const found = await blogPostRepository.findById(Number(id))
 
-        if (payload.sub !== found?.author) {
+
+
+        if (payload.sub !== found?.author.username) {
             return c.json({ error: 'Brak wymaganych uprawnień do usunięcia posta' }, 403);
         }
 
@@ -130,7 +131,7 @@ export const deleteBlogPostHandler = (async (c: Context, blogPostRepository: Blo
 })
 
 blogPostController.get('/public/:id', (c) => getBlogPostHandler(c, new BlogPostRepository(db)))
-blogPostController.get('/public/', (c) => getAllBlogPostHandler(c, new BlogPostRepository(db)))
+blogPostController.get('/public', (c) => getAllBlogPostHandler(c, new BlogPostRepository(db)))
 blogPostController.post('/', (c) => postBlogPostHandler(c, new BlogPostRepository(db)))
 blogPostController.put('/:id', (c) => putBlogPostHandler(c, new BlogPostRepository(db)))
 blogPostController.delete('/:id', (c) => deleteBlogPostHandler(c, new BlogPostRepository(db)))

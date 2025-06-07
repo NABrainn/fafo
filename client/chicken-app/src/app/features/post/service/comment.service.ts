@@ -7,7 +7,9 @@ import {ServiceState} from '../../../shared/service-state';
 export type SelectComment = {
   id: number,
   content: string,
-  author: {username: string, verified: boolean},
+  author: {
+    username: string,
+  },
   createdAt?: string,
 }
 

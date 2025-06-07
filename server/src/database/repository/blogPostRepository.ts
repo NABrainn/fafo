@@ -19,7 +19,11 @@ export class BlogPostRepository {
                 author: true,
                 comments: {
                     with: {
-                        author: true
+                        author: {
+                            columns: {
+                                username: true
+                            }
+                        }
                     },
                     orderBy: asc(comments.id)
                 },
@@ -32,7 +36,11 @@ export class BlogPostRepository {
         return await this.pool.query.blogPosts.findMany({
             with: {
                 comments: true,
-                author: true,
+                author: {
+                    columns: {
+                        username: true
+                    }
+                }
             }
         })        
     }
