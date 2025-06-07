@@ -106,7 +106,7 @@ export const putCommentHandler = async (c: Context, commentRepository: CommentRe
             return c.json({error: 'Nie znaleziono komentarza'}, 404)
         }
 
-        if (payload.sub !== found.author.username) {
+        if (found && payload.sub !== found.author.username) {
             return c.json({ error: 'Brak wymaganych uprawnień do edycji komentarza' }, 403);
         }
 
