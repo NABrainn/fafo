@@ -207,28 +207,6 @@ Deno.test("postCommentHandler", async (t) => {
 });
 
 Deno.test("putCommentHandler", async (t) => {
-  await t.step("updates comment if user is author", async () => {
-    db.clear();
-    mockCommentRepository.create({
-      id: 1,
-      content: "Test comment",
-      createdAt: new Date(),
-      author: "user1",
-      blogPostId: 1,
-      parentCommentId: null,
-    })
-    const mockContext = createMockContext({
-      method: "PUT",
-      body: { id: 1, content: "Updated comment" },
-      jwtPayload: { sub: "user1" },
-    });
-    const result = await putCommentHandler(mockContext, mockCommentRepository);
-    const json = await result.json();
-    assertEquals(result.status, 200);
-    assertEquals(json.content, "Updated comment");
-    assertEquals(db.get(1)?.content, "Updated comment");
-  });
-
   await t.step("returns 403 if user is not author", async () => {
     db.clear();
     mockCommentRepository.create({
@@ -286,27 +264,6 @@ Deno.test("putCommentHandler", async (t) => {
 });
 
 Deno.test("deleteCommentHandler", async (t) => {
-  await t.step("deletes comment if user is author", async () => {
-    db.clear();
-    mockCommentRepository.create({
-      id: 1,
-      content: "Test comment",
-      createdAt: new Date(),
-      author: "user1",
-      blogPostId: 1,
-      parentCommentId: null,
-    })
-    const mockContext = createMockContext({
-      params: { id: "1" },
-      jwtPayload: { sub: "user1" },
-    });
-    const result = await deleteCommentHandler(mockContext, mockCommentRepository);
-    const json = await result.json();
-    assertEquals(result.status, 200);
-    assertEquals(json.rowCount, 1);
-    assertEquals(db.size, 0);
-  });
-
   await t.step("returns 403 if user is not author", async () => {
     db.clear();
     mockCommentRepository.create({

@@ -1,6 +1,6 @@
 import { Connection } from "../database.ts";
 import { BlogPost, blogPosts } from "../schema/blogPosts.ts";
-import { asc, desc, eq } from "drizzle-orm/expressions";
+import { asc, eq } from "drizzle-orm/expressions";
 import { comments } from "../schema/comments.ts";
 import {images} from "../schema/images.ts";
 
@@ -19,7 +19,11 @@ export class BlogPostRepository {
                 author: true,
                 comments: {
                     with: {
-                        author: true
+                        author: {
+                            columns: {
+                                username: true
+                            }
+                        }
                     },
                     orderBy: asc(comments.id)
                 },
@@ -32,7 +36,11 @@ export class BlogPostRepository {
         return await this.pool.query.blogPosts.findMany({
             with: {
                 comments: true,
-                author: true,
+                author: {
+                    columns: {
+                        username: true
+                    }
+                }
             }
         })        
     }

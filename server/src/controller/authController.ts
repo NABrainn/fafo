@@ -85,6 +85,24 @@ export const loginHandler = (async (c: Context, userRepository: UserRepository) 
         return c.json({ error: "Wystąpił błąd serwera" }, 500);
     }
 });
+
+export const logoutHandler = (async (c: Context) => {
+    try {
+        deleteCookie(c, "jwt", {
+            sameSite: "Strict",
+            path: "/",
+        });
+        deleteCookie(c, "csrfToken", {
+            sameSite: "Strict",
+            path: "/",
+        });
+        return c.json({ message: "Wylogowano pomyślnie" }, 200);
+    } catch (err) {
+        console.error("💥 Błąd podczas wylogowywania:", err);
+        return c.json({ error: "Wystąpił błąd serwera" }, 500);
+    }
+});
+
 export const verifyHandler = (async (c: Context) => {
     try {
         const token = getCookie(c, 'jwt');
@@ -114,4 +132,5 @@ export const verifyHandler = (async (c: Context) => {
 
 authController.post("/register", async (c) => registerHandler(c, new UserRepository(db)));
 authController.post('/login', async (c) => loginHandler(c, new UserRepository(db)));
+authController.post('/logout', async (c) => logoutHandler(c));
 authController.post("/verify", async (c) => verifyHandler(c));

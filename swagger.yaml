@@ -115,16 +115,48 @@ paths:
           description: Invalid credentials
         '500':
           description: Server error
+  /logout:
+    post:
+      summary: Log user out
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Wylogowano pomyślnie
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: jwt=; Max-Age=0; SameSite=Strict; Path=/, csrfToken=; Max-Age=0; SameSite=Strict; Path=/
+              description: Deletes JWT and CSRF token cookies
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Wystąpił błąd serwera
+
   /verify:
     post:
       summary: Verify JWT token
       parameters:
-      - name: Authorization
+      - name: Cookie
         in: header
         required: true
         schema:
           type: string
-        description: Bearer token
+          example: jwt=<token>
+        description: JWT token stored in cookie
       responses:
         '200':
           description: Token valid
