@@ -2,12 +2,11 @@ import { Hono } from "hono";
 import { Comment, comments } from "../database/schema/comments.ts";
 import { CommentRepository } from "../database/repository/commentRepository.ts";
 import { db } from "../database/database.ts";
-import {BlogPostRepository} from "../database/repository/blogPostRepository.ts";
+import {Context} from "npm:hono@4.7.5";
 
 export const commentController = new Hono();
-const commentRepository = new CommentRepository(db)
 
-commentController.get('/:id', async (c) => {
+export const getCommentHandler = (async (c: Context, commentRepository: CommentRepository) => {
     try {
         const id = c.req.param('id');
 
@@ -25,18 +24,16 @@ commentController.get('/:id', async (c) => {
         return c.json({error: "Wystąpił błąd serwera"}, 500);
     }
 })
-commentController.get('/public', async (c) => {
+export const getAllCommentsHandler = (async (c: Context, commentRepository: CommentRepository) => {
     try {
         const comments = await commentRepository.findAll()
-        if (!comments)
-            return c.json({error: 'Nie znaleziono komentarzy'}, 404)
         return c.json(comments, 200);
     } catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
         return c.json({error: "Wystąpił błąd serwera"}, 500);
     }
 })
-commentController.get('/:author', async (c) => {
+export const getCommentByAuthorHandler = (async (c: Context, commentRepository: CommentRepository) => {
     try {
         const author = c.req.param('author')
 
@@ -45,15 +42,13 @@ commentController.get('/:author', async (c) => {
         }
 
         const comments = await commentRepository.findAllByAuthor(author)
-        if (!comments)
-            return c.json({error: 'Nie znaleziono komentarzy'}, 404)
         return c.json(comments, 200);
     } catch (err) {
         console.error("💥 Błąd podczas pobierania danych:", err);
         return c.json({error: "Wystąpił błąd serwera"}, 500);
     }
 })
-commentController.get('/public/blogposts/:id', async (c) => {
+export const getBlogPostHandler = (async (c: Context, commentRepository: CommentRepository) => {
     try {
         const id = c.req.param('id')
 
@@ -70,7 +65,7 @@ commentController.get('/public/blogposts/:id', async (c) => {
         return c.json({error: "Wystąpił błąd serwera"}, 500);
     }
 })
-commentController.post('/', async (c) => {
+export const postCommentHandler = (async (c: Context, commentRepository: CommentRepository) => {
     try {
         const body = await c.req.json<Extract<Comment, typeof comments.$inferInsert>>()
 
@@ -91,11 +86,12 @@ commentController.post('/', async (c) => {
         return c.json({error: "Wystąpił błąd serwera"}, 500);
     }
 })
-commentController.put('/:id', async (c) => {
+
+
+export const putCommentHandler = async (c: Context, commentRepository: CommentRepository) => {
     try {
         const body = await c.req.json<Extract<Comment, typeof comments.$inferSelect>>()
         const payload = c.get('jwtPayload')
-
 
         if (!body.id || !body.content) {
             return c.json({ error: 'Brak ID lub treści komentarza' }, 400);
@@ -106,8 +102,11 @@ commentController.put('/:id', async (c) => {
         }
 
         const found = await commentRepository.findById(Number(body.id))
+        if (!found) {
+            return c.json({error: 'Nie znaleziono komentarza'}, 404)
+        }
 
-        if (payload.sub !== found?.author.username) {
+        if (payload.sub !== found.author) {
             return c.json({ error: 'Brak wymaganych uprawnień do edycji komentarza' }, 403);
         }
 
@@ -116,11 +115,13 @@ commentController.put('/:id', async (c) => {
             return c.json({error: 'Nie znaleziono komentarza'}, 404)
         return c.json(comment, 200);
     } catch (err) {
-        console.error("💥 Błąd podczas pobierania danych:", err);
+        console.error("Błąd podczas pobierania danych:", err);
         return c.json({error: "Wystąpił błąd serwera"}, 500);
     }
-})
-commentController.delete('/:id', async (c) => {
+}
+
+
+export const deleteCommentHandler = async (c: Context, commentRepository: CommentRepository) => {
     try {
         const id = c.req.param('id')
         const payload = c.get('jwtPayload')
@@ -131,7 +132,8 @@ commentController.delete('/:id', async (c) => {
 
         const found = await commentRepository.findById(Number(id))
 
-        if (payload.sub !== found?.author.username) {
+        // Fix: Compare payload.sub with found?.author (string), not found?.author.username
+        if (found && payload.sub !== found.author) {
             return c.json({ error: 'Brak wymaganych uprawnień do usunięcia komentarza' }, 403);
         }
 
@@ -144,4 +146,12 @@ commentController.delete('/:id', async (c) => {
         console.error("💥 Błąd podczas pobierania danych:", err);
         return c.json({error: "Wystąpił błąd serwera"}, 500);
     }
-})
+}
+
+commentController.get('/:id', async (c) => getCommentHandler(c, new CommentRepository(db)))
+commentController.get('/public', async (c) => getAllCommentsHandler(c, new CommentRepository(db)))
+commentController.get('/:author', async (c) => getCommentByAuthorHandler(c, new CommentRepository(db)))
+commentController.get('/public/blogposts/:id', async (c) => getBlogPostHandler(c, new CommentRepository(db)))
+commentController.post('/', async (c) => postCommentHandler(c, new CommentRepository(db)))
+commentController.put('/:id', async (c) => putCommentHandler(c, new CommentRepository(db)))
+commentController.delete('/:id', async (c) => deleteCommentHandler(c, new CommentRepository(db)))

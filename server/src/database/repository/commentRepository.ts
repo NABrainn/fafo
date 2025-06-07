@@ -4,23 +4,21 @@ import { desc, asc, eq } from "drizzle-orm/expressions";
 
 export class CommentRepository {
 
-    private pool!: Connection
+    pool!: Connection
 
     constructor(pool: Connection) {
         this.pool = pool
     }
 
     async findById(id: number) {
-        console.log(id)
         return await this.pool.query.comments.findFirst({
             where: eq(comments.id, id),
             with: {
                 parentComment: true,
                 author: {
                     columns: {
-                        username: true,
-                        verified: true
-                    }
+                        username: true
+                    },
                 },
                 blogPost: true
             }
@@ -32,8 +30,7 @@ export class CommentRepository {
                 parentComment: true,
                 author: {
                     columns: {
-                        username: true,
-                        verified: true
+                        username: true
                     }
                 },
                 blogPost: true
@@ -47,9 +44,8 @@ export class CommentRepository {
                 parentComment: true,
                 author: {
                     columns: {
-                        username: true,
-                        verified: true
-                    }
+                        username: true
+                    },
                 },
                 blogPost: true
             }
@@ -62,9 +58,8 @@ export class CommentRepository {
                 parentComment: true,
                 author: {
                     columns: {
-                        username: true,
-                        verified: true
-                    }
+                        username: true
+                    },
                 },
                 blogPost: true
             },
@@ -72,8 +67,6 @@ export class CommentRepository {
         })
     }
     async create(data: Extract<Comment, typeof comments.$inferInsert>) {
-        console.log(data);
-        
         const created = await this.pool.insert(comments).values(data).returning();
         return created[0]
     }

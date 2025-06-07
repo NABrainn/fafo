@@ -1,19 +1,38 @@
 import { assertEquals } from "@std/assert/equals";
-import {createAuthController} from "../authController.ts";
 import {User} from "../../database/schema/users.ts";
-import {hashPassword} from "../../util/cryptoUtil.ts";
+import {hashPassword, verifyPassword} from "../../util/cryptoUtil.ts";
+import {loginHandler, registerHandler, verifyHandler} from "../authController.ts";
+import {createMockContext} from "./utils/mockContext.ts";
+import {generateJWT} from "../../util/jwtUtil.ts";
+import {UserRepository} from "../../database/repository/userRepository.ts";
 
 const db = new Map();
-const mockUserRepository = {
+
+let mockJwtToken = "";
+const mockJwtPayload = { sub: "" };
+const mockGenerateJWT = async (username: string) => {
+  mockJwtToken = `jwt-${username}`;
+  mockJwtPayload.sub = username;
+  return mockJwtToken;
+};
+const mockVerifyJWT = async (token: string) => {
+  if (token === mockJwtToken) return mockJwtPayload;
+  throw new Error("Invalid token");
+};
+const mockVerifyPassword = async (password: string, hashedPassword: string) => {
+  return password === "correctPassword"; // Simulate password check
+};
+
+const mockUserRepository: UserRepository = {
   pool: {} as any,
-  findById: async (id: number): Promise<any> => undefined,
+  findById: async (_id: number): Promise<any> => undefined,
   findByUsername: async (username: string): Promise<any> => db.get(username),
   findByEmail: async (email: string): Promise<any> => db.get(email),
   findAll: async (): Promise<any[]> => [],
   create: async (data: { username: string; email: string; password: string }): Promise<any> => {
     const hashedPassword = await hashPassword(data.password);
-    const user =  {
-      id: 1,
+    const user = {
+      id: Math.max(...Array.from(db.values(), (u: any) => u.id || 0), 0) + 1,
       username: data.username,
       email: data.email,
       password: hashedPassword,
@@ -21,166 +40,175 @@ const mockUserRepository = {
       comments: [],
       blogPosts: [],
     } as User;
-    db.set(user.username, user)
-    db.set(user.email, user)
+    db.set(user.username, user);
+    db.set(user.email, user);
+    return user;
   },
-  updateById: async (id: number, data: any): Promise<any> => ({} as User),
-  deleteById: async (id: number): Promise<any> => {},
-  verifyUser: async (id: number): Promise<any> => ({} as User),
+  updateById: async (_id: number, _data: any): Promise<any> => ({} as User),
+  deleteById: async (_id: number): Promise<any> => ({}),
+  verifyUser: async (_id: number): Promise<any> => ({} as User),
 };
 
-
-Deno.test("register – duplikat username", async () => {
-  const authController = createAuthController(mockUserRepository);
-  await mockUserRepository.create({
-    username: "existingUser",
-    email: "example@email.com",
-    password: "password123",
+Deno.test("authController", async (t) => {
+  await t.step("registerHandler - fails with missing data", async () => {
+    db.clear();
+    const mockContext = createMockContext({
+      method: "POST",
+      body: { username: "newUser", email: "new@example.com" }, // Missing password
+    });
+    const result = await registerHandler(mockContext, mockUserRepository);
+    const json = await result.json();
+    assertEquals(result.status, 400);
+    assertEquals(json.error, "Brak wymaganych danych");
   });
-  const req = new Request("http://localhost:8000/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+
+  await t.step("registerHandler - fails with duplicate username", async () => {
+    db.clear();
+    await mockUserRepository.create({
       username: "existingUser",
-      email: "new@example.com",
-      password: "password123",
-    }),
-  });
-
-  const res = await authController.fetch(req);
-  assertEquals(res.status, 409);
-  assertEquals(await res.json(), "Wprowadź inną nazwę użytkownika");
-  db.clear()
-});
-
-Deno.test("register – duplikat email", async () => {
-  const authController = createAuthController(mockUserRepository);
-  await mockUserRepository.create({
-    username: "existingUser",
-    email: "example@email.com",
-    password: "password123",
-  });
-  const req = new Request("http://localhost:8000/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: "newUser",
       email: "example@email.com",
       password: "password123",
-    }),
+    });
+    const mockContext = createMockContext({
+      method: "POST",
+      body: {
+        username: "existingUser",
+        email: "new@example.com",
+        password: "password123",
+      },
+    });
+    const result = await registerHandler(mockContext, mockUserRepository);
+    const json = await result.json();
+    assertEquals(result.status, 409);
+    assertEquals(json, "Wprowadź inną nazwę użytkownika");
   });
 
-  const res = await authController.fetch(req);
-  assertEquals(res.status, 409);
-  assertEquals(await res.json(), "Wprowadź inny adres email");
-  db.clear()
-});
-
-
-Deno.test("register – sukces", async () => {
-  const authController = createAuthController(mockUserRepository);
-  const req = new Request("http://localhost:8000/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: "newUser",
-      email: "new@example.com",
+  await t.step("registerHandler - fails with duplicate email", async () => {
+    db.clear();
+    await mockUserRepository.create({
+      username: "existingUser",
+      email: "example@email.com",
       password: "password123",
-    }),
+    });
+    const mockContext = createMockContext({
+      method: "POST",
+      body: {
+        username: "newUser",
+        email: "example@email.com",
+        password: "password123",
+      },
+    });
+    const result = await registerHandler(mockContext, mockUserRepository);
+    const json = await result.json();
+    assertEquals(result.status, 409);
+    assertEquals(json, "Wprowadź inny adres email");
   });
 
-  const res = await authController.fetch(req);
-  assertEquals(res.status, 201);
-  db.clear()
-});
+  await t.step("registerHandler - succeeds with valid data", async () => {
+    db.clear();
+    const mockContext = createMockContext({
+      method: "POST",
+      body: {
+        username: "newUser",
+        email: "new@example.com",
+        password: "password123",
+      },
+    });
+    const result = await registerHandler(mockContext, mockUserRepository);
+    const json = await result.json();
+    assertEquals(result.status, 201);
+    assertEquals(json.username, "newUser");
+    assertEquals(json.email, "new@example.com");
+    assertEquals(db.get("newUser").username, "newUser");
+    assertEquals(db.get("new@example.com").email, "new@example.com");
+  });
 
-Deno.test("login – nieistniejący user", async () => {
-  const authController = createAuthController(mockUserRepository);
+  await t.step("loginHandler - fails with missing username or password", async () => {
+    db.clear();
+    const mockContext = createMockContext({
+      method: "POST",
+      body: { username: "existingUser" }, // Missing password
+    });
+    const result = await loginHandler(mockContext, mockUserRepository);
+    const json = await result.json();
+    assertEquals(result.status, 400);
+    assertEquals(json.error, "Brak loginu lub hasła");
+  });
 
-  const req = new Request("http://localhost:8000/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: "unknownUser",
+  await t.step("loginHandler - fails with non-existing user", async () => {
+    db.clear();
+    const mockContext = createMockContext({
+      method: "POST",
+      body: {
+        username: "unknownUser",
+        password: "password123",
+      },
+    });
+    const result = await loginHandler(mockContext, mockUserRepository);
+    const json = await result.json();
+    assertEquals(result.status, 404);
+    assertEquals(json, "Podany login nie istnieje");
+  });
+
+  await t.step("loginHandler - fails with incorrect password", async () => {
+    db.clear();
+    await mockUserRepository.create({
+      username: "existingUser",
+      email: "example@email.com",
+      password: "correctPassword",
+    });
+    const mockContext = createMockContext({
+      method: "POST",
+      body: {
+        username: "existingUser",
+        password: "wrongPassword",
+      },
+    });
+    const result = await loginHandler(mockContext, mockUserRepository);
+    const json = await result.json();
+    assertEquals(result.status, 401);
+    assertEquals(json, "Niepoprawny email/hasło");
+  });
+
+  await t.step("verifyHandler - fails with missing token", async () => {
+    db.clear();
+    const mockContext = createMockContext({
+      method: "POST",
+    });
+    const result = await verifyHandler(mockContext);
+    const json = await result.json();
+    assertEquals(result.status, 401);
+    assertEquals(json, "Brak tokenu");
+  });
+
+  await t.step("verifyHandler - fails with invalid token", async () => {
+    db.clear();
+    const mockContext = createMockContext({
+      method: "POST",
+      cookies: { jwt: "invalidToken" },
+    });
+    const result = await verifyHandler(mockContext);
+    const json = await result.json();
+    assertEquals(result.status, 401);
+    assertEquals(json, "Niepoprawny token");
+  });
+
+  await t.step("verifyHandler - succeeds with valid token", async () => {
+    db.clear();
+    await mockUserRepository.create({
+      username: "existingUser",
+      email: "example@email.com",
       password: "password123",
-    }),
+    });
+    const token = await generateJWT("existingUser");
+    const mockContext = createMockContext({
+      method: "POST",
+      cookies: { jwt: token },
+    });
+    const result = await verifyHandler(mockContext);
+    const json = await result.json();
+    assertEquals(result.status, 200);
+    assertEquals(json.user, "existingUser");
+    assertEquals((result as any).__cookies["jwt"], token);
   });
-
-  const res = await authController.fetch(req);
-  assertEquals(res.status, 404);
-  db.clear()
 });
-
-Deno.test("login – zły password", async () => {
-  const authController = createAuthController(mockUserRepository);
-
-  const reqBody = {
-    username: "existingUser",
-    password: "password123"
-  }
-  await mockUserRepository.create({
-    username: "existingUser",
-    email: "example@email.com",
-    password: "1234",
-  });
-  const req = new Request("http://localhost:8000/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(reqBody)
-  });
-
-  const res = await authController.fetch(req);
-  assertEquals(res.status, 401);
-  assertEquals(await res.json(), 'Niepoprawny email/hasło');
-  db.clear()
-});
-
-Deno.test("login – sukces", async () => {
-  const authController = createAuthController(mockUserRepository);
-  const reqBody = {
-    username: "existingUser",
-    password: "password123"
-  }
-  const req = new Request("http://localhost:8000/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(reqBody)
-  });
-
-  await mockUserRepository.create({...reqBody, email: "example@email.com"})
-
-  const res = await authController.request(req);
-
-  assertEquals(res.status, 200);
-  db.clear()
-});
-
-Deno.test("verify – brak tokenu", async () => {
-  const authController = createAuthController(mockUserRepository);
-
-  const req = new Request("http://localhost:8000/verify", {
-    method: "POST",
-  });
-
-  const res = await authController.request(req);
-  assertEquals(res.status, 401);
-  assertEquals(await res.json(), "Brak tokenu");
-  db.clear()
-});
-
-Deno.test("verify – niepoprawny token", async () => {
-  const authController = createAuthController(mockUserRepository);
-
-  const req = new Request("http://localhost:8000/verify", {
-    method: "POST",
-    headers: {
-        "Cookie": "jwt=hyhyhy"
-    }
-  });
-
-  const res = await authController.request(req);
-  assertEquals(res.status, 401);
-  assertEquals(await res.json(), "Niepoprawny token");
-  db.clear()
-});
-

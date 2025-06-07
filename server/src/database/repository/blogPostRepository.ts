@@ -7,7 +7,7 @@ import {images} from "../schema/images.ts";
 
 export class BlogPostRepository {
 
-    private pool!: Connection
+    pool!: Connection
 
     constructor(pool: Connection) {
         this.pool = pool
@@ -16,21 +16,10 @@ export class BlogPostRepository {
         const found = await this.pool.query.blogPosts.findFirst({
             where: eq(blogPosts.id, id),
             with: {
-                author: {
-                    columns: {
-                        username: true,
-                        verified: true
-                    }
-                },
+                author: true,
                 comments: {
                     with: {
-                        author: {
-                            columns: {
-                                username: true,
-                                verified: true
-                            }
-                        },
-                        parentComment: true
+                        author: true
                     },
                     orderBy: asc(comments.id)
                 },
@@ -43,12 +32,7 @@ export class BlogPostRepository {
         return await this.pool.query.blogPosts.findMany({
             with: {
                 comments: true,
-                author: {
-                    columns: {
-                        username: true,
-                        verified: true
-                    }
-                },
+                author: true,
             }
         })        
     }
