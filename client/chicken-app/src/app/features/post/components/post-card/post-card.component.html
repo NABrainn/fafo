@@ -2,12 +2,12 @@
     <img class="object-cover grow-1 basis-1/2" [src]="reqUrl" alt="there shall be an image">
     <main class="grow-1 basis-1/2 flex flex-col gap-4 px-4 pb-4">
       <div class="grow-1 flex flex-col gap-4">
-        <h3 class="min-h-20 text-neutral-dark text-xl font-semibold break-words">
+        <h3 class="min-h-30 text-neutral-dark text-xl font-semibold break-words">
           <ng-content select="title">
 
           </ng-content>
         </h3>
-        <div class="min-h-20 grow-1 break-words">
+        <div class="min-h-30 grow-1 break-words">
           <ng-content select="description">
 
           </ng-content>
@@ -22,7 +22,7 @@
 
           </ng-content>
         </div>
-        <div class="flex gap-2">
+        <div class="flex min-h-8 gap-2">
         @if (authenticated() && author() === user) {
           <button
             (click)="onDelete(id())"
