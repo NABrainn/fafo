@@ -96,7 +96,6 @@ Deno.test("getCommentHandler", async (t) => {
   });
 });
 
-// Tests for getAllCommentsHandler
 Deno.test("getAllCommentsHandler", async (t) => {
   await t.step("returns all comments when available", async () => {
     db.clear();
@@ -118,7 +117,6 @@ Deno.test("getAllCommentsHandler", async (t) => {
   });
 });
 
-// Tests for getCommentByAuthorHandler
 Deno.test("getCommentByAuthorHandler", async (t) => {
   await t.step("returns comments by author", async () => {
     db.clear();
@@ -148,7 +146,6 @@ Deno.test("getCommentByAuthorHandler", async (t) => {
   });
 });
 
-// Tests for getBlogPostHandler
 Deno.test("getBlogPostHandler", async (t) => {
   await t.step("returns comments for blog post", async () => {
     db.clear();
@@ -178,7 +175,6 @@ Deno.test("getBlogPostHandler", async (t) => {
   });
 });
 
-// Tests for postCommentHandler
 Deno.test("postCommentHandler", async (t) => {
   await t.step("creates comment with valid data and JWT", async () => {
     db.clear();
@@ -210,7 +206,6 @@ Deno.test("postCommentHandler", async (t) => {
   });
 });
 
-// Tests for putCommentHandler
 Deno.test("putCommentHandler", async (t) => {
   await t.step("updates comment if user is author", async () => {
     db.clear();
@@ -290,7 +285,6 @@ Deno.test("putCommentHandler", async (t) => {
   });
 });
 
-// Tests for deleteCommentHandler
 Deno.test("deleteCommentHandler", async (t) => {
   await t.step("deletes comment if user is author", async () => {
     db.clear();

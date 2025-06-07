@@ -2,11 +2,11 @@ import { Hono } from "hono";
 import { UserRepository } from "../database/repository/userRepository.ts";
 import { User, users } from "../database/schema/users.ts";
 import { db } from "../database/database.ts";
+import {Context} from "npm:hono@4.7.5";
 
 export const userController = new Hono();
-const userRepository = new UserRepository(db);
 
-userController.get("/:id", async (c) => {
+export const getUserHandler = (async (c: Context, userRepository: UserRepository) => {
   try {
     const id = c.req.param("id");
 
@@ -24,7 +24,7 @@ userController.get("/:id", async (c) => {
     return c.json({ error: "Wystąpił błąd serwera" }, 500);
   }
 });
-userController.get("/", async (c) => {
+export const getAllUsersHandler = (async (c: Context, userRepository: UserRepository) => {
   try {
     const users = await userRepository.findAll();
     if (!users || users.length === 0 ) {
@@ -36,7 +36,7 @@ userController.get("/", async (c) => {
     return c.json({ error: "Wystąpił błąd serwera" }, 500);
   }
 });
-userController.post("/", async (c) => {
+export const postUserHandler = (async (c: Context, userRepository: UserRepository) => {
   try {
     const body = await c.req.json<Extract<User, typeof users.$inferInsert>>();
 
@@ -55,7 +55,7 @@ userController.post("/", async (c) => {
     return c.json({ error: "Wystąpił błąd serwera" }, 500);
   }
 });
-userController.put("/:id", async (c) => {
+export const putUserHandler = (async (c: Context, userRepository: UserRepository) => {
   try {
     const body = await c.req.json<Extract<User, typeof users.$inferSelect>>();
 
@@ -73,7 +73,7 @@ userController.put("/:id", async (c) => {
     return c.json({ error: "Wystąpił błąd serwera" }, 500);
   }
 });
-userController.delete("/:id", async (c) => {
+export const deleteUserHandler = (async (c: Context, userRepository: UserRepository) => {
   try {
     const body = await c.req.json<Extract<User, typeof users.$inferSelect>>();
 
@@ -92,3 +92,9 @@ userController.delete("/:id", async (c) => {
     return c.json({ error: "Wystąpił błąd serwera" }, 500);
   }
 });
+
+userController.get("/:id", async (c) => getUserHandler(c, new UserRepository(db)));
+userController.get("/", async (c) => getAllUsersHandler(c, new UserRepository(db)));
+userController.post("/", async (c) => postUserHandler(c, new UserRepository(db)));
+userController.put("/:id", async (c) => putUserHandler(c, new UserRepository(db)));
+userController.delete("/:id", async (c) => deleteUserHandler(c, new UserRepository(db)));
