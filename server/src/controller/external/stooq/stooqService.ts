@@ -82,3 +82,9 @@ async function fetchStooqData(): Promise<StockQuote[]> {
 function evalChange(close: number, open: number, precision: number): number {
     return parseFloat((((close - open) / open) * 2).toFixed(precision))
 }
+
+// tylko do testów
+export function __setQuotesForTesting(mockQuotes: StockQuote[]) {
+    quotes.length = 0;
+    quotes.push(...mockQuotes);
+}
