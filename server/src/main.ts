@@ -4,7 +4,7 @@ import { blogPostController } from "./controller/blogPostController.ts";
 import { userController } from "./controller/userController.ts";
 import { jwt } from 'hono/jwt'
 import type { JwtVariables } from 'hono/jwt'
-import { authController } from "./controller/authController.ts";
+import {authController} from "./controller/authController.ts";
 import { except } from 'hono/combine';
 import {stooqController} from "./controller/external/stooq/stooqController.ts";
 import {chickenController} from "./controller/external/chickenFacts/chickenController.ts";
@@ -42,7 +42,6 @@ const jwtSecret = Deno.env.get('JWT_SECRET');
 if (!jwtSecret) {
     throw new Error(`JWT_SECRET environment variable is not set ${import.meta.url}`);
 }
-
 
 app.use('/api/*',
     except(
